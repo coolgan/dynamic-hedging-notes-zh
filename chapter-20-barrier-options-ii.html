@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>第20章：障碍期权（下）（Barrier Options (II)） · Dynamic Hedging 精读笔记</title>
+<link rel="stylesheet" href="assets/katex.min.css">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<button id="menuToggle" class="menu-toggle" aria-label="目录">☰</button>
+<aside class="sidebar" id="sidebar">
+<a class="brand" href="index.html"><span class="brand-title">Dynamic Hedging 精读笔记</span><span class="brand-sub">Nassim Taleb · 动态对冲 · 中文精读笔记</span></a><div class="nav-search"><input type="search" id="navSearch" placeholder="筛选章节…" autocomplete="off"></div><div class="nav-section"><h3 class="nav-section-title">正文章节</h3><ul><li><a href="chapter-01-introduction-to-the-instruments.html"><span class="nav-tag">第一章</span><span class="nav-name">金融工具导论</span></a></li>
+<li><a href="chapter-02-the-generalized-option.html"><span class="nav-tag">第二章</span><span class="nav-name">广义期权</span></a></li>
+<li><a href="chapter-03-market-making-and-market-using.html"><span class="nav-tag">第三章</span><span class="nav-name">做市与用市</span></a></li>
+<li><a href="chapter-04-liquidity-and-liquidity-holes.html"><span class="nav-tag">第四章</span><span class="nav-name">流动性与流动性洞</span></a></li>
+<li><a href="chapter-05-arbitrage-and-the-arbitrageurs.html"><span class="nav-tag">第五章</span><span class="nav-name">套利与套利者</span></a></li>
+<li><a href="chapter-06-volatility-and-correlation.html"><span class="nav-tag">第六章</span><span class="nav-name">波动率与相关性</span></a></li>
+<li><a href="chapter-07-adapting-black-scholes-merton-the-delta.html"><span class="nav-tag">第七章</span><span class="nav-name">改造 Black-Scholes-Merton —— Delta</span></a></li>
+<li><a href="chapter-08-gamma-and-shadow-gamma.html"><span class="nav-tag">第八章</span><span class="nav-name">Gamma 与 Shadow Gamma</span></a></li>
+<li><a href="chapter-09-vega-and-the-volatility-surface.html"><span class="nav-tag">第九章</span><span class="nav-name">Vega 与波动率曲面</span></a></li>
+<li><a href="chapter-10-theta-and-minor-greeks.html"><span class="nav-tag">第十章</span><span class="nav-name">Theta 与次要希腊字母</span></a></li>
+<li><a href="chapter-11-the-greeks-and-their-behavior.html"><span class="nav-tag">第十一章</span><span class="nav-name">希腊字母的动态行为</span></a></li>
+<li><a href="chapter-12-fungibility-convergence-and-stacking.html"><span class="nav-tag">第12章</span><span class="nav-name">可替代性、收敛与堆叠</span></a></li>
+<li><a href="chapter-13-some-wrinkles-of-option-markets.html"><span class="nav-tag">第13章</span><span class="nav-name">期权市场的一些褶皱</span></a></li>
+<li><a href="chapter-14-bucketing-and-topography.html"><span class="nav-tag">第14章</span><span class="nav-name">分桶与地形图</span></a></li>
+<li><a href="chapter-15-beware-the-distribution.html"><span class="nav-tag">第15章</span><span class="nav-name">当心分布</span></a></li>
+<li><a href="chapter-16-option-trading-concepts.html"><span class="nav-tag">第16章</span><span class="nav-name">期权交易概念</span></a></li>
+<li><a href="chapter-17-binary-options-european-style.html"><span class="nav-tag">第17章</span><span class="nav-name">欧式二元期权</span></a></li>
+<li><a href="chapter-18-binary-options-american-style.html"><span class="nav-tag">第18章</span><span class="nav-name">美式二元期权</span></a></li>
+<li><a href="chapter-19-barrier-options-i.html"><span class="nav-tag">第19章</span><span class="nav-name">障碍期权</span></a></li>
+<li class="active"><a href="chapter-20-barrier-options-ii.html"><span class="nav-tag">第20章</span><span class="nav-name">障碍期权</span></a></li>
+<li><a href="chapter-21-compound-choosers-and-higher-order-options.html"><span class="nav-tag">第21章</span><span class="nav-name">复合期权、选择者期权与高阶期权</span></a></li>
+<li><a href="chapter-22-multiasset-options.html"><span class="nav-tag">第22章</span><span class="nav-name">多资产期权</span></a></li>
+<li><a href="chapter-23-minor-exotics-lookback-and-asian-options.html"><span class="nav-tag">第23章</span><span class="nav-name">次要奇异期权——回望与亚式期权</span></a></li></ul></div><div class="nav-section"><h3 class="nav-section-title">附录模块</h3><ul><li><a href="module-a-brownian-motion-on-a-spreadsheet.html"><span class="nav-tag">模块 A</span><span class="nav-name">电子表格上的布朗运动教程</span></a></li>
+<li><a href="module-b-risk-neutrality-explained.html"><span class="nav-tag">模块 B</span><span class="nav-name">风险中性解释</span></a></li>
+<li><a href="module-c-numeraire-relativity-and-the-two-country-paradox.html"><span class="nav-tag">模块 C</span><span class="nav-name">计价单位相对性与两国悖论</span></a></li>
+<li><a href="module-d-correlation-triangles.html"><span class="nav-tag">模块 D</span><span class="nav-name">相关性三角，一个图形化案例</span></a></li>
+<li><a href="module-e-the-value-at-risk.html"><span class="nav-tag">模块 E</span><span class="nav-name">风险价值</span></a></li>
+<li><a href="module-f-probabilistic-rankings-in-arbitrage.html"><span class="nav-tag">模块 F</span><span class="nav-name">套利中的概率排序</span></a></li>
+<li><a href="module-g-option-pricing.html"><span class="nav-tag">模块 G</span><span class="nav-name">期权定价</span></a></li></ul></div>
+</aside>
+<div class="overlay" id="overlay"></div>
+<main class="content">
+<article class="note">
+<h1 id="第20章-障碍期权-下-barrier-options-ii">第20章：障碍期权（下）（Barrier Options (II)）</h1>
+<blockquote>
+<p>The only thing I like about a knock-out option is that it knocks out. —— N. Zeidan</p>
+</blockquote>
+<h2 id="导读-本章要解决的问题">导读：本章要解决的问题</h2>
+<p>上一章处理的常规障碍在虚值处生灭，payoff 在障碍上连续趋于零，所以相对温和。本章进入真正让交易员失眠的领域：<strong>反向障碍（reverse barrier）</strong>，即期权在实值、握有大额内在价值时被触发，以及双障碍、各类变体和它们在风险报告里的呈现。Zeidan 那句题词带着黑色幽默：敲出期权唯一的好处就是它会敲出，因为活着的时候它折磨人。</p>
+<p>对一个金融工程读者，本章的价值不在于又一组解析解，而在于看清三件被常规 BSM 框架遮蔽的东西：</p>
+<ol>
+<li>反向障碍在障碍处既丢掉大额内在价值、又承担巨大 gamma 跳变，它更像一个高赔付的美式二元期权，而非期权。由此 delta 会变负、theta 会变正、gamma 会在生命周期里反复变号，所有希腊字母都不可信。</li>
+<li>路径依赖的损益图（&quot;到期 profile&quot;）极易被用来误导客户。一张看起来像蝶式的图，背后是一个几乎不可能实现的条件事件。这一节是 Taleb 对结构产品销售最锋利的批判，理论上对应&quot;终值损益 vs 路径条件损益&quot;的区别。</li>
+<li>障碍处的 delta 不连续，在风险系统里表现为 gamma 发散成 Dirac、报告报错；而障碍订单在市场里聚集，会制造&quot;埋雷市场&quot;和流动性洞。这把第 4 章的滑点、第 8 章的影子 gamma、污染原理在一个真实风险报告上收束起来。</li>
+</ol>
+<p>下面沿原文顺序展开：先反向敲出与那笔法郎&quot;救赎交易&quot;案例，再是逐个希腊字母的对冲案例研究，然后双障碍、返利、各类变体与 CAPs，最后落到风险报告与埋雷市场。</p>
+<hr>
+<h2 id="一-反向敲出期权-长得像期权-行为像赌注">一、反向敲出期权：长得像期权，行为像赌注</h2>
+<p>反向敲出（reverse knock-out）是一种在<strong>实值</strong>处终止的障碍期权，因此障碍两侧的价值出现巨大落差。它几乎可以分解成&quot;常规敲出 + 一个美式赌注（American bet）&quot;，但分解后会得到符号相反的 gap delta。围绕它的风险管理有大量恐怖故事，所以值得单独研究。</p>
+<p>数值上，一个三个月的 call 在 15.7% 波动率下一般值面值的 3.11%；而一个在 108 处终止、无返利的反向敲出只值 0.55%。更怪的是，反向敲出 call 有时呈现<strong>负 delta</strong>，市场上涨时它的价格反而下跌。新接触奇异期权的人很难想象这件事，因为普通期权的内在价值增加时价值上升。但这里的关键在于：内在价值在某一点会整个消失，所以当市场涨向障碍时，价格反而下降。障碍与底层香草之间的拉锯贯穿这张工具的一生。</p>
+<p>理论上，负 delta 并不神秘。期权价值 <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.2222em;">V</span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.0576em;">S</span><span class="mclose">)</span></span></span></span> 在障碍附近是 <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.0576em;">S</span></span></span></span> 的减函数，因为越靠近障碍、&quot;被敲掉一大块实值&quot;的概率越高，这块概率损失压过了内在价值的增加，于是 <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord" style="margin-right:0.0556em;">∂</span><span class="mord mathnormal" style="margin-right:0.2222em;">V</span><span class="mord">/</span><span class="mord" style="margin-right:0.0556em;">∂</span><span class="mord mathnormal" style="margin-right:0.0576em;">S</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">&lt;</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">0</span></span></span></span>。这正是&quot;barrier 与 vanilla 两股力量拉锯&quot;的微分表述。</p>
+<p>反向敲出看起来定价异常低，且价值通常随时间<strong>反向</strong>变动，它负向衰减（decay negatively）。这个特性让它成为对企业客户极具吸引力的卖出工具，同样的特性给期权交易员带来冷汗涔涔的不眠之夜。</p>
+<blockquote>
+<p>看反向敲出和反向敲入最直观的方式，是把它们当成高赔付的美式二元期权。</p>
+</blockquote>
+<p>因为它的 payoff 形如一个深度实值、内在价值高而时间价值少的期权，在障碍附近它一点都不像期权，而像一个赌注。这条直觉是本章的总纲：<strong>反向障碍 ≈ 美式二元（数字）期权</strong>，所以它继承了第 18 章美式二元的全部毛病：单调的 vega、障碍处尖锐的时间效应、首次穿越时间主导一切。</p>
+<p><img src="images/8e057aee9983780fe50d657ff2a25792eb9db6f504386f3cc0347b0b3d16cf92.jpg" alt="图 20.1 香草 call 与反向敲出的损益对比"></p>
+<p><img src="images/2287e646605d21bbce7c14a6147f1c425595c9e901cbf5d2d6c591f8cc017c3e.jpg" alt="图 20.2 香草 call 与反向敲出的 delta 对比"></p>
+<p>图 20.1、20.2 画的是一个 108 终止、还剩六个月的反向敲出。持有者呈轻微 short gamma，同时 short delta。</p>
+<p><img src="images/0a333c55f633897e0471de4a5a265cbf165a23ddb1ea4c5e25bad4547f9161b7.jpg" alt="图 20.3 时间对反向敲出价格的影响"></p>
+<p>图 20.3 显示障碍附近时间的恶劣效果，与美式二元如出一辙。</p>
+<p><img src="images/0b48a9357d0707023442a2660f98aaefa5f27f9de4356a1b770561dea8b7a267.jpg" alt="图 20.4 不同波动率下的反向 KO(100,105)"></p>
+<p><img src="images/789abb18fd364afc898c74472102cba507e05e42fb9ee2685cd809fd43353506.jpg" alt="图 20.5 会变号的 theta"></p>
+<p>图 20.4 是反向 KO(100,105) 在不同波动率下的形态，图 20.5 是它与美式二元的区别：100 以下交易呈 short gamma，因此即便没有 carry 也能赚时间衰减。</p>
+<p>theta 变号这件事，理论根在 BSM 关系 <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord">Θ</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">≈</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1.1901em;vertical-align:-0.345em;"></span><span class="mord">−</span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.8451em;"><span style="top:-2.655em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">2</span></span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.394em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">1</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.345em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0359em;">σ</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0576em;">S</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span><span class="mord">Γ</span></span></span></span>。反向敲出的 gamma 在生命周期不同区域变号，theta 必然跟着变号：short gamma 的区域 long theta（收租），long gamma 的区域 short theta（付租）。普通期权的 theta 符号是稳定的，反向障碍把这个稳定性也打破了。</p>
+<hr>
+<h2 id="二-案例研究-敲出盒子-the-knock-out-box">二、案例研究：敲出盒子（The Knock-Out Box）</h2>
+<p>这是一笔真实交易（略作改动），发生在美元兑法国法郎上。</p>
+<p>1990 年代美元对欧洲货币持续走弱，许多法国企业财务在投机头寸上深度被套。当时巴黎流行用购买力平价之类的理论唱多美元，于是这些&quot;宏观经济学家交易员&quot;在 5.60 法郎一线大举做多美元，比后来的价位高出约 12%。许多没有真正盯市纪律的企业，乐于扛着头寸而不设严格止损，但终归要在某一刻吞下子弹、认下亏损。</p>
+<p>当法郎在 5.00 附近徘徊时，某衍生品行向他们兜售了下面这个把戏：给你一个&quot;对冲&quot;美元敞口的机会。</p>
+<p>客户在 5.60 做多 1 亿美元，因 USD-FRF 现货已在 5.00，亏损约 1200 万美元。这副&quot;江湖郎中的药&quot;号称能让客户把钱赚回来：</p>
+<p>客户买一个美元 5.60 敲出 put（即法郎 call），价格相对便宜，但它在 4.85（离现货不远）敲出，还有整整一年。成本很小，约头寸面值的 0.8%，即 80 万美元（含银行利润）。到期时若没被敲出，交易员就赚回 1200 万，因为他能在 5.60 重新做空美元、了结整件事，然后若愿意可以重新做一回美元多头。绝妙的交易，卖得像选举日的《世界报》一样好。</p>
+<p>用 BSM 型估值（单一恒定波动率），这笔交易在 11.5% 波动率、6% 美国利率、7% 法国利率下值 0.63%。</p>
+<p><img src="images/a13dacf4f7ba9d22d9624bfee3cd3bac99f3112056092e2d3337589637791890.jpg" alt="图 20.6 救赎交易，权利金以百万美元计"></p>
+<p>图 20.6 是这个 5.60 美元 put、4.85 敲出、一年期、11.5% 波动率结构的价值，按 1 亿美元交易的总权利金计。</p>
+<p><img src="images/19d210a198a92f8cd5206f8d3e49fa74cb4a73aa81aa3dfec6ceb95d47ab83fb.jpg" alt="图 20.7 没有救赎交易的初始头寸"></p>
+<p><img src="images/d0f9aa3459cc39ec2d8996f059507f785da190150dc97f9c00e6da939e20e783.jpg" alt="图 20.8 加上救赎交易后的头寸"></p>
+<p>图 20.7 是不含救赎交易的初始头寸，图 20.8 是加上之后的头寸。沧海一粟而已。今天这笔交易帮不上这位倒霉的法国人什么忙，但明天也许有点希望：看图 20.8 到期附近的形态，整个组合（扣掉救赎交易的权利金）在 4.85 到 5.60 之间出现一个盈亏平衡区。</p>
+<div class="callout callout-warning"><div class="callout-title"><span class="callout-icon">⚠</span><span class="callout-title-text">交易规则</span></div><div class="callout-body"><p>一些机构利用投资者缺乏概率论知识、截断利润分布来愚弄轻信的投资者。投资者在压力下尤其倾向于相信圣诞老人。</p>
+</div></div>
+<div class="callout callout-note"><div class="callout-title"><span class="callout-icon">✎</span><span class="callout-title-text">Option Wizard：糟糕的销售如何愚弄客户</span></div><div class="callout-body"><p>有个老把戏：利用客户的统计错觉。用分布的混淆去骗人最容易。比如 Covered Write（持股并卖出 call），让券商扼杀客户的上行、产生稳定佣金流。客户在 call 上亏钱，券商说你在股票上赚了；客户在股票上亏钱，券商说幸亏 call 的收入帮你减亏。等客户懂了点统计，游戏就升级到花哨的奇异期权 payoff，分布的混淆从此转移到&quot;路径依赖&quot;这个概念上。能活下来的华尔街公司，是那些迎合客户需求的。</p>
+</div></div>
+<p><img src="images/a59ef594ab3879f33ded95ec81771bb8019541d509be3785f67612a0d2733b74.jpg" alt="图 20.9 但还是有点希望"></p>
+<p>图 20.9 并不能改善客户的处境，但券商现在无论成败都有故事可讲。进一步分析揭穿了这副药为什么便宜：<strong>正因为它的首次穿越时间极短</strong>。整笔交易完全被障碍主导，5.60 put 还能保持&quot;期权身份&quot;的概率极低。随着时间推移，期权价值会上升，若市场（出于某种原因）变得静止，这结构看起来才像真正的保护，而这种事件在未来一年存活的概率无穷小。</p>
+<h3 id="理论映射-被到期-profile-欺骗">理论映射：被到期 profile 欺骗</h3>
+<p>这一节是全章最值得我们用理论语言点透的地方。销售给客户看图 20.9、20.10，却不告诉他：这张图代表的不是普通期权那样的<strong>到期损益</strong>，而是&quot;USD-FRF 全程从不跌破 4.850001 时&quot;的损益。路径独立的到期损益与路径依赖的损益之间，有着天壤之别。</p>
+<p><img src="images/4b2bea509e04a71d2e9b6800ad56f249917519ff9e2c44c725d34955638e023c.jpg" alt="图 20.10 直到到期的损益形态"></p>
+<div class="callout callout-note"><div class="callout-title"><span class="callout-icon">✎</span><span class="callout-title-text">Option Wizard：被到期 profile 欺骗</span></div><div class="callout-body"><p>到期 profile 是把客户诱入&quot;对卖方有利&quot;的交易的好工具。人们的统计直觉本就薄弱，连普通风险图都看不准。看路径依赖的&quot;到期&quot;profile 时，客户意识不到他需要在心里对 payoff 概率做修正，当报告被做成一张静态 payoff 图、底部只附一行小字时，这种修正尤其难。</p>
+</div></div>
+<p>用我们的语言说：客户看到的那张盈亏平衡图，其值是</p>
+<div class="math-display"><span class="katex-display"><span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.0361em;vertical-align:-0.2861em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.2222em;">V</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-left:-0.2222em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord text mtight"><span class="mord mtight">profile</span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em;"><span></span></span></span></span></span></span><span class="mopen">(</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0576em;">S</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3283em;"><span style="top:-2.55em;margin-left:-0.0576em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.1389em;">T</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1.2em;vertical-align:-0.35em;"></span><span class="mord text"><span class="mord">Payoff</span></span><span class="mopen">(</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0576em;">S</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3283em;"><span style="top:-2.55em;margin-left:-0.0576em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.1389em;">T</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mclose">)</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="delimsizing mult"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.85em;"><span style="top:-2.85em;"><span class="pstrut" style="height:3.2em;"></span><span style="width:0.333em;height:1.2em;"><svg xmlns="http://www.w3.org/2000/svg" width="0.333em" height="1.2em" viewBox="0 0 333 1200"><path d="M145 15 v585 v0 v585 c2.667,10,9.667,15,21,15
+c10,0,16.667,-5,20,-15 v-585 v0 v-585 c-2.667,-10,-9.667,-15,-21,-15
+c-10,0,-16.667,5,-20,15z M188 15 H145 v585 v0 v585 h43z"/></svg></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.35em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mopen">{</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.1132em;">τ</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3283em;"><span style="top:-2.55em;margin-left:-0.1132em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.0813em;">H</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">&gt;</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.1389em;">T</span><span class="mclose">}</span></span></span></span></span></div>
+<p>即<strong>条件于障碍从未被触及</strong>的终值损益。但反向障碍的首次穿越时间 <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.5806em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.1132em;">τ</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3283em;"><span style="top:-2.55em;margin-left:-0.1132em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.0813em;">H</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span> 极短，<span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.1389em;">P</span><span class="mopen">(</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.1132em;">τ</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3283em;"><span style="top:-2.55em;margin-left:-0.1132em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.0813em;">H</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">&gt;</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.1389em;">T</span><span class="mclose">)</span></span></span></span> 接近零。无条件的期望损益</p>
+<div class="math-display"><span class="katex-display"><span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathbb">E</span><span class="mopen">[</span><span class="mord mathnormal" style="margin-right:0.2222em;">V</span><span class="mclose">]</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1.2052em;vertical-align:-0.3552em;"></span><span class="mord mathbb">E</span><span class="mord"><span class="delimsizing size1">[</span></span><span class="mord text"><span class="mord">Payoff</span></span><span class="mopen">(</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0576em;">S</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3283em;"><span style="top:-2.55em;margin-left:-0.0576em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.1389em;">T</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mclose">)</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mord mathbf">1</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3448em;"><span style="top:-2.5198em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mopen mtight">{</span><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.1132em;">τ</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3448em;"><span style="top:-2.3567em;margin-left:-0.1132em;margin-right:0.0714em;"><span class="pstrut" style="height:2.5em;"></span><span class="sizing reset-size3 size1 mtight"><span class="mord mathnormal mtight" style="margin-right:0.0813em;">H</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.1433em;"><span></span></span></span></span></span></span><span class="mrel mtight">&gt;</span><span class="mord mathnormal mtight" style="margin-right:0.1389em;">T</span><span class="mclose mtight">}</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.3552em;"><span></span></span></span></span></span></span><span class="mord"><span class="delimsizing size1">]</span></span></span></span></span></span></div>
+<p>里那个示性函数 <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.9996em;vertical-align:-0.3552em;"></span><span class="mord"><span class="mord mathbf">1</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3448em;"><span style="top:-2.5198em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mopen mtight">{</span><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.1132em;">τ</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3448em;"><span style="top:-2.3567em;margin-left:-0.1132em;margin-right:0.0714em;"><span class="pstrut" style="height:2.5em;"></span><span class="sizing reset-size3 size1 mtight"><span class="mord mathnormal mtight" style="margin-right:0.0813em;">H</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.1433em;"><span></span></span></span></span></span></span><span class="mrel mtight">&gt;</span><span class="mord mathnormal mtight" style="margin-right:0.1389em;">T</span><span class="mclose mtight">}</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.3552em;"><span></span></span></span></span></span></span></span></span></span> 几乎总是零。客户被展示的是分子里那个零测度事件上的图景，却被默认当成整个分布。这就是&quot;截断分布（truncating the distribution）&quot;的精确含义：把赚钱的希望切掉，换来&quot;可以永远重试这笔交易、直到某一年没碰到障碍为止&quot;的幻觉。统计学家大概会估算出那一天在几百年之后。</p>
+<p><img src="images/3b711dfa3eba75a8bfbfb4ef07e0847f1b97d36f8be142d819e09e94ebd71af7.jpg" alt="图 20.11 静态（现货不动）下的损益视图"></p>
+<p>图 20.11 显示：只要 USD-FRF 完全冻结，这笔交易确实有正的时间衰减。问题在于&quot;完全冻结&quot;本身概率为零。</p>
+<h3 id="把交易做成零成本-客户亲手截断了自己的分布">把交易做成零成本：客户亲手截断了自己的分布</h3>
+<p>客户过段时间可能回来抱怨这交易未必总管用，他们花 80 万（银行实际可能借 BSM 之名收到 100 万，把每一分高于 BSM 的钱都当利润）只是买了个蝶式。于是销售给出新花样：在&quot;伟大救赎&quot;之上再叠一个 covered write，让客户零成本（甚至小幅净收入）地把这交易一直做下去，直到遥远未来某天打平。</p>
+<p>直接让客户卖 5.60 美元 call 收权利金有两个问题：客户可能自己拆解、自行交易而绕过银行利润；而且一旦 KO 端被敲出、裸露的 call 腿会阻碍结构续作。解法是把卖出的 call 也设成在 4.85 敲出。条款变成：</p>
+<blockquote>
+<p>期限一年。客户买 5.60 美元 put KO 4.85，卖 5.60 美元 call KO 4.85，零权利金。若期末美元仍在 4.75 之上，客户拿回 1200 万亏损。</p>
+</blockquote>
+<p>但若结构被敲出（美元跌破 4.85），交易员的全局头寸会亏得更多，这点衍生品行不会提。客户实际上被引导着<strong>截断了自己的分布</strong>：用&quot;永远重试这笔交易、直到熬过整一年不碰障碍&quot;的渺茫希望，换掉了任何真正赚回钱的可能。</p>
+<p><img src="images/2420a833df0cc3e1a2719e7771a19165b4bf069880098952393d4e67c4b463a2.jpg" alt="图 20.12 客户截断了自己的分布"></p>
+<p>图 20.12 是整个组合的到期形态。它与图 20.9 的主要区别是：在 4.85 障碍之上，图 20.12 显示完美的盈亏平衡线。这条平线正是被截断分布的视觉签名。</p>
+<hr>
+<h2 id="三-对冲反向敲出-一个图解案例">三、对冲反向敲出：一个图解案例</h2>
+<p>反向敲出根本上难对冲。下面从卖方视角逐步对冲，并逐个检视希腊字母是否还可信。</p>
+<p>交易员卖出 1 亿美元、一年期、5.60 美元 put（法郎 call），收 80 万，带 4.85 敲出，离市场仅 3%。</p>
+<h3 id="delta-从正翻负">Delta：从正翻负</h3>
+<p>操作者 short call，但没经验的交易员会惊讶地看到 delta 从正翻到负。原因是：靠近障碍时期权结构衰弱、被赌注主导，市场逼近障碍时交易变便宜；而在另一端（高位），交易又因为像一个上涨中的 long put 而变便宜。两极之间，交易令人困惑。</p>
+<p>delta 以面值百分比表示（按美元而非货币计）。</p>
+<p><img src="images/84fbea1f0c7cdf22ae323f082fd840082558d23fe2972816779b80b0e911e5e3.jpg" alt="图 20.13 距到期一年的 delta"></p>
+<p>图 20.13 显示结构 delta 的变化，能看到在 4.75 障碍价处从悬崖跌落。</p>
+<p><img src="images/8685c04c4e48ab42bfb19635d74b05521aa4bb6c209d5176e94495c66f8663a3.jpg" alt="图 20.14 到期日的 delta（以头寸倍数计）"></p>
+<p>随着时间逼近，delta 会跳动起来。看还剩一天时（图 20.14）：到期前一天 delta 达到 2000 的量级，对 1 亿美元头寸意味着惊人的实际 delta。对美元基准的人，头寸面值其实更大：它相当于在 5.6 处 short 等值 1 亿法郎即 5.6 亿法郎，按两国悖论是恒定的法郎，但在 4.85 处会变成 <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.7278em;vertical-align:-0.0833em;"></span><span class="mord">100</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">5.60/4.85</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">1.154</span></span></span></span> 亿美元。于是 2000 个 delta 就是 <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.7278em;vertical-align:-0.0833em;"></span><span class="mord">20</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">115.4</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">2310</span></span></span></span> 亿美元。同时期权的内在价值会值 1550 万美元，相对一年前卖出价 60 万到 80 万，是惊人的时间衰减。</p>
+<p>这里 delta 突破常规量级、内在价值暴涨，本质是反向障碍在临近到期、临近障碍时退化为美式二元的体现：数字期权在障碍邻域的 delta 趋于 Dirac，价值集中爆发。</p>
+<p><img src="images/cb8020b3a9c325ef2ef03838f3d521f49834b199e36389d24a0d5a0aa6ff95b6.jpg" alt="图 20.15 障碍处价值随时间的变化"></p>
+<p>图 20.15 显示时间流逝带来期权价值的加速变化。在交易里，加速意味着不稳定。这种不稳定在障碍处加剧，前提是结构在到期前没被敲出。所以这个最凶恶的情景，恰恰也是最不可能的：市场整整一年待在障碍附近却不触碰，机会极小。</p>
+<p><img src="images/b2655e2a441386c3ecd0dac2850982192688684fd9cc6331f892150e6eea6e6f.jpg" alt="图 20.16 在汇率 4.76 与 5.55 处贯穿生命周期的价值"></p>
+<p>图 20.16 给出两个情景：靠近障碍的 4.76 与远离障碍的 5.55。在 4.76，交易对卖方呈折磨人的负时间衰减；在 5.55，交易正向衰减。交易员执行 delta：他卖了 KO put，因此 long 美元（short 法郎），于是按美元价值的 19% 卖美元买法郎（5.00 处美元价值 <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.7278em;vertical-align:-0.0833em;"></span><span class="mord">100</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">5.60/5.00</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">112</span></span></span></span> 百万，19% 即 2120 万）。</p>
+<h3 id="显微镜与望远镜-局部与全局的背离">显微镜与望远镜：局部与全局的背离</h3>
+<p>图 20.17 到 20.23 在动态对冲下检视各种风险。前几张假设 delta 中性，后几张在 delta 中性外再加 vega 中性。由于希腊字母的局部行为与全局行为不同，图既用&quot;显微镜&quot;（小幅参数变化的局部敏感性）也用&quot;望远镜&quot;（大幅变化）来看。</p>
+<p><img src="images/13c7c69e83374f623e737619770597e08a5db1ec444088fafc798ae62b4c3f51.jpg" alt="图 20.17 显微镜下的对冲损益"></p>
+<p><img src="images/24228c68a7f2d89c862e4ebd0bc8f3363fb8920ca30a0c8de67811e81d511a17.jpg" alt="图 20.18 较大增量下的对冲损益"></p>
+<p>图 20.17 在 USD-FRF 5.00 邻域的显微镜下，损益呈简单 long gamma 的 &quot;V&quot; 形。图 20.18 放大尺度后，障碍处出现一个跳变，揭示出在障碍处必须清掉 delta 对冲——这正是管理障碍期权的难点之一。</p>
+<h3 id="gamma-与-vega-不可信赖的度量">Gamma 与 Vega：不可信赖的度量</h3>
+<p><img src="images/2104289c957468ede7115c411d731fb270869fb6ad057b0a89630eaebd87f7c1.jpg" alt="图 20.19 头寸的 gamma（空头侧为负）"></p>
+<p><img src="images/f8aff12347663a08d3cc1bcce93ec66209aa2762c882b46b19b9e3ee46768a8c.jpg" alt="图 20.20 到期前五周的 gamma"></p>
+<p>图 20.19 显示令人不安的 gamma，它集中在 5.30 USD-FRF 邻域。图 20.20 显示到期前五周，gamma 峰值移到靠近障碍处，并在 5.35 邻域变负。图 20.19 与 20.20 的差异，正是交易员害怕反向敲出的原因：它的任何特征都靠不住，维持不了多久。</p>
+<p>在看 vega 对冲前，先看度量的稳定性。</p>
+<p><img src="images/9b9ffbce26de99770ce15283e80eb89370d0df7e1a9e92ececf6bc23a63c83d0.jpg" alt="图 20.21 距到期一年的 vega 敏感性"></p>
+<p><img src="images/6ef587427b2451e1e4bd124ed841a19241c5c54570df91d79e7f3f7a460aa2e2.jpg" alt="图 20.22 距到期一个月的 vega 敏感性"></p>
+<p>图 20.21、20.22 是当前现货下、分别还剩一年与一个月的 vega 敏感性。可以注意到，障碍邻域的 vega 及 vega 凸性都随到期时间增加而增大。vega 符号为负：持有者 short vega，卖出期权的交易员要卖 vega 来对冲一个 long volatility 头寸。</p>
+<p>看即时移动的 gamma 表，交易员注意到 gamma 在 5.30 附近见顶，vega 也在那里见顶（单一期权的 gamma 与 vega 在同一水平见顶）。于是他卖一个在该水平见顶的期权：选一个执行价约 5.30、三个月的期权，得到 vega 中性头寸。</p>
+<p><img src="images/ce63e9152fb52112367f1b3d5f4053543fb22ca595cd7bbcb1a4cdaf4b61c740.jpg" alt="图 20.23 vega 中性的损益"></p>
+<p>图 20.23 是 vega 组合的图，显示 vega 中性对下一步移动极其短暂。交易员处在一个不愉快的境地：波动率下降时头寸 vega 增加，上涨时 vega 减少，这意味着 vega 中性必输。</p>
+<p><img src="images/7aa38d04156f53ec86adcfdd104f8262b52d327f296c7721cd9caca5bd82e196.jpg" alt="图 20.24 结构的 vega"></p>
+<p><img src="images/cd4cc2dc286b6b155317b898f451656501aaee3c862177c3681ef2dc95139271.jpg" alt="图 20.25 一个危险的 vega 对冲"></p>
+<p>图 20.24 是结构未对冲时跨现货、跨波动率的 vega。把它与图 20.23 对比，未对冲反而更有利——也许压根不该卖那三个月期权做对冲。图 20.25 显示对冲后的敞口随汇率移动的变化，说明不只波动率变化会扰动 vega，现货移动同样会。</p>
+<p>案例的结论很 Taleb：也许这笔交易压根就该不做 vega 对冲。</p>
+<blockquote>
+<p>作为交易员，作者宁愿要一笔大致未对冲的危险交易，也不要一笔精确地对冲错了的交易。</p>
+</blockquote>
+<p>这句话点出反向障碍对冲的核心困境：希腊字母在障碍附近极不稳定，gamma、vega 会变号、会随时间漂移峰值位置，用一个静态期权去匹配某一时刻的 vega，下一刻就脱钩，还引入新的不稳定。<strong>度量本身不可信时，精确对冲反而把一个已知的脏风险换成一个未知的脏风险。</strong></p>
+<hr>
+<h2 id="四-双障碍期权">四、双障碍期权</h2>
+<p>双障碍期权在两个障碍中任一个被触及时到期。单资产（一维）期权只能有两个障碍，一个高于市场、一个低于市场；多维期权的障碍数最多是维数的两倍。</p>
+<p><img src="images/b898b8a964997fd9cbb59c2e5d9aa90a53abe1a349f48273d91074565fc43d4f.jpg" alt="图 20.26 反向障碍与双障碍的价值对比"></p>
+<p>图 20.26 对比双障碍与单障碍：都是一年期、执行价 100 的 call，单障碍上敲出价 110，双障碍上敲出 110、下敲出 90。</p>
+<p>关于双障碍的基本规则：</p>
+<ul>
+<li>通常首次穿越时间极短，底层期权的特征几乎无关紧要。好的情况下，结构看起来像反向敲出；坏的情况下，它仿佛随时想立刻到期。</li>
+<li>因此研究它们的最佳方式是检视美式双向赌注（American double bets）。</li>
+</ul>
+<p>这条规则的理论含义是：双障碍把存活区间夹在两条边界之间，<span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.5806em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.1132em;">τ</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3283em;"><span style="top:-2.55em;margin-left:-0.1132em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.0813em;">H</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mop">in<span style="margin-right:0.0778em;">f</span></span><span class="mopen">{</span><span class="mord mathnormal">s</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">:</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0576em;">S</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1514em;"><span style="top:-2.55em;margin-left:-0.0576em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">s</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel"><span class="mord"><span class="mrel">∈</span></span><span class="mord vbox"><span class="thinbox"><span class="llap"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="inner"><span class="mord"><span class="mord">/</span><span class="mspace" style="margin-right:0.0556em;"></span></span></span><span class="fix"></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord mathnormal">L</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.109em;">U</span><span class="mclose">)}</span></span></span></span> 的期望值被两侧障碍同时压缩，比单障碍更短。当首次穿越时间趋于零，底层香草的 gamma、vega 全被冲掉，剩下的纯粹是&quot;在区间内存活多久&quot;这个赌注，所以用美式双向数字期权去近似最贴切。</p>
+<h3 id="返利-rebate">返利（Rebate）</h3>
+<p>返利是一个简单的美式二元期权，在障碍终止时支付一笔确定金额。带返利的敲出期权 = 直接敲出 + 同 strike 的美式赌注。</p>
+<p>设一个执行价 100、敲出触发 109 的反向敲出 call 在终止时支付 9。结构是简单可加的：</p>
+<div class="math-display"><span class="katex-display"><span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord text"><span class="mord">KO call</span></span><span class="mopen">(</span><span class="mord">100</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord">109</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord text"><span class="mord">Bet</span></span><span class="mopen">(</span><span class="mord">9</span><span class="mord text"><span class="mord"> at </span></span><span class="mord">109</span><span class="mclose">)</span></span></span></span></span></div>
+<p>即一个 100 call / 109 敲出，加一个面值 9 的赌注——只要 109 在存续期内任一刻被触及，赌注就支付 9。返利把&quot;障碍处不连续&quot;显式地货币化成一个数字期权 payoff，这与第 19 章&quot;障碍滑点补偿 = 美式二元价值&quot;的逻辑一脉相承。</p>
+<h3 id="练习-加入敲入">练习：加入敲入</h3>
+<p>读者可作为练习，用常规敲出与常规敲入对比的方法，对敲入期权重做上述研究。由互补恒等式，敲入的分析可由香草减去敲出平移得到。</p>
+<hr>
+<h2 id="五-各类障碍变体">五、各类障碍变体</h2>
+<h3 id="替代障碍期权-alternative-outbarrier-options">替代障碍期权（Alternative / Outbarrier Options）</h3>
+<p>替代障碍期权也叫 outbarrier，同时属于路径依赖族和相关性族：期权写在一个资产上，障碍却挂在<strong>另一个</strong>资产上。典型例子是 SCUD（second currency underlying），写在某资产上、障碍挂在汇率上的期权，比如带美元-马克障碍的德国马克 cap，或带低位美元-日元敲出的日经指数 put。</p>
+<p>SCUD 的逻辑是：当资产以某种方式移动、单靠汇率就已产生利润时，客户不再需要期权保护。例如一只美元基金做多日本股票，美元走低、日元走强本身就足以产生利润；他买一个针对日本市场不利移动的保护，并设定它在货币升值时终止，一旦终止就整体平仓获利。再如美国投资者借短期马克并滚动续借，他买一个利率 cap 但设定马克贬值时敲出——被敲出时，他可以低价买回马克满足债务并获利。</p>
+<p>关键交易要点：</p>
+<ul>
+<li>资产间的<strong>相关性</strong>让替代障碍像常规障碍；<strong>独立</strong>则让障碍退化成对另一个期权的赌注。</li>
+<li>结构最终有两个相关的 delta：一个对资产 A 为正，另一个在障碍的对侧、对挂障碍的资产 B（见第 22 章多资产期权）。</li>
+</ul>
+<p>理论上，outbarrier 是路径依赖与相关性的交叉：定价需要二维扩散下对&quot;A 的 payoff 条件于 B 不触障&quot;的期望，相关系数 <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal">ρ</span></span></span></span> 把两个维度耦合起来。<span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal">ρ</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">→</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">1</span></span></span></span> 时 B 的路径几乎由 A 决定，结构回到单资产障碍；<span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal">ρ</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">→</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">0</span></span></span></span> 时 B 的触障与 A 独立，障碍部分变成纯粹乘在期权上的存活概率。</p>
+<h3 id="爆炸期权-exploding-option">爆炸期权（Exploding Option）</h3>
+<p>爆炸期权在起始到到期之间某个价格被触及时支付一笔确定金额，此时称它&quot;爆炸&quot;。设标的在 100，一个&quot;在 107 爆炸&quot;的 102 call 在 107 被触及时支付 5 点。它替代了 call spread 或 put spread：持有者可以不必承担交易成本就锁定利润。缺点是若持有者在到期前改变主意，平仓的价差成本会高于普通期权。</p>
+<blockquote>
+<p>爆炸期权等价于一个带返利的反向敲出，返利等于期权终止时的爆炸 payoff。</p>
+</blockquote>
+<p><img src="images/82915126d1697f99bdb1562ec52ce5e90576ef8a8d8ccff64d481d71a3c501ad.jpg" alt="图 20.27 在终止时付 2 的 100 call 与普通 100 call（90 天到期）"></p>
+<p><img src="images/afd88530be121b80181aa35e02249e12bf51365671fdceab90dc59c022276eaf.jpg" alt="图 20.28 在终止时付 10 的 100 call 与普通 100 call（90 天到期）"></p>
+<p>图 20.27、20.28 比较普通 call（执行 100）与爆炸期权（执行 100、105 终止）：图 20.27 终止 payoff 为 2，图 20.28 为 10。payoff 越大，结构越像纯赌注。</p>
+<h3 id="上限指数期权-capped-index-option-caps">上限指数期权（Capped Index Option, CAPs）</h3>
+<p>CAPs 最好被描述为一个反向敲出，终止时支付等于&quot;执行价与敲出价之差&quot;的返利，看起来像一个 payoff 等于两个执行价之差的 call/put spread。一个关键复杂性是：与多数&quot;触及即触发&quot;的敲出不同，CAPs（在某些情形）需要**结算价（settlement price）**达到或穿过第二个执行价才终止。</p>
+<p>CAPs 与爆炸期权的区别就在这里：CAPs 只在资产的官方收盘价终止，爆炸期权则通常随时可被敲出（即&quot;爆炸&quot;）。如第 18 章所述，按结算（at-settlement）的期权像美式二元那样行为（单调 long 或 short vega），只有临近到期日才变回欧式、呈现混合 gamma 特征。</p>
+<p><img src="images/eea5ef36107a2a9de42e2edf23143119a823c2cabdbf94500ffc8d40c36ae1ba.jpg" alt="图 20.29 CAPs 100-105 与 105 call（90 天到期）的对比"></p>
+<p>图 20.29 比较 CAPs 100-105（即 100/105 上限 call spread）与执行 100 的普通 call，市场在 100。CAP 初始买价 2.72，普通 call 为 3.11，波动率 15.7% 年化。</p>
+<p>CAPs 难交易，因为它只在标的<strong>穿过结算价</strong>时终止，不管交易日内发生什么。这个特性对不做对冲的用户似乎无足轻重，对对冲者却带来重大风险或重大机会。在传统障碍里，交易员清楚何时清掉对冲；做市商 short CAP 并持有对冲标的时，会在 CAP 价格附近挂单。普通障碍下他在接近敲出价处清掉对冲；CAPs 下他不知道确切价格——这种不确定反而能带来机会。</p>
+<p>以 100/105 CAPs 为例：交易员 short 1 亿、long 4800 万标的。在 105 敲出价，做市商的 delta 从 48% 瞬间变零。但若这发生在交易日内，他不知道是否要靠卖回 4800 万全额回补。他可以先卖一部分，观察市场是否走高——若信心增强相信结构会终止，就在更高价卖出余量；若市场掉头向下穿越障碍，他能以盈利买回对冲，并期待重复操作。所以在这例子里，交易员手里握着一个无价的期权。</p>
+<p>CAPs 的&quot;结算价触发&quot;把一个连续监测的障碍变成了离散监测，理论上这降低了触障概率（连续上确界 <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.7719em;vertical-align:-0.136em;"></span><span class="mrel">≥</span></span></span></span> 收盘值），也把做市商在盘中的不确定性变成了一个真实的择时期权——这正是污染原理的又一处体现：规则的细节凭空生出 optionality。</p>
+<hr>
+<h2 id="六-触发的合法性与价格操纵">六、触发的合法性与价格操纵</h2>
+<p>障碍是否被合法触发，操作者之间常有分歧。持有被对手方判定为已终止的敲出期权的交易员，希望看到清晰证据表明市场确实在那里成交、没有操纵。</p>
+<div class="callout callout-note"><div class="callout-title"><span class="callout-icon">✎</span><span class="callout-title-text">Option Wizard：触发的合法性</span></div><div class="callout-body"><p>在流动性差的 OTC 市场里操纵是可能的（有人说是大概率的）。上市交易所有防止两个交易员以虚构价格成交的程序：成交价不能低于现有买价或高于现有卖价。OTC 没有集中场所，无此保护。这迫使银行与交易商订立繁复合约，规定障碍触发须有&quot;多于一个独立场所&quot;（多于一个经纪商）的成交证明。</p>
+</div></div>
+<p>一些机构对这种条款不满，认为&quot;触及即触发（market if touched）&quot;更可取：战斗正酣时，若操作者要等着收集成交次数和价位的信息，根本无法判断期权是否被敲出。操作者需要确定性，立即知道自己是否被敲出至关重要，等待证明可能代价高昂，因为信息滞后造成滑点。</p>
+<p>最佳解法是：要求 short 敲出（或 long 敲入）的银行向一组双方都认可的第三方留置止损单。这样 long the barrier 的一方（即需要逆市场移动方向挂止损单、而非挂限价单的一方）可以用一张成交确认单来证明障碍被触发。</p>
+<div class="callout callout-note"><div class="callout-title"><span class="callout-icon">✎</span><span class="callout-title-text">Option Wizard：障碍与价格操纵</span></div><div class="callout-body"><p>委内瑞拉 par bond 是著名案例：一家持有敲入 put 的公司据称大举买入债券以满足触发条件，而 short put 的一方留下巨量卖单阻止价格穿越。一次闪烁的屏幕更新让一方认为敲入、对手方却不这么认为。异常的成交量和少数玩家的集中度惊动了 SEC。</p>
+</div></div>
+<p>教训是：在流动性差的市场，障碍期权的卖方（即从触发中受益、因而留置止损单的一方）能用足够小、值得操纵的量轻易操纵市场。障碍处的 payoff 大到让尝试触发的风险相比之下微不足道。</p>
+<blockquote>
+<p>按污染原理，这无异于一个免费期权。</p>
+</blockquote>
+<p>类似情形也出现在现金结算期权上：到期前几分钟的少量买入能带来巨额利润，且没有平仓滑点的惩罚。</p>
+<div class="callout callout-important"><div class="callout-title"><span class="callout-icon">★</span><span class="callout-title-text">教训</span></div><div class="callout-body"><p>在流动性差的市场，永远不要卷入敲出期权，除非能就流动性洞的风险获得适当补偿。</p>
+</div></div>
+<p>这个案例说明：结构的持有者若做动态对冲反而处于劣势。把它翻译成理论：障碍处的 payoff 不连续创造了一个内生的操纵激励，触发障碍的边际成本（买卖少量标的的滑点）远小于触发带来的边际收益（大额数字 payoff），这是一个被市场结构制造出来的、对 long-the-barrier 一方有利的&quot;免费期权&quot;。流动性洞在这里是这种激励的均衡结果，而非偶发意外。</p>
+<hr>
+<h2 id="七-读一张风险管理报告">七、读一张风险管理报告</h2>
+<p>本节用一张标准风险报告把前面的概念收束起来，包含：希腊字母如何向风险经理披露、常规风险系统如何（错误）处理它们、障碍处的 pin risk、以及通过 gap 报告区分&quot;埋雷市场&quot;与&quot;清空市场&quot;。</p>
+<p>Taleb 主张<strong>整体式（holistic）风险管理</strong>：把同一标的上所有头寸汇总到一张报告，因为如今几乎没有机构的头寸不含障碍。风险经理通过场景分析报告窥见头寸风险，主报告是现货敏感性，刻画资产价格变化带来的损益风险。有些机构生成&quot;影子（shadow）&quot;报告（显示第 8 章定义的影子 gamma），有些不幸只用直报告。直接期权头寸的报告好读，因为不需对交易员的潜在动作做假设；障碍期权则要求经理考虑触及执行价时的对冲执行风险。</p>
+<p>设定：Syldavia 货币（SYD）兑美元 1.00（报告按惯例显示 100）。交易员库存里只有一个头寸：short 1 亿美元等值、三个月、执行价 105.00、带 97.00 敲出的 SYD call（USD put）。</p>
+<p>报告字段含义：变量为现货（只变现货、不变其他参数，是&quot;直 gamma&quot;敏感性）；Pair 是关注的货币对；P/L cur 是计算损益的货币（须用 numeraire 货币，delta 用对手货币表示，对应两国悖论）；日期是损益演化的区间。</p>
+<h3 id="两张报告-止损-off-与-on">两张报告：止损 OFF 与 ON</h3>
+<p>Taleb 给了两张报告：图 20.30 不考虑障碍头寸的清算（Barrier 止损 OFF），图 20.31 考虑（Barrier 止损 ON）。为简单起见，头寸只含一个 delta 中性头寸，处在平漂移、平波动率期限结构的环境。</p>
+<p>下面是两张报告关键行的对比（数值取自原文，单位千）。注意障碍 97.00 处：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:right">Spot</th>
+<th style="text-align:right">P&amp;L</th>
+<th style="text-align:right">Delta（止损OFF）</th>
+<th style="text-align:right">Gamma（OFF）</th>
+<th style="text-align:right">Delta（止损ON）</th>
+<th style="text-align:right">Gamma（ON）</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right">100.00</td>
+<td style="text-align:right">—</td>
+<td style="text-align:right">(390)</td>
+<td style="text-align:right">(2,520)</td>
+<td style="text-align:right">(390)</td>
+<td style="text-align:right">(2,520)</td>
+</tr>
+<tr>
+<td style="text-align:right">98.00</td>
+<td style="text-align:right">(306)</td>
+<td style="text-align:right">2,940</td>
+<td style="text-align:right">(960)</td>
+<td style="text-align:right">2,940</td>
+<td style="text-align:right">(960)</td>
+</tr>
+<tr>
+<td style="text-align:right">97.25</td>
+<td style="text-align:right">(545)</td>
+<td style="text-align:right">3,360</td>
+<td style="text-align:right">(360)</td>
+<td style="text-align:right">3,360</td>
+<td style="text-align:right">(360)</td>
+</tr>
+<tr>
+<td style="text-align:right">97.00</td>
+<td style="text-align:right">(630)</td>
+<td style="text-align:right">35,000</td>
+<td style="text-align:right">Error!!!</td>
+<td style="text-align:right">0</td>
+<td style="text-align:right">Error!!</td>
+</tr>
+<tr>
+<td style="text-align:right">96.75</td>
+<td style="text-align:right">(1,505)</td>
+<td style="text-align:right">35,000</td>
+<td style="text-align:right">—</td>
+<td style="text-align:right">(630)</td>
+<td style="text-align:right">0</td>
+</tr>
+<tr>
+<td style="text-align:right">96.00</td>
+<td style="text-align:right">(4,129)</td>
+<td style="text-align:right">35,000</td>
+<td style="text-align:right">—</td>
+<td style="text-align:right">(630)</td>
+<td style="text-align:right">0</td>
+</tr>
+<tr>
+<td style="text-align:right">94.50</td>
+<td style="text-align:right">(9,379)</td>
+<td style="text-align:right">35,000</td>
+<td style="text-align:right">—</td>
+<td style="text-align:right">(630)</td>
+<td style="text-align:right">0</td>
+</tr>
+</tbody>
+</table>
+<p>两张报告在 97.00 之上完全相同。差别在障碍下方：止损 OFF 时，系统假设交易员没有在障碍处平掉对冲，于是残留 35,000 的 delta 一路裸露，损益随现货继续恶化（94.50 处亏 9,379）；止损 ON 时，系统假设交易员在 97.00 用止损单清掉了 35,000 SYD 的对冲，障碍下方 delta 归零、损益冻结在 (630)。</p>
+<h3 id="障碍处-gamma-发散成-dirac">障碍处 gamma 发散成 Dirac</h3>
+<p>这张表最值得我们用理论点透的是 97.00 那一行的 <code>Error!!!</code>。障碍处 delta 从 3,360 跳到 35,000（或归零），是一个有限跳变；gamma 作为 delta 对现货的导数，在不连续点上是一个 Dirac delta 函数（<span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6944em;"></span><span class="mord mathnormal" style="margin-right:0.0379em;">δ</span></span></span></span> 分布），数值上发散，所以系统报错。这正是第 19 章&quot;障碍处 delta 不连续&quot;在风险系统里的具体后果：</p>
+<div class="math-display"><span class="katex-display"><span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord">Γ</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:2.0574em;vertical-align:-0.686em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.3714em;"><span style="top:-2.314em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord" style="margin-right:0.0556em;">∂</span><span class="mord mathnormal" style="margin-right:0.0576em;">S</span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.677em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord" style="margin-right:0.0556em;">∂</span><span class="mord">Δ</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.686em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span><span class="mpunct">,</span><span class="mspace" style="margin-right:2em;"></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord">Δ</span><span class="mord text"><span class="mord"> </span><span class="mord cjk_fallback">在</span><span class="mord"> </span></span><span class="mord mathnormal" style="margin-right:0.0576em;">S</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.0813em;">H</span><span class="mord text"><span class="mord"> </span><span class="mord cjk_fallback">处跳变</span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">⇒</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord">Γ</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">∼</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord text"><span class="mord">Dirac </span></span><span class="mord mathnormal" style="margin-right:0.0379em;">δ</span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.0576em;">S</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.0813em;">H</span><span class="mclose">)</span></span></span></span></span></div>
+<p>常规期权的 gamma 是有界的连续函数，障碍期权在障碍处的 gamma 是一个测度而非函数，任何用有限差分算 gamma 的系统都会在那里崩掉。</p>
+<h3 id="报告字段的几个要点">报告字段的几个要点</h3>
+<ul>
+<li><strong>Audited ON</strong>：报告来自受控制方审计的数据库，只读，交易员（理论上）不能藏头寸。</li>
+<li><strong>Barrier: Analytic</strong>：障碍用简单闭式解定价，不用更复杂的工具。</li>
+<li><strong>American: Cox-Ross</strong>：美式期权用二项模型；Iterations 90 O/E 指树有 90 步，并在奇偶步间翻转作为精度优化技巧。</li>
+<li><strong>Barrier ON/OFF</strong>：核心所在。Report 2（ON）假设交易员有止损单在障碍处清掉对冲（此处 97.00 处 3500 万 SYD）。若止损触发，交易员有合约要求的成交证明、了结期权，风险经理因此关心止损后的剩余头寸。</li>
+</ul>
+<p>但事情没那么简单：若障碍止损没在理想价位执行呢？有第 4 章定义的滑点，更有严重的 gap 风险——市场跳空穿越障碍，在低于 97.00 处清算，每低一个点要花 350 万美元执行成本。外汇虽是 24 小时交易，但有周末跳空风险，还有政治公告（Syldavia 国王心血管出问题的消息打上屏幕）造成的突然跳空。</p>
+<p>许多风险经理建议把止损放在官方敲出触发<strong>之前</strong>（略高于下障碍、略低于上障碍）。Taleb 说这是坏主意：若障碍最终没被触及，这会制造一个负 gamma（交易员防守障碍时常说的&quot;反弹 bounce&quot;现象）。</p>
+<div class="callout callout-important"><div class="callout-title"><span class="callout-icon">★</span><span class="callout-title-text">风险管理规则</span></div><div class="callout-body"><p>报告上必须清楚区分&quot;合约上路径依赖&quot;的头寸（障碍）与&quot;因动态对冲而路径依赖&quot;的证券（香草期权）。</p>
+</div></div>
+<p>不把已触发的障碍从风险报告中剔除，银行会被风险噎住、无法交易。与常规 short gamma 不同，障碍是一次性命中，不是永久危险：若交易员按止损卖掉 350 万 SYD，成交确认就是敲出证明，之后无论市场涨跌，头寸都不复存在。最佳方案是用 Report 2（止损 ON）加一张展示潜在执行风险的 gap 报告。这也解释了动态对冲者为何总要费劲向老板解释损益波动——&quot;我以为你对冲了&quot;是不懂产品的管理者的回答，最好的解药就是 gap 风险报告。</p>
+<h3 id="报告列的简要解释">报告列的简要解释</h3>
+<ul>
+<li><strong>P&amp;L</strong>：从原点（Center 100）起的利润，假设无影子 gamma、无波动率变化。要算影子 gamma 的损益，需对移动条件下的波动率行为做假设：若交易员认为 102 处波动率会高一个点（极安全的假设），而他 short modified vega 每点 13.9 万，则 102 处损益为 <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8389em;vertical-align:-0.1944em;"></span><span class="mord">−</span><span class="mord">644</span><span class="mord"><span class="mpunct">,</span></span><span class="mord">000</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.8389em;vertical-align:-0.1944em;"></span><span class="mord">139</span><span class="mord"><span class="mpunct">,</span></span><span class="mord">000</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.8389em;vertical-align:-0.1944em;"></span><span class="mord">−</span><span class="mord">783</span><span class="mord"><span class="mpunct">,</span></span><span class="mord">000</span></span></span></span>。</li>
+<li><strong>Gamma</strong>：常规，只是在障碍处爆成 Dirac，报告显示错误号。</li>
+<li><strong>Modified vega</strong>（按惯例以 100 而非 1000 表示）：假设曲线移动按三个月等价加权。因为模型用解析模型而非 Dupire-Derman-Kani，对障碍的修正不会很精确，因为障碍对整条曲线起反应。</li>
+<li><strong>Rhod / Rhof</strong>：Rhod 是 numeraire 货币平行移动的敞口，Rhof 是对手货币的。两者都未加权（极糟的做法）。Rhod 高于 Rhof，因为它含权利金 carry 的敞口。</li>
+</ul>
+<hr>
+<h2 id="八-跳空与跳空报告-埋雷市场">八、跳空与跳空报告：埋雷市场</h2>
+<p>跳空报告量化 gap delta 的潜在执行风险，即结构终止时需要在止损上卸掉的那些 delta。这些是一次性滑点成本。</p>
+<p><img src="images/e62001dcb1f010379f399a4ca606103fdd1976e6961a8f686a0b4c97bc9d2d3c.jpg" alt="图 20.32 上述头寸的跳空报告"></p>
+<p>图 20.32 的跳空报告：第二列是 97.00 处需卖出的 delta 量。Syldavia 信用银行的系统估计工作日的 gap 风险为 63.4 万（第三列），对应 0.20 的跳空（订单平均在 96.80 成交的风险）；市场周末跳空时是三倍（第四列）。</p>
+<blockquote>
+<p>gap 风险的量级是期权数量的函数，与组合久期或停止时间无关。</p>
+</blockquote>
+<p>这条规则值得停一下：常规 short gamma 的风险随时间、随波动率持续累积，gap 风险却只取决于障碍处那一跳的 delta 量。它是结构性的、一次性的，不随久期缩放。</p>
+<p><img src="images/131bde29d33c0b8838892713760df58378df987ce571d54fa383d0bc8aba9717.jpg" alt="图 20.33 埋雷市场"></p>
+<p>市场有个倾向：在高波动率时段之后，会清扫掉某个价格区间里堆积的止损单，这往往对波动率有严重影响。由此引出&quot;埋雷市场（mined market）&quot;的概念。</p>
+<p><strong>埋雷市场</strong>是布满敲出、敲入 gap-delta 订单的市场，因而会在这些价位附近经历高度的&quot;抽打（whipping）&quot;和均值回复波动率。**清空市场（cleared market）**则没有这类订单。随着障碍期权的未平仓量累积，操作者的 gap 订单也累积。交易员监测近期高低点（比如一个月），当这个差距连续几周保持狭窄时，可以预期低点之下、高点之上会堆积 gap delta 订单。一旦市场进入&quot;埋雷&quot;区，一连串流动性洞被触发，市场随之清空。这个现象叫&quot;浮木效应（driftwood effect）&quot;——所有障碍期权订单被推到近期高低区间之外（图 20.33）。</p>
+<div class="callout callout-important"><div class="callout-title"><span class="callout-icon">★</span><span class="callout-title-text">风险管理规则</span></div><div class="callout-body"><p>当风险经理有足够信息判断 gap delta 所处的水平位于一个密集埋雷的市场区间时，需要上调 gap delta 的预期滑点成本。</p>
+</div></div>
+<p>理论上，埋雷市场是障碍订单的内生聚集造成的局部价格动力学畸变。大量止损单聚在相近价位，意味着价格一旦触及就会引发连锁的同向交易（止损卖单触发更多下跌、触发更多止损），这是一种正反馈，表现为局部的高波动与跳空。这与第 6 章的均值回复、第 15 章的分布警告呼应：障碍期权的真实风险不在 BSM 假设的连续、独立增量里，而在这些被订单结构扭曲的、有记忆的局部路径里。</p>
+<hr>
+<h2 id="九-本章综述-理论与实务的对照">九、本章综述：理论与实务的对照</h2>
+<table>
+<thead>
+<tr>
+<th>Taleb 的实务命题</th>
+<th>对应的理论命题</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>反向障碍在障碍附近像高赔付美式二元，不像期权</td>
+<td>payoff = 深度实值期权 ≈ 数字期权；时间价值少</td>
+</tr>
+<tr>
+<td>反向敲出 call 可有负 delta</td>
+<td>触障的实值损失概率压过内在价值增加，<span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord" style="margin-right:0.0556em;">∂</span><span class="mord mathnormal" style="margin-right:0.2222em;">V</span><span class="mord">/</span><span class="mord" style="margin-right:0.0556em;">∂</span><span class="mord mathnormal" style="margin-right:0.0576em;">S</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">&lt;</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">0</span></span></span></span></td>
+</tr>
+<tr>
+<td>反向敲出 theta 会变号、可负向衰减</td>
+<td><span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord">Θ</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">≈</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1.1901em;vertical-align:-0.345em;"></span><span class="mord">−</span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.8451em;"><span style="top:-2.655em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">2</span></span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.394em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">1</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.345em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0359em;">σ</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0576em;">S</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span><span class="mord">Γ</span></span></span></span>，gamma 变号 ⇒ theta 变号</td>
+</tr>
+<tr>
+<td>到期 profile 骗人：盈亏平衡区其实是条件事件</td>
+<td>路径条件损益 <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord text"><span class="mord">Payoff</span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord">∣</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mopen">{</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.1132em;">τ</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3283em;"><span style="top:-2.55em;margin-left:-0.1132em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.0813em;">H</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">&gt;</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.1389em;">T</span><span class="mclose">}</span></span></span></span>，而 <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.1389em;">P</span><span class="mopen">(</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.1132em;">τ</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3283em;"><span style="top:-2.55em;margin-left:-0.1132em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.0813em;">H</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">&gt;</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.1389em;">T</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">≈</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">0</span></span></span></span></td>
+</tr>
+<tr>
+<td>客户&quot;截断分布&quot;</td>
+<td>用零测度事件上的图景替代无条件期望</td>
+</tr>
+<tr>
+<td>反向敲出便宜，因首次穿越时间极短</td>
+<td>障碍主导 ⇒ <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.5806em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.1132em;">τ</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3283em;"><span style="top:-2.55em;margin-left:-0.1132em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.0813em;">H</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span> 极小 ⇒ 期权身份概率低</td>
+</tr>
+<tr>
+<td>反向障碍希腊字母不可信、精确对冲反受害</td>
+<td>gamma/vega 随时间变号、峰值漂移；静态对冲久期失配</td>
+</tr>
+<tr>
+<td>双障碍首次穿越更短，研究用美式双向赌注</td>
+<td><span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal" style="margin-right:0.1132em;">τ</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mop">in<span style="margin-right:0.0778em;">f</span></span><span class="mopen">{</span><span class="mord mathnormal" style="margin-right:0.0576em;">S</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel"><span class="mord"><span class="mrel">∈</span></span><span class="mord vbox"><span class="thinbox"><span class="llap"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="inner"><span class="mord"><span class="mord">/</span><span class="mspace" style="margin-right:0.0556em;"></span></span></span><span class="fix"></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord mathnormal">L</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.109em;">U</span><span class="mclose">)}</span></span></span></span> 被双侧压缩</td>
+</tr>
+<tr>
+<td>带返利敲出 = 敲出 + 美式赌注</td>
+<td>payoff 可加分解，数字期权显式化障碍跳变</td>
+</tr>
+<tr>
+<td>替代障碍（SCUD）：相关性决定它像障碍还是像赌注</td>
+<td>二维扩散下条件期望，<span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal">ρ</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">→</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">1</span></span></span></span> 退化单资产、<span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal">ρ</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">→</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">0</span></span></span></span> 解耦</td>
+</tr>
+<tr>
+<td>爆炸期权 = 带返利的反向敲出</td>
+<td>触障即付固定 payoff</td>
+</tr>
+<tr>
+<td>CAPs 按结算价触发，给做市商一个择时期权</td>
+<td>离散监测降低触障概率；规则细节生出 optionality</td>
+</tr>
+<tr>
+<td>障碍处 gamma 报错</td>
+<td>delta 不连续 ⇒ <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord">Γ</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">∼</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.0379em;">δ</span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.0576em;">S</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.0813em;">H</span><span class="mclose">)</span></span></span></span>，是测度非函数</td>
+</tr>
+<tr>
+<td>流动性差市场可操纵障碍 = 免费期权</td>
+<td>触发边际成本 &lt;&lt; 障碍 payoff；污染原理</td>
+</tr>
+<tr>
+<td>埋雷市场、浮木效应</td>
+<td>障碍订单聚集 ⇒ 局部正反馈、跳空与均值回复</td>
+</tr>
+</tbody>
+</table>
+<h3 id="核心观点">核心观点</h3>
+<p>第一，<strong>反向障碍是披着期权外衣的赌注</strong>。它在障碍附近的全部行为——负 delta、变号 theta、发散 gamma——都该从&quot;高赔付美式二元&quot;这个原型去理解，而非从香草期权。</p>
+<p>第二，<strong>路径依赖让到期损益图变成误导工具</strong>。客户看到的盈亏平衡区是一个条件于&quot;从未触障&quot;的零测度事件，而反向障碍的首次穿越时间极短，使这个条件几乎永不成立。理解这一点，就理解了 Taleb 对结构产品销售的全部批判。</p>
+<p>第三，<strong>度量不稳定时，精确对冲是把已知的脏风险换成未知的脏风险</strong>。反向障碍的 gamma、vega 会变号、会漂移峰值，用静态期权做 vega 中性下一刻就脱钩。Taleb 宁要大致未对冲的危险交易，也不要精确对冲错的交易。</p>
+<p>第四，<strong>障碍处的不连续在风险系统里表现为 Dirac 发散</strong>，在市场里表现为可操纵的免费期权和埋雷市场。gap 报告、止损 ON 的报告、影子 gamma，都是为了让这种一次性、结构性的风险可见。</p>
+<h3 id="面对一张反向-双障碍结构的操作清单">面对一张反向/双障碍结构的操作清单</h3>
+<ol>
+<li>它在障碍处是丢内在价值还是连续归零？是常规还是反向？（决定它更像期权还是更像数字赌注）</li>
+<li>它的首次穿越时间有多短？障碍是否完全主导了底层香草？</li>
+<li>delta 会不会变负、theta 会不会变号？我看到的 gamma/vega 峰值会随时间漂移到哪里？</li>
+<li>客户被展示的&quot;到期 profile&quot;是无条件损益，还是条件于不触障的损益？<span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.1389em;">P</span><span class="mopen">(</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.1132em;">τ</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3283em;"><span style="top:-2.55em;margin-left:-0.1132em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.0813em;">H</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">&gt;</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.1389em;">T</span><span class="mclose">)</span></span></span></span> 有多小？</li>
+<li>障碍处的 gap delta 有多大？滑点和周末跳空成本是多少？这是不是一次性风险？</li>
+<li>这个障碍是触及即触发还是按结算价触发？合约的触发证明条款是什么？</li>
+<li>市场是否埋雷？近期高低点是否长期狭窄、堆积了大量 gap 订单？</li>
+<li>在流动性差的市场，我是否就障碍处的流动性洞和被操纵风险拿到了足够补偿？</li>
+</ol>
+<h3 id="一句话收束">一句话收束</h3>
+<p>反向与双障碍最该记住的一句：<strong>它名义价值低、看起来便宜，是因为它几乎注定被障碍吞掉；你真正卖出或买入的是一个写在不连续边界上、由首次穿越时间和障碍处流动性决定生死的赌注，而非一张普通期权——所有让香草可对冲的希腊字母，在这里都会变号、发散或失效。</strong></p>
+
+<nav class="pager-row"><a class="pager prev" href="chapter-19-barrier-options-i.html"><span class="pager-dir">← 上一篇</span><span class="pager-name">障碍期权</span></a><a class="pager next" href="chapter-21-compound-choosers-and-higher-order-options.html"><span class="pager-dir">下一篇 →</span><span class="pager-name">复合期权、选择者期权与高阶期权</span></a></nav>
+</article>
+<nav class="toc" aria-label="本章目录"><div class="toc-title">本章目录</div><ul><li class="toc-l2"><a href="#导读-本章要解决的问题">导读：本章要解决的问题</a></li>
+<li class="toc-l2"><a href="#一-反向敲出期权-长得像期权-行为像赌注">一、反向敲出期权：长得像期权，行为像赌注</a></li>
+<li class="toc-l2"><a href="#二-案例研究-敲出盒子-the-knock-out-box">二、案例研究：敲出盒子（The Knock-Out Box）</a></li>
+<li class="toc-l3"><a href="#理论映射-被到期-profile-欺骗">理论映射：被到期 profile 欺骗</a></li>
+<li class="toc-l3"><a href="#把交易做成零成本-客户亲手截断了自己的分布">把交易做成零成本：客户亲手截断了自己的分布</a></li>
+<li class="toc-l2"><a href="#三-对冲反向敲出-一个图解案例">三、对冲反向敲出：一个图解案例</a></li>
+<li class="toc-l3"><a href="#delta-从正翻负">Delta：从正翻负</a></li>
+<li class="toc-l3"><a href="#显微镜与望远镜-局部与全局的背离">显微镜与望远镜：局部与全局的背离</a></li>
+<li class="toc-l3"><a href="#gamma-与-vega-不可信赖的度量">Gamma 与 Vega：不可信赖的度量</a></li>
+<li class="toc-l2"><a href="#四-双障碍期权">四、双障碍期权</a></li>
+<li class="toc-l3"><a href="#返利-rebate">返利（Rebate）</a></li>
+<li class="toc-l3"><a href="#练习-加入敲入">练习：加入敲入</a></li>
+<li class="toc-l2"><a href="#五-各类障碍变体">五、各类障碍变体</a></li>
+<li class="toc-l3"><a href="#替代障碍期权-alternative-outbarrier-options">替代障碍期权（Alternative / Outbarrier Options）</a></li>
+<li class="toc-l3"><a href="#爆炸期权-exploding-option">爆炸期权（Exploding Option）</a></li>
+<li class="toc-l3"><a href="#上限指数期权-capped-index-option-caps">上限指数期权（Capped Index Option, CAPs）</a></li>
+<li class="toc-l2"><a href="#六-触发的合法性与价格操纵">六、触发的合法性与价格操纵</a></li>
+<li class="toc-l2"><a href="#七-读一张风险管理报告">七、读一张风险管理报告</a></li>
+<li class="toc-l3"><a href="#两张报告-止损-off-与-on">两张报告：止损 OFF 与 ON</a></li>
+<li class="toc-l3"><a href="#障碍处-gamma-发散成-dirac">障碍处 gamma 发散成 Dirac</a></li>
+<li class="toc-l3"><a href="#报告字段的几个要点">报告字段的几个要点</a></li>
+<li class="toc-l3"><a href="#报告列的简要解释">报告列的简要解释</a></li>
+<li class="toc-l2"><a href="#八-跳空与跳空报告-埋雷市场">八、跳空与跳空报告：埋雷市场</a></li>
+<li class="toc-l2"><a href="#九-本章综述-理论与实务的对照">九、本章综述：理论与实务的对照</a></li>
+<li class="toc-l3"><a href="#核心观点">核心观点</a></li>
+<li class="toc-l3"><a href="#面对一张反向-双障碍结构的操作清单">面对一张反向/双障碍结构的操作清单</a></li>
+<li class="toc-l3"><a href="#一句话收束">一句话收束</a></li></ul></nav>
+</main>
+<script src="assets/app.js"></script>
+</body>
+</html>

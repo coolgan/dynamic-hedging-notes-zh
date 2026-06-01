@@ -1,0 +1,1040 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>第19章：障碍期权（上）（Barrier Options (I)） · Dynamic Hedging 精读笔记</title>
+<link rel="stylesheet" href="assets/katex.min.css">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<button id="menuToggle" class="menu-toggle" aria-label="目录">☰</button>
+<aside class="sidebar" id="sidebar">
+<a class="brand" href="index.html"><span class="brand-title">Dynamic Hedging 精读笔记</span><span class="brand-sub">Nassim Taleb · 动态对冲 · 中文精读笔记</span></a><div class="nav-search"><input type="search" id="navSearch" placeholder="筛选章节…" autocomplete="off"></div><div class="nav-section"><h3 class="nav-section-title">正文章节</h3><ul><li><a href="chapter-01-introduction-to-the-instruments.html"><span class="nav-tag">第一章</span><span class="nav-name">金融工具导论</span></a></li>
+<li><a href="chapter-02-the-generalized-option.html"><span class="nav-tag">第二章</span><span class="nav-name">广义期权</span></a></li>
+<li><a href="chapter-03-market-making-and-market-using.html"><span class="nav-tag">第三章</span><span class="nav-name">做市与用市</span></a></li>
+<li><a href="chapter-04-liquidity-and-liquidity-holes.html"><span class="nav-tag">第四章</span><span class="nav-name">流动性与流动性洞</span></a></li>
+<li><a href="chapter-05-arbitrage-and-the-arbitrageurs.html"><span class="nav-tag">第五章</span><span class="nav-name">套利与套利者</span></a></li>
+<li><a href="chapter-06-volatility-and-correlation.html"><span class="nav-tag">第六章</span><span class="nav-name">波动率与相关性</span></a></li>
+<li><a href="chapter-07-adapting-black-scholes-merton-the-delta.html"><span class="nav-tag">第七章</span><span class="nav-name">改造 Black-Scholes-Merton —— Delta</span></a></li>
+<li><a href="chapter-08-gamma-and-shadow-gamma.html"><span class="nav-tag">第八章</span><span class="nav-name">Gamma 与 Shadow Gamma</span></a></li>
+<li><a href="chapter-09-vega-and-the-volatility-surface.html"><span class="nav-tag">第九章</span><span class="nav-name">Vega 与波动率曲面</span></a></li>
+<li><a href="chapter-10-theta-and-minor-greeks.html"><span class="nav-tag">第十章</span><span class="nav-name">Theta 与次要希腊字母</span></a></li>
+<li><a href="chapter-11-the-greeks-and-their-behavior.html"><span class="nav-tag">第十一章</span><span class="nav-name">希腊字母的动态行为</span></a></li>
+<li><a href="chapter-12-fungibility-convergence-and-stacking.html"><span class="nav-tag">第12章</span><span class="nav-name">可替代性、收敛与堆叠</span></a></li>
+<li><a href="chapter-13-some-wrinkles-of-option-markets.html"><span class="nav-tag">第13章</span><span class="nav-name">期权市场的一些褶皱</span></a></li>
+<li><a href="chapter-14-bucketing-and-topography.html"><span class="nav-tag">第14章</span><span class="nav-name">分桶与地形图</span></a></li>
+<li><a href="chapter-15-beware-the-distribution.html"><span class="nav-tag">第15章</span><span class="nav-name">当心分布</span></a></li>
+<li><a href="chapter-16-option-trading-concepts.html"><span class="nav-tag">第16章</span><span class="nav-name">期权交易概念</span></a></li>
+<li><a href="chapter-17-binary-options-european-style.html"><span class="nav-tag">第17章</span><span class="nav-name">欧式二元期权</span></a></li>
+<li><a href="chapter-18-binary-options-american-style.html"><span class="nav-tag">第18章</span><span class="nav-name">美式二元期权</span></a></li>
+<li class="active"><a href="chapter-19-barrier-options-i.html"><span class="nav-tag">第19章</span><span class="nav-name">障碍期权</span></a></li>
+<li><a href="chapter-20-barrier-options-ii.html"><span class="nav-tag">第20章</span><span class="nav-name">障碍期权</span></a></li>
+<li><a href="chapter-21-compound-choosers-and-higher-order-options.html"><span class="nav-tag">第21章</span><span class="nav-name">复合期权、选择者期权与高阶期权</span></a></li>
+<li><a href="chapter-22-multiasset-options.html"><span class="nav-tag">第22章</span><span class="nav-name">多资产期权</span></a></li>
+<li><a href="chapter-23-minor-exotics-lookback-and-asian-options.html"><span class="nav-tag">第23章</span><span class="nav-name">次要奇异期权——回望与亚式期权</span></a></li></ul></div><div class="nav-section"><h3 class="nav-section-title">附录模块</h3><ul><li><a href="module-a-brownian-motion-on-a-spreadsheet.html"><span class="nav-tag">模块 A</span><span class="nav-name">电子表格上的布朗运动教程</span></a></li>
+<li><a href="module-b-risk-neutrality-explained.html"><span class="nav-tag">模块 B</span><span class="nav-name">风险中性解释</span></a></li>
+<li><a href="module-c-numeraire-relativity-and-the-two-country-paradox.html"><span class="nav-tag">模块 C</span><span class="nav-name">计价单位相对性与两国悖论</span></a></li>
+<li><a href="module-d-correlation-triangles.html"><span class="nav-tag">模块 D</span><span class="nav-name">相关性三角，一个图形化案例</span></a></li>
+<li><a href="module-e-the-value-at-risk.html"><span class="nav-tag">模块 E</span><span class="nav-name">风险价值</span></a></li>
+<li><a href="module-f-probabilistic-rankings-in-arbitrage.html"><span class="nav-tag">模块 F</span><span class="nav-name">套利中的概率排序</span></a></li>
+<li><a href="module-g-option-pricing.html"><span class="nav-tag">模块 G</span><span class="nav-name">期权定价</span></a></li></ul></div>
+</aside>
+<div class="overlay" id="overlay"></div>
+<main class="content">
+<article class="note">
+<h1 id="第19章-障碍期权-上-barrier-options-i">第19章：障碍期权（上）（Barrier Options (I)）</h1>
+<blockquote>
+<p>A true trader is a human being endowed with the rare gift of a positively sloping learning curve. —— Taleb</p>
+</blockquote>
+<h2 id="导读-本章要解决的问题">导读：本章要解决的问题</h2>
+<p>障碍期权是全书第一个真正意义上的路径依赖（path-dependent）结构。对一个金融工程出身的读者，敲入敲出的解析解、反射原理、局部波动率这些工具大多在课堂上见过。本章要补的是另一层东西：<strong>当障碍把一张普通香草期权变成路径依赖工具时，交易员手里的 delta、gamma、vega 会以什么方式畸变，他能用什么近似去对冲，以及这些近似在哪里失效。</strong></p>
+<p>Taleb 在本章只处理&quot;常规（regular）障碍&quot;，也就是期权在虚值状态下敲入或敲出的那一类。它们的 payoff 在障碍处连续（趋近于零），所以相对温和。障碍处带巨大内在价值的&quot;反向（reverse）障碍&quot;留到第 20 章，那里需要先掌握美式二元期权。换句话说，本章是障碍交易的入门台阶，先在风险最小的结构上把直觉和工具建立起来。</p>
+<p>把全章压缩成几条主线：</p>
+<ol>
+<li>常规障碍期权在障碍处有 delta 跳变，这条不连续性决定了它的对冲成本、滑点，以及为什么动态对冲&quot;很贵&quot;。</li>
+<li>敲入与敲出在同 strike、同到期下互补成香草，这条恒等式既是定价关系，也是&quot;short barrier&quot;对冲规则的根。</li>
+<li>障碍可以被近似看成一个 risk reversal，由此引出 put/call 对称、反射原理与 Girsanov 这条从交易直觉通向方法论的链条。</li>
+<li>障碍的真实到期由一个分布化的首次穿越时间（first exit time）决定，它短于名义到期。这一点让任何用单一波动率、用香草静态复制障碍的做法在原理上就是错的。</li>
+</ol>
+<p>下面的笔记沿原文小节顺序展开，在每个节点把 Taleb 的交易语言翻译成我们熟悉的数学命题。</p>
+<hr>
+<h2 id="一-障碍期权的分类-常规与反向">一、障碍期权的分类：常规与反向</h2>
+<p>障碍期权（barrier option）是带第二个执行价的普通期权，这第二个价位被称作触发价（trigger）、敲出价（outstrike）或障碍（barrier）。当标的穿越障碍时，期权的状态发生切换：敲出期权（knock-out）就此消亡，敲入期权（knock-in）就此诞生。</p>
+<p>Taleb 给出的第一层、也是最关键的划分，是<strong>常规（regular）与反向（reverse）</strong>。判据落在期权消亡或诞生时它处于价内还是价外：如果障碍布置得使期权在<strong>虚值</strong>时死去，就是常规敲出；如果期权在<strong>实值</strong>、握有可观内在价值时被触发，就是反向。反向结构难管得多，因为标的逼近障碍时期权价值正高，一次穿越就抹掉一大块内在价值，对冲头寸会在障碍处剧烈跳变。交易员因此把常规敲出戏称为&quot;和反向比起来算是香草&quot;。</p>
+<p><img src="images/9b12c90f790aff9ca9515af02be558736aa03d7a5857e0f032eae2b2cdd4e2bf.jpg" alt="表 19.1 单障碍期权的分类"></p>
+<p>原文表 19.1 把八种单障碍结构按交易难度排了序。可以这样记：触发方向与期权类型&quot;同向&quot;时（向下敲的 call、向上敲的 put）期权在虚值处生灭，属低难度；&quot;逆向&quot;时（向上敲的 call、向下敲的 put）期权在实值处生灭，属高难度。</p>
+<table>
+<thead>
+<tr>
+<th>结构</th>
+<th>别称</th>
+<th>生灭时的状态</th>
+<th>交易难度</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Down-and-out call</td>
+<td>常规敲出 call</td>
+<td>虚值处死亡</td>
+<td>低</td>
+</tr>
+<tr>
+<td>Down-and-out put</td>
+<td>反向敲出 put</td>
+<td>实值处死亡</td>
+<td>高</td>
+</tr>
+<tr>
+<td>Up-and-out call</td>
+<td>反向敲出 call</td>
+<td>实值处死亡</td>
+<td>高</td>
+</tr>
+<tr>
+<td>Up-and-out put</td>
+<td>常规敲出 put</td>
+<td>虚值处死亡</td>
+<td>低</td>
+</tr>
+<tr>
+<td>Down-and-in call</td>
+<td>常规敲入 call</td>
+<td>虚值处诞生</td>
+<td>低</td>
+</tr>
+<tr>
+<td>Down-and-in put</td>
+<td>反向敲入 put</td>
+<td>实值处诞生</td>
+<td>高</td>
+</tr>
+<tr>
+<td>Up-and-in call</td>
+<td>反向敲入 call</td>
+<td>实值处诞生</td>
+<td>高</td>
+</tr>
+<tr>
+<td>Up-and-in put</td>
+<td>常规敲入 put</td>
+<td>虚值处诞生</td>
+<td>低</td>
+</tr>
+</tbody>
+</table>
+<p>本章只覆盖这张表里&quot;低难度&quot;的四类常规结构。返利（rebate）和双障碍放到下一章，因为带返利的障碍更接近美式二元期权。除非特别说明，本章涉及的都是欧式期权。</p>
+<hr>
+<h2 id="二-敲出期权-折价的代价藏在障碍处">二、敲出期权：折价的代价藏在障碍处</h2>
+<h3 id="障碍处的-delta-不连续是核心难点">障碍处的 delta 不连续是核心难点</h3>
+<p>敲出期权之所以难交易，根源在障碍处 delta 的不连续（discontinuity）。期权穿越触发价的瞬间，价值从某个正数跳到零，对冲头寸必须随之骤变。滑点（slippage）在这里最大，尤其当市场跳空（gap）穿越障碍、交易员被迫在远比预期糟糕的价位平掉对冲时。这正是&quot;动态对冲代价高昂&quot;这句话最具体的来源之一。反过来，持有足够大头寸、能影响市场的交易员，有时能靠这种结构制造可观利润，这也是金融界谈之色变的&quot;流动性洞（liquidity hole）&quot;的成因。</p>
+<p>Taleb 给的数值例子很直观。标的在 100、无远期曲线时，一个月平值期权值面值的 1.80%；同样的平值 call，但在低于现价 2% 处敲出，只值 1.34%（外加更宽的买卖价差带来的更高佣金）。从客户角度看：若市场立刻上涨，敲出 call 等价于一个买得更便宜的普通 call；若立刻下破，最坏情形与普通 call 相同；唯一吃亏的情形是市场先跌触障碍、再反弹，而这种路径在现实中出现的频率比理论预期略高。</p>
+<p><img src="images/9b12c90f790aff9ca9515af02be558736aa03d7a5857e0f032eae2b2cdd4e2bf.jpg" alt="图 19.1 恒定波动率下香草与敲出 call 的损益对比"></p>
+<h3 id="谁在买敲出期权">谁在买敲出期权</h3>
+<p>Taleb 列出三类主要客户，他们的共同点是都对路径有信念：</p>
+<ul>
+<li><strong>持有大量股票敞口的基金经理</strong>，为压低对冲开支而买敲出 put。他们觉得市场涨过某个水平（比如高出 5%）后就不再需要保护，因为那时本就该减仓。这种损益形态接近 risk reversal（领口/collar），区别在于剧烈上涨时未必被迫交出股票。</li>
+<li><strong>相信趋势与序列相关（serial correlation）的投机者</strong>。趋势跟随者愿意做多，只要市场不跌破某点；于是买一个会在那点敲出的虚值 call。敲出的路径依赖与他们对分布形态的信念一致，障碍常被布置在图表关键位附近。一旦趋势破位，他们也不介意取消这笔押注。</li>
+<li><strong>有或有敞口的企业</strong>，相信市场朝有利方向移动时能把敞口平掉。</li>
+</ul>
+<p>敲出契合趋势跟随的心态，敲入则契合均值回复的心态。这是路径依赖结构对&quot;分布形态信念&quot;的直接编码：敲出在市场顺势时存活、逆势时消亡；敲入则总是逆着方向苏醒。</p>
+<h3 id="卖方为什么要多买-delta">卖方为什么要多买 delta</h3>
+<p>障碍处 delta 的跳变可以量化。在 100 call / KO 98（读作&quot;100 看涨，98 敲出&quot;）这个例子里，穿越障碍时 delta 从 .66 跳到零。</p>
+<p><img src="images/43a90349072f4111fa9c78b9a29c0d4dd0efaf7559bfe83631c69a85f1f2eda1.jpg" alt="图 19.2 香草与敲出的 delta 对比"></p>
+<p>图 19.2 显示，平值附近香草的 delta 在 50% 左右，而敲出的 delta 约为 68%。卖出敲出 call 的交易员需要比卖香草时买更多标的。原因在于：上涨时敲出与香草价格趋同，而交易员当初是以低于香草的价格卖出敲出的，所以要用更高的 delta 去补这块差。市场越往上走，两者的 delta 与价格越收敛。</p>
+<p>这里有一条容易被系统忽略的成本：</p>
+<div class="callout callout-important"><div class="callout-title"><span class="callout-icon">★</span><span class="callout-title-text">交易规则</span></div><div class="callout-body"><p>卖出障碍期权时，必须把障碍处平掉对冲的交易成本计入定价。</p>
+</div></div>
+<p>按例子推演：若市场立刻下跳 2 个点，68% 的 delta 大约产生 1.36 每单位的对冲收益（精确算因 gamma 效应平均 delta 约 .67，得 1.34），恰好等于卖出价 1.34。但交易员要的不止 1.34，他还得覆盖在障碍处平仓的交易成本。假设恐慌使障碍处执行滑点达 .10，这相当于在 1.34 之上至少多出 <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.7278em;vertical-align:-0.0833em;"></span><span class="mord">.1</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">.66</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">0.066</span></span></span></span> 的成本（仅当期权确实终止时）。于是操作者的最低公允价应是</p>
+<div class="math-display"><span class="katex-display"><span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.7278em;vertical-align:-0.0833em;"></span><span class="mord">1.34</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.7278em;vertical-align:-0.0833em;"></span><span class="mord">0.066</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.1389em;">P</span><span class="mopen">(</span><span class="mord text"><span class="mord cjk_fallback">触障</span></span><span class="mclose">)</span></span></span></span></span></div>
+<p>其中触障概率对应一个&quot;在 98 处支付 .066、与障碍同时到期的美式二元期权&quot;的价值。算下来大约 1.39，而这还只是下限，更多成本会继续冒出来。这条推演本身就是一次实务到理论的映射：<strong>障碍处的滑点补偿 = 一个美式二元（数字）期权的价值</strong>，障碍期权天然内嵌了一个数字期权。</p>
+<p>随着市场逼近障碍，敲出与香草的 delta 开始分道：交易员要不断累积更多 delta，去补&quot;可能很快失去期权、被免除义务&quot;这件事；但当标的极度贴近障碍时，这些 delta 又变得多余，必须反手卸掉。这是一把双刃剑。触障是好事（卸掉一个负债），但触障的方式很关键——市场若跳空穿越（它经常如此），对冲会在比预期更差的水平被平掉，交易员反而会希望自己没碰到障碍。</p>
+<p><img src="images/49380a4ea2b89c7a02dc37d8e61195361badc3a1560da4f8710c005647385f72.jpg" alt="图 19.3 一个月虚值敲出与香草的 delta"></p>
+<p>图 19.3 给出 100 call / 90 的情形。当 strike 与 trigger 拉得越开，敲出的价格与 delta 越像香草，障碍带来的风险也越小。</p>
+<hr>
+<h2 id="三-敲入期权-敲出的镜像">三、敲入期权：敲出的镜像</h2>
+<p>敲入期权在某价位被触及时才诞生。常规敲入诞生于虚值，触发条件简单；反向敲入则带着内在价值（按远期算）来到世上，存在本身就复杂。把敲入当成独立工具研究的意义有限，因为按构造它就是香草与敲出的组合，这一点本节稍后会证明。</p>
+<p>客户需求方面，敲入对应均值回复心态，是天生逆着市场方向苏醒的工具。但对动态对冲者，Taleb 提醒：与其纠结产品用途，不如把精力放在对冲技术上。</p>
+<p><img src="images/22cb22493ee16ee9858a2d8306d832e50e40a411569e4e4291c4cd722c9072b6.jpg" alt="图 19.4 敲入 call 的价格"></p>
+<p>用同样的例子，一个月 100 call 在 98 敲入，图 19.4 的价格曲线第一次看会让人困惑：它像是两段 delta 符号相反的期权拼起来。</p>
+<p><img src="images/a38a8e0379b07a725e482b3193746678dff3ca648c9f4a4a9a0e076b37d82e20.jpg" alt="图 19.5 敲入 call 的 delta"></p>
+<p>看 delta（图 19.5）就清楚了。敲入 call 表面吓人，其特征其实与敲出完全一致：delta 的跳变幅度相等，只是符号相反。在障碍处，敲入的 delta 从 -.32 跳到 .33，即操作者有 .65 的 gap delta 要补；敲出 call 在同一点的 gap delta 则是向下跳 .65。</p>
+<h3 id="互补恒等式与-short-barrier-规则">互补恒等式与 short barrier 规则</h3>
+<p>把这两件事并排放，结论就出来了：同时持有一份敲入、一份敲出（同 strike、同到期），两者在障碍处的 gap delta 恰好抵消，操作者在障碍处无事可做。这就是套利恒等式</p>
+<div class="math-display"><span class="katex-display"><span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord text"><span class="mord">Knock-in</span></span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.0715em;">K</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">t</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.0813em;">H</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord text"><span class="mord">Knock-out</span></span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.0715em;">K</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">t</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.0813em;">H</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord text"><span class="mord">Vanilla</span></span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.0715em;">K</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">t</span><span class="mclose">)</span></span></span></span></span></div>
+<p>其中 <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.0715em;">K</span></span></span></span> 是执行价，<span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6151em;"></span><span class="mord mathnormal">t</span></span></span></span> 是到期时间，<span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.0813em;">H</span></span></span></span> 是障碍水平。这条恒等式在理论上不过是 payoff 的线性叠加：在任意一条路径上，&quot;碰过障碍&quot;与&quot;没碰过障碍&quot;是对全样本空间的一个划分，敲入与敲出的支付在每条路径上相加，正好还原香草的支付。由终值在所有状态下相等，反推两者之和在整个存续期内等于香草。</p>
+<p><img src="images/d351b95487c2ad127596347b83f90ccdee59a585af6ff81e4eafa15df3ea2284.jpg" alt="图 19.6 香草、敲入与敲出"></p>
+<p>图 19.6 把 100 call KO 98、100 call KI 98 与 100 call 画在一起。98 以下敲入与香草重合（它此时已变成香草），敲出则已死亡；98 以上敲出像香草，敲入则越来越偏离香草。</p>
+<p>Taleb 在此定义了&quot;long the barrier&quot;这个贯穿后文的概念：</p>
+<blockquote>
+<p>持有障碍头寸（long the barrier）指操作者从触障中获益，要么因负债减少（敲出），要么因财富增加（敲入）。</p>
+</blockquote>
+<p>于是 short knock-out 是 long the barrier，long knock-in 也是 long the barrier。短敲出在触障时受益，因为或有负债消失；长敲入同样受益，因为它从一个或有资产（底层期权）变成无条件资产。由互补恒等式，long knock-in 加 long knock-out 在障碍处是平的（flat the barrier），只剩对底层香草的敞口。这就是&quot;短障碍规则（rule of the short barrier）&quot;的来源：把敲入和敲出配成香草，障碍处的跳变风险互相注销。</p>
+<hr>
+<h2 id="四-波动率的影响-障碍如何非线性地逼近">四、波动率的影响：障碍如何非线性地逼近</h2>
+<p><img src="images/51e210a6e57478b65c7a4910175d607f526b2c8e774a0fd67a9c49fd62e535f3.jpg" alt="图 19.7 波动率对 1m 100/98 敲出与香草 call 的影响"></p>
+<p>图 19.7 画的是敲出对波动率水平的价格敏感性。波动率升高时，香草的 vega 保持线性，敲出的 vega 却逐渐变平、趋于零。直觉是：波动率上升会以非线性方式把障碍&quot;拉近&quot;，最终障碍会主导整张期权，波动率越高，期权能活的时间越短。</p>
+<p><img src="images/c63b4f4d4cd76bc3a90b26c38df649f2996378294e9419db96db0e24b73e29e8.jpg" alt="图 19.8 敲入与香草"></p>
+<p>图 19.8 给出敲入的相反效果：敲入对波动率呈凸（convex）vega，敲出呈凹（concave）vega。这对对冲意义重大。</p>
+<div class="callout callout-important"><div class="callout-title"><span class="callout-icon">★</span><span class="callout-title-text">交易规则</span></div><div class="callout-body"><p>波动率以非线性方式把障碍拉近。因为波动率对偏离分布中心的事件（即虚值和实值期权）总是非线性地起作用。</p>
+</div></div>
+<p>靠近障碍时，两类期权的 vega 不同，障碍在此处失去凸性；远离障碍（在&quot;另一侧&quot;）时，它们的行为乃至对波动率的敏感性又开始收敛。这给出一个实用的系统测试法：把敲出 call 的障碍设到 0（或 .00001）、敲出 put 的障碍设到一个极大值，验证价格是否退化为香草价。</p>
+<div class="callout callout-important"><div class="callout-title"><span class="callout-icon">★</span><span class="callout-title-text">交易规则</span></div><div class="callout-body"><p>障碍部分贡献的 vega，对卖方是凹的。障碍 vega 加香草 vega，对 long barrier 合成出凹 vega，对 short barrier 合成出凸 vega。当交易员远离障碍、进入香草主导的区域时，这种凹凸性会逐渐消失。</p>
+</div></div>
+<p><img src="images/20b2d069076c0bf66c5135b7feaa8525a59d207756a0984edf87af5cf1b282b0.jpg" alt="图 19.9 down-and-in 与香草的 vega"></p>
+<p><img src="images/b78725d114a7bd663c70735fdfb501c95ab1d973d7df268d0b50e56727d725ea.jpg" alt="图 19.10 down-and-out 与香草的 vega"></p>
+<p>图 19.9、19.10 画出两类工具的 vega。Taleb 又把例子换成执行价 105、触发 98、六个月、波动率 15.7% 的虚值结构做更细的分析。</p>
+<p><img src="images/50b0f7d2f081c274bcb8c65aa9779a3a3784cb6a2f6f3c5b5f8d2b1b4311992d.jpg" alt="图 19.11 六个月敲出与香草的 vega（100 calls，98 barrier）"></p>
+<p><img src="images/69e6311dc849ececf9ccd556467071af1c6cae06ac1ff5b81c014b411f50177c.jpg" alt="图 19.12 敲入与香草的 vega"></p>
+<p>图 19.11 显示市场离障碍越远，敲出 call 的 vega 越像香草；图 19.12 则显示越靠近触发价，敲入 call 的 vega 越像香草。这种凹凸性的本质，到下一节会看清楚：障碍可以被读成一个 risk reversal，而 risk reversal 的 vega 正是一边升、一边降。</p>
+<hr>
+<h2 id="五-加入漂移-远期线带来的复杂性">五、加入漂移：远期线带来的复杂性</h2>
+<p>只要给世界加上利率，障碍期权的 delta 就可能突破 1，这在香草里是不会发生的。</p>
+<div class="callout callout-important"><div class="callout-title"><span class="callout-icon">★</span><span class="callout-title-text">风险管理规则</span></div><div class="callout-body"><p>若现货-远期线是平的，常规敲出（虚值处触发）的 delta 永远不会高于 1。但在上斜的远期曲线下，call 的 delta 可以高于 1；在下斜曲线下，put 的 delta 也可以。</p>
+</div></div>
+<p>这条规则的两个延伸是：</p>
+<ul>
+<li>障碍附近，delta 越高，期权保留的价值也越高。</li>
+<li>任何高于 1 的 delta 都会在风险图的某处引出负 gamma。delta 的抬升是为了补偿障碍处强烈的 payoff，一旦市场移入香草主导的区域，delta 会被拉回正常比例。</li>
+</ul>
+<p><img src="images/11b811b7c75478aab6b164f6ecad205f6e58503ec47f4e714043ceeed11b53ee.jpg" alt="图 19.13 利率上升对 delta 的影响（strike 98.50，vol 15.7%，两年到期，barrier 91.50）"></p>
+<p><img src="images/2fbd9caa2f6025a65970a96b6f4cc9875ce63b152baabc545a12df64da308734.jpg" alt="图 19.14 对应图 19.13 的 gamma"></p>
+<p>图 19.13、19.14 画出利率上升对 delta 与 gamma 的影响。gamma 的低谷极端到无法用常规坐标画下。高利率下，头寸开始显出三阶矩（第三动差）的增加，所以 Taleb 先把利率拿掉做简化分析，后面再加回来。</p>
+<p>理论上看，delta 越过 1 与负 gamma 同时出现并不意外。delta 在标的方向上若是递减的（<span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord" style="margin-right:0.0556em;">∂</span><span class="mord">Δ/</span><span class="mord" style="margin-right:0.0556em;">∂</span><span class="mord mathnormal" style="margin-right:0.0576em;">S</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">&lt;</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">0</span></span></span></span>），按定义就是负 gamma。障碍迫使 delta 在某段区间被人为推高以匹配触障 payoff，这段抬升必然在相邻区间以更陡的回落收尾，于是 <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.0641em;vertical-align:-0.25em;"></span><span class="mord"><span class="mord" style="margin-right:0.0556em;">∂</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span><span class="mord mathnormal" style="margin-right:0.2222em;">V</span><span class="mord">/</span><span class="mord" style="margin-right:0.0556em;">∂</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0576em;">S</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">&lt;</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">0</span></span></span></span>。这正是&quot;任何 delta 高于 1 都对应某处负 gamma&quot;的数学含义。</p>
+<h3 id="risk-reversals">Risk reversals</h3>
+<p>把敲入、敲出的 vega 与 risk reversal 的 vega 放在一起比较，会看到惊人的相似：vega 在一个方向上升、在另一个方向消退。正是这种相似性催生了大量&quot;用 risk reversal 复制期权&quot;的文献。</p>
+<hr>
+<h2 id="六-put-call-对称与障碍期权的对冲">六、Put/Call 对称与障碍期权的对冲</h2>
+<p>本节讲文献里常见的&quot;用对称性对冲障碍&quot;的技术，并提醒交易员盲目套用的陷阱。公式的严格推导留到后面的&quot;反射原理&quot;小节。</p>
+<h3 id="option-wizard-期权对称">Option Wizard：期权对称</h3>
+<p>每个欧式期权都有一个能匹配其风险的对称配对。对称是相对<strong>远期</strong>而非现货建立的，二者之差称为&quot;距离（distance）&quot;。在无 skew（远期两侧波动率对称）的假设下，put 与 call 之间的距离这样算：设 <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.0715em;">K</span></span></span></span> 是一个执行价，<span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.1389em;">F</span></span></span></span> 是远期，对称执行价 <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.7519em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0715em;">K</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.7519em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">′</span></span></span></span></span></span></span></span></span></span></span></span>（<span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.0715em;">K</span></span></span></span> 是 call 则 <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.7519em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0715em;">K</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.7519em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">′</span></span></span></span></span></span></span></span></span></span></span></span> 是 put，反之亦然）满足</p>
+<div class="math-display"><span class="katex-display"><span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:2.4em;vertical-align:-0.95em;"></span><span class="mop"><span class="mord mathrm" style="margin-right:0.0139em;">Log</span></span><span class="mspace" style="margin-right:-0.1667em;"></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="minner"><span class="mopen delimcenter" style="top:0em;"><span class="delimsizing size3">(</span></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.3603em;"><span style="top:-2.314em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.1389em;">F</span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.677em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0715em;">K</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.686em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span><span class="mclose delimcenter" style="top:0em;"><span class="delimsizing size3">)</span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:2.4em;vertical-align:-0.95em;"></span><span class="mop"><span class="mord mathrm" style="margin-right:0.0139em;">Log</span></span><span class="mspace" style="margin-right:-0.1667em;"></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="minner"><span class="mopen delimcenter" style="top:0em;"><span class="delimsizing size3">(</span></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.3603em;"><span style="top:-2.314em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord"><span class="mord mathnormal" style="margin-right:0.0715em;">K</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.6779em;"><span style="top:-2.989em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">′</span></span></span></span></span></span></span></span></span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.677em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.1389em;">F</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.686em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span><span class="mclose delimcenter" style="top:0em;"><span class="delimsizing size3">)</span></span></span></span></span></span></span></div>
+<p>于是</p>
+<div class="math-display"><span class="katex-display"><span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8019em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0715em;">K</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8019em;"><span style="top:-3.113em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">′</span></span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:2.1771em;vertical-align:-0.686em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.4911em;"><span style="top:-2.314em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0715em;">K</span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.677em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord"><span class="mord mathnormal" style="margin-right:0.1389em;">F</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.686em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span></span></span></span></span></div>
+<p><img src="images/eca687d4b57dd3bf40ade4dac83b86dba0cfb6b949843faaa60f6a3acd087cfa.jpg" alt="期权对称：远期是两个执行价的几何平均"></p>
+<p>第二个对称执行价被设成使远期成为两个执行价的几何平均。在无 skew 时，put 与 call 的价格比等于执行价之比的平方根：</p>
+<div class="math-display"><span class="katex-display"><span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:2.3649em;vertical-align:-0.936em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.4289em;"><span style="top:-2.314em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mop"><span class="mord mathrm">Call</span></span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.0715em;">K</span><span class="mclose">)</span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.677em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mop"><span class="mord mathrm">Put</span></span><span class="mopen">(</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0715em;">K</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.7519em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">′</span></span></span></span></span></span></span></span></span><span class="mclose">)</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.936em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:2.5337em;vertical-align:-0.93em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.6037em;"><span style="top:-2.1833em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord sqrt"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.9267em;"><span class="svg-align" style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="mord" style="padding-left:0.833em;"><span class="mord mathnormal" style="margin-right:0.0715em;">K</span></span></span><span style="top:-2.8867em;"><span class="pstrut" style="height:3em;"></span><span class="hide-tail" style="min-width:0.853em;height:1.08em;"><svg xmlns="http://www.w3.org/2000/svg" width="400em" height="1.08em" viewBox="0 0 400000 1080" preserveAspectRatio="xMinYMin slice"><path d="M95,702
+c-2.7,0,-7.17,-2.7,-13.5,-8c-5.8,-5.3,-9.5,-10,-9.5,-14
+c0,-2,0.3,-3.3,1,-4c1.3,-2.7,23.83,-20.7,67.5,-54
+c44.2,-33.3,65.8,-50.3,66.5,-51c1.3,-1.3,3,-2,5,-2c4.7,0,8.7,3.3,12,10
+s173,378,173,378c0.7,0,35.3,-71,104,-213c68.7,-142,137.5,-285,206.5,-429
+c69,-144,104.5,-217.7,106.5,-221
+l0 -0
+c5.3,-9.3,12,-14,20,-14
+H400000v40H845.2724
+s-225.272,467,-225.272,467s-235,486,-235,486c-2.7,4.7,-9,7,-19,7
+c-6,0,-10,-1,-12,-3s-194,-422,-194,-422s-65,47,-65,47z
+M834 80h400000v40h-400000z"/></svg></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.1133em;"><span></span></span></span></span></span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.677em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord sqrt"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.9267em;"><span class="svg-align" style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="mord" style="padding-left:0.833em;"><span class="mord"><span class="mord mathnormal" style="margin-right:0.0715em;">K</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.6779em;"><span style="top:-2.989em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">′</span></span></span></span></span></span></span></span></span></span></span><span style="top:-2.8867em;"><span class="pstrut" style="height:3em;"></span><span class="hide-tail" style="min-width:0.853em;height:1.08em;"><svg xmlns="http://www.w3.org/2000/svg" width="400em" height="1.08em" viewBox="0 0 400000 1080" preserveAspectRatio="xMinYMin slice"><path d="M95,702
+c-2.7,0,-7.17,-2.7,-13.5,-8c-5.8,-5.3,-9.5,-10,-9.5,-14
+c0,-2,0.3,-3.3,1,-4c1.3,-2.7,23.83,-20.7,67.5,-54
+c44.2,-33.3,65.8,-50.3,66.5,-51c1.3,-1.3,3,-2,5,-2c4.7,0,8.7,3.3,12,10
+s173,378,173,378c0.7,0,35.3,-71,104,-213c68.7,-142,137.5,-285,206.5,-429
+c69,-144,104.5,-217.7,106.5,-221
+l0 -0
+c5.3,-9.3,12,-14,20,-14
+H400000v40H845.2724
+s-225.272,467,-225.272,467s-235,486,-235,486c-2.7,4.7,-9,7,-19,7
+c-6,0,-10,-1,-12,-3s-194,-422,-194,-422s-65,47,-65,47z
+M834 80h400000v40h-400000z"/></svg></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.1133em;"><span></span></span></span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.93em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span></span></span></span></span></div>
+<p>这套对称的性质是：按平方根比例一多一空地配出来的组合，应当 gamma 为零、vega 为零，在到第三阶矩之前保持中性。其理论根在 BSM 的对数正态对称性：以远期为对数坐标原点时，价内与价外按 <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mop">ln</span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.0715em;">K</span><span class="mord">/</span><span class="mord mathnormal" style="margin-right:0.1389em;">F</span><span class="mclose">)</span></span></span></span> 镜像分布，几何平均 <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.04em;vertical-align:-0.1133em;"></span><span class="mord sqrt"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.9267em;"><span class="svg-align" style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="mord" style="padding-left:0.833em;"><span class="mord mathnormal" style="margin-right:0.0715em;">K</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0715em;">K</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.6779em;"><span style="top:-2.989em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">′</span></span></span></span></span></span></span></span></span></span></span><span style="top:-2.8867em;"><span class="pstrut" style="height:3em;"></span><span class="hide-tail" style="min-width:0.853em;height:1.08em;"><svg xmlns="http://www.w3.org/2000/svg" width="400em" height="1.08em" viewBox="0 0 400000 1080" preserveAspectRatio="xMinYMin slice"><path d="M95,702
+c-2.7,0,-7.17,-2.7,-13.5,-8c-5.8,-5.3,-9.5,-10,-9.5,-14
+c0,-2,0.3,-3.3,1,-4c1.3,-2.7,23.83,-20.7,67.5,-54
+c44.2,-33.3,65.8,-50.3,66.5,-51c1.3,-1.3,3,-2,5,-2c4.7,0,8.7,3.3,12,10
+s173,378,173,378c0.7,0,35.3,-71,104,-213c68.7,-142,137.5,-285,206.5,-429
+c69,-144,104.5,-217.7,106.5,-221
+l0 -0
+c5.3,-9.3,12,-14,20,-14
+H400000v40H845.2724
+s-225.272,467,-225.272,467s-235,486,-235,486c-2.7,4.7,-9,7,-19,7
+c-6,0,-10,-1,-12,-3s-194,-422,-194,-422s-65,47,-65,47z
+M834 80h400000v40h-400000z"/></svg></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.1133em;"><span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.1389em;">F</span></span></span></span> 恰好把两个执行价放在关于 <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.1389em;">F</span></span></span></span> 对称的位置上，这与 change of numeraire 下&quot;一边的 call 即另一边的 put&quot;是同一件事。</p>
+<p>不过 Taleb 直言：有经验的动态对冲者认为对称这个概念<strong>不稳定</strong>。&quot;上行&quot;与&quot;下行&quot;执行价之间存在极大差异，大到市场涨或跌时会造成实质性的行为分化。这套方法被作者判定为有疑问的，其价值在教学，用来揭示障碍结构的风险所在。</p>
+<h3 id="用-risk-reversal-近似复制障碍">用 risk reversal 近似复制障碍</h3>
+<p>假设无漂移。把敲出 call 看成&quot;一个 call，但又不完全是 call&quot;，于是它可以是一个 long call 配一个 short 虚值 put。这个虚值 put 的执行价要选得与 call 在障碍处完全对称，对称的方式与数量要使整个组合在市场到达障碍时恰好值 0。这样的 risk reversal 在除终止之外的所有地方都能近似复制障碍，到障碍时则需在市场上把它平掉。这套复制只在波动率全程不变时才有效。</p>
+<h4 id="case-1-敲出-call">Case 1：敲出 call</h4>
+<p>设市场在 100、波动率 15.7%：</p>
+<ul>
+<li>六个月香草 105 call：2.35</li>
+<li>六个月 KO(105/98) call：1.06（记号 KO(strike, outstrike)）</li>
+</ul>
+<p>对称 put 的执行价要满足 <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.7667em;vertical-align:-0.0833em;"></span><span class="mord mathnormal" style="margin-right:0.0715em;">K</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">105</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.8141em;"></span><span class="mord">9</span><span class="mord"><span class="mord">8</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span></span></span></span>，得 <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.0715em;">K</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">91.47</span></span></span></span>。该 91.47 put 价值 1.20。put 对 call 的比例应为 <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.24em;vertical-align:-0.305em;"></span><span class="mord sqrt"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.935em;"><span class="svg-align" style="top:-3.2em;"><span class="pstrut" style="height:3.2em;"></span><span class="mord" style="padding-left:1em;"><span class="mord">105/91.47</span></span></span><span style="top:-2.895em;"><span class="pstrut" style="height:3.2em;"></span><span class="hide-tail" style="min-width:1.02em;height:1.28em;"><svg xmlns="http://www.w3.org/2000/svg" width="400em" height="1.28em" viewBox="0 0 400000 1296" preserveAspectRatio="xMinYMin slice"><path d="M263,681c0.7,0,18,39.7,52,119
+c34,79.3,68.167,158.7,102.5,238c34.3,79.3,51.8,119.3,52.5,120
+c340,-704.7,510.7,-1060.3,512,-1067
+l0 -0
+c4.7,-7.3,11,-11,19,-11
+H40000v40H1012.3
+s-271.3,567,-271.3,567c-38.7,80.7,-84,175,-136,283c-52,108,-89.167,185.3,-111.5,232
+c-22.3,46.7,-33.8,70.3,-34.5,71c-4.7,4.7,-12.3,7,-23,7s-12,-1,-12,-1
+s-109,-253,-109,-253c-72.7,-168,-109.3,-252,-110,-252c-10.7,8,-22,16.7,-34,26
+c-22,17.3,-33.3,26,-34,26s-26,-26,-26,-26s76,-59,76,-59s76,-60,76,-60z
+M1001 80h400000v40h-400000z"/></svg></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.305em;"><span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">1.0714</span></span></span></span>。交易员要验证：在障碍 98.00 处，这个 risk reversal 应当值 0。</p>
+<p>复制还有一个附加约束：障碍被触及后要在市场上平掉 risk reversal。但约束不必太苛刻，触发后立刻做一次 delta 中性即可，之后有充裕时间慢慢平。</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:right">资产价格</th>
+<th style="text-align:right">KO</th>
+<th style="text-align:right">Call(105)</th>
+<th style="text-align:right">Put(91.47)</th>
+<th style="text-align:right">Risk Reversal（long 1 call，short 1.0714 put）</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right">91</td>
+<td style="text-align:right">0.00</td>
+<td style="text-align:right">0.48</td>
+<td style="text-align:right">4.07</td>
+<td style="text-align:right"></td>
+</tr>
+<tr>
+<td style="text-align:right">95</td>
+<td style="text-align:right">0.00</td>
+<td style="text-align:right">1.06</td>
+<td style="text-align:right">2.47</td>
+<td style="text-align:right"></td>
+</tr>
+<tr>
+<td style="text-align:right">98</td>
+<td style="text-align:right">0.00</td>
+<td style="text-align:right">1.74</td>
+<td style="text-align:right">1.63</td>
+<td style="text-align:right">0</td>
+</tr>
+<tr>
+<td style="text-align:right">99</td>
+<td style="text-align:right">0.53</td>
+<td style="text-align:right">2.03</td>
+<td style="text-align:right">1.40</td>
+<td style="text-align:right">0.53</td>
+</tr>
+<tr>
+<td style="text-align:right">100</td>
+<td style="text-align:right">1.06</td>
+<td style="text-align:right">2.35</td>
+<td style="text-align:right">1.21</td>
+<td style="text-align:right">1.06</td>
+</tr>
+<tr>
+<td style="text-align:right">105</td>
+<td style="text-align:right">3.85</td>
+<td style="text-align:right">4.42</td>
+<td style="text-align:right">0.53</td>
+<td style="text-align:right">3.85</td>
+</tr>
+<tr>
+<td style="text-align:right">110</td>
+<td style="text-align:right">7.07</td>
+<td style="text-align:right">7.30</td>
+<td style="text-align:right">0.21</td>
+<td style="text-align:right">7.07</td>
+</tr>
+</tbody>
+</table>
+<p>表 19.2（节选）显示：障碍以上，risk reversal 的值与 KO 价格高度吻合；到障碍 98 处它归零。逻辑是：障碍不过是某种 risk reversal，因此它的 vega 应当像 risk reversal 那样表现。一个重要结论是：<strong>当存在下行 skew（downside skew）时，障碍 call 应当卖得比平 skew 时更便宜。</strong></p>
+<p>把它推广到敲入很直接。由 <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord text"><span class="mord">KIC</span></span><span class="mopen">(</span><span class="mord">105/98</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord text"><span class="mord">KOC</span></span><span class="mopen">(</span><span class="mord">105/98</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord text"><span class="mord">Vanilla</span></span><span class="mopen">(</span><span class="mord">105</span><span class="mclose">)</span></span></span></span>，得 <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord text"><span class="mord">KIC</span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord text"><span class="mord">Vanilla</span></span><span class="mopen">(</span><span class="mord">105</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord text"><span class="mord">KOC</span></span></span></span></span>。而 KOC 由 <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">−</span><span class="mord">1.0714</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord text"><span class="mord">put</span></span><span class="mopen">(</span><span class="mord">91.47</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord text"><span class="mord">call</span></span><span class="mopen">(</span><span class="mord">105</span><span class="mclose">)</span></span></span></span> 复制，代入：</p>
+<div class="math-display"><span class="katex-display"><span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:2.7em;vertical-align:-1.1em;"></span><span class="mord"><span class="mtable"><span class="col-align-r"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.6em;"><span style="top:-3.76em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord text"><span class="mord">KIC</span></span><span class="mopen">(</span><span class="mord">105/98</span><span class="mclose">)</span></span></span><span style="top:-2.26em;"><span class="pstrut" style="height:3em;"></span><span class="mord"></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:1.1em;"><span></span></span></span></span></span><span class="col-align-l"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.6em;"><span style="top:-3.76em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord"></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mord text"><span class="mord">call</span></span><span class="mopen">(</span><span class="mord">105</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord">1.07</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord text"><span class="mord">put</span></span><span class="mopen">(</span><span class="mord">91.47</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord text"><span class="mord">call</span></span><span class="mopen">(</span><span class="mord">105</span><span class="mclose">)</span></span></span><span style="top:-2.26em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord"></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mord">1.07</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord text"><span class="mord">put</span></span><span class="mopen">(</span><span class="mord">91.47</span><span class="mclose">)</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:1.1em;"><span></span></span></span></span></span></span></span></span></span></span></span></div>
+<p>所以敲入的复制组合在障碍被触及前就是那个 put（按某比例），触及后变成 call。完美复制要在障碍处把 put 换成 call（执行那笔 risk reversal）。</p>
+<h4 id="case-2-敲入-call">Case 2：敲入 call</h4>
+<p>敲入是一个开关：在 98 这个从一态切到另一态的点上，比例为 1 call 比 1.0714 put 的 risk reversal 恰好值 0。所以敲入代表在那个价位上从一边切到另一边。</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:right">资产价格</th>
+<th style="text-align:right">KI(105/98)</th>
+<th style="text-align:right">Call(105)</th>
+<th style="text-align:right">Put(91.47)</th>
+<th style="text-align:right">复制（障碍上方 long 1.0714 put，下方 long 1 call）</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right">91</td>
+<td style="text-align:right">0.48</td>
+<td style="text-align:right">0.48</td>
+<td style="text-align:right">4.07</td>
+<td style="text-align:right">0.48</td>
+</tr>
+<tr>
+<td style="text-align:right">95</td>
+<td style="text-align:right">1.06</td>
+<td style="text-align:right">1.06</td>
+<td style="text-align:right">2.47</td>
+<td style="text-align:right">1.06</td>
+</tr>
+<tr>
+<td style="text-align:right">98</td>
+<td style="text-align:right">1.74</td>
+<td style="text-align:right">1.74</td>
+<td style="text-align:right">1.63</td>
+<td style="text-align:right">1.74</td>
+</tr>
+<tr>
+<td style="text-align:right">99</td>
+<td style="text-align:right">1.50</td>
+<td style="text-align:right">2.03</td>
+<td style="text-align:right">1.40</td>
+<td style="text-align:right">1.50</td>
+</tr>
+<tr>
+<td style="text-align:right">100</td>
+<td style="text-align:right">1.29</td>
+<td style="text-align:right">2.35</td>
+<td style="text-align:right">1.21</td>
+<td style="text-align:right">1.29</td>
+</tr>
+<tr>
+<td style="text-align:right">105</td>
+<td style="text-align:right">0.56</td>
+<td style="text-align:right">4.42</td>
+<td style="text-align:right">0.53</td>
+<td style="text-align:right">0.56</td>
+</tr>
+<tr>
+<td style="text-align:right">110</td>
+<td style="text-align:right">0.22</td>
+<td style="text-align:right">7.30</td>
+<td style="text-align:right">0.21</td>
+<td style="text-align:right">0.22</td>
+</tr>
+</tbody>
+</table>
+<p>表 19.3（节选）验证：障碍下方敲入与香草 call 完全重合（它就是香草），上方则跟随那 1.0714 个 put。</p>
+<h3 id="这套方法的三个好处">这套方法的三个好处</h3>
+<p>把障碍看成内嵌的 risk reversal，带来三项结果：</p>
+<ol>
+<li><strong>为 skew 定价。</strong> 分析障碍时要记着 skew 的斜率，这套思路与二元期权分析相似。</li>
+<li><strong>为波动率曲线定价。</strong> 波动率期限结构关系重大（后面&quot;停止时间&quot;会讲）。有意思的是，障碍的分解会得到波动率阶梯上两个不同久期的期权：敲出 call 的 put 腿对应一个周期，call 腿对应另一个；敲入的情况更复杂。</li>
+<li><strong>对冲。</strong> 障碍期权像 risk reversal 一样由两个极端分量构成，任何时刻只有市场所在邻域的那一个占主导。这只对常规障碍成立（虚值处敲入或敲出），对反向障碍不成立（那里巨大的 payoff 始终主导）。前面例子里，上涨时 call 苏醒并主导、下跌时减弱由 put 接管，于是结构在上涨时呈 long gamma、下跌时呈 short gamma。</li>
+</ol>
+<p><img src="images/cada1108828706615cd34f2d53be9add4ce6b1697595942034876cc6e8f33d1d.jpg" alt="Option Wizard: The Skew Revisited（一）"></p>
+<p><img src="images/7f3f55f931b4198404a2aa628e6696807f925efdd7a69e26841ef3caa55ed5e6.jpg" alt="Option Wizard: The Skew Revisited（二）"></p>
+<h3 id="这套方法的陷阱">这套方法的陷阱</h3>
+<p>risk reversal 对冲法建立在两个假设上：skew 稳定（最好恒定），远期曲线平且恒定（无漂移、无升贴水）。</p>
+<p>skew 一旦不稳定，对冲精度就下降。初始时无论操作者在正还是负 skew 进场，头寸都是局部匹配的，因为 skew 价格已被纳入。但 skew 不稳定，日后可能漂移甚至反转，使交易与 skew 斜率脱钩。这种脱钩之所以发生，是因为 skew 对冲的久期未必匹配障碍的久期——更糟的是，由于停止时间本身不稳定，可能根本不存在一个可供对冲 skew 的真实久期。</p>
+<p>利率或持有成本变得极正或极负，也会让方法失效：按前面的规则，障碍 call 在障碍上方可能不再像 risk reversal 那样表现。</p>
+<p><img src="images/6a6ca5c5dc4138c2379ba2e3b9f25e3df8fcaa75a96acc778038fbb01f6bd513.jpg" alt="图 19.15 敲出的 gamma"></p>
+<p><img src="images/d7b6b6ee20644f390d61c695d413c9da6215fabdeccda77a8da5e54438aff911.jpg" alt="图 19.16 敲入的 gamma"></p>
+<p><img src="images/54a70782e1457c8113efb5911a5a5afbfea27ba30ff07d834bb9132ca658b9c8.jpg" alt="图 19.17 risk reversal 的 gamma"></p>
+<p>在平远期曲线下，敲出的 gamma 像 risk reversal 的右半边（图 19.15）；敲入的 gamma 像山丘右侧一个 call、左侧一个 put 的 gamma（图 19.16）；risk reversal 的 gamma 见图 19.17。</p>
+<p><img src="images/84a1ee6a70dc35e95bca7bf92a82e589310cb3a16a029393a840170b74f9efe3.jpg" alt="图 19.18 带轻微正漂移的敲出 gamma"></p>
+<p>引入利差，局面就复杂了（图 19.18）。Taleb 拿墨西哥这类利差 45% 的新兴市场举例：一年期、对美元的敲出 call（对墨西哥比索是 put），标的标定为 100，敲出价 105，执行价 102，波动率取 50%。这能解释为什么机构长期管不好新兴市场头寸。</p>
+<p><img src="images/e55aa2269d5d4c41e0c3ab2f91ed15dea83a3684dd0ebca819bdd51e7163aa4b.jpg" alt="图 19.19 高息资产敲出期权的 delta"></p>
+<p><img src="images/252fe7a2536b79dd26ecc27a50dbf4d5809ff797429ceeaa585504b4efde1714.jpg" alt="图 19.20 高息头寸的 gamma"></p>
+<p>图 19.19、19.20 显示：在这种条件下，障碍期权表现得像<strong>整个</strong> risk reversal，而非图 19.15 那样的半个，它的 gamma 在障碍右侧改变符号，相当令人困惑。要为这种&quot;墨西哥效应&quot;在任何路径依赖期权上定价，必须用后面讲的 Dupire-Derman-Kani 技术。</p>
+<hr>
+<h2 id="七-skew-环境下的障碍分解">七、Skew 环境下的障碍分解</h2>
+<p>如果在 Case 1（敲出 call）里，put 交易在溢价上（低执行价比高执行价贵，即正常的下行 skew），操作者就能把障碍卖得更便宜。</p>
+<div class="callout callout-important"><div class="callout-title"><span class="callout-icon">★</span><span class="callout-title-text">交易规则</span></div><div class="callout-body"><p>假设日历平坦（同波动率不分到期），在正 skew（高执行价溢价）下，敲出 call 比平 skew 世界里更便宜；负 skew 则相反。put 同理（前提是常规敲出而非反向敲出）。一般地，若触发价高于执行价，敲出期权就是 short the skew，反之 long the skew。</p>
+</div></div>
+<div class="callout callout-note"><div class="callout-title"><span class="callout-icon">✎</span><span class="callout-title-text">Option Wizard：有 skew 的地方就有 skew 不稳定</span></div><div class="callout-body"><p>交易员注意到，skew 的存在伴随第三动差的明显漂移（即强的第五动差）。强正/负三阶矩的分布会有强正/负五阶矩和更高的四阶矩。市场的波动率曲面需要 skew，是不对称性的结果，也是结构性不稳定的标志。</p>
+</div></div>
+<h4 id="long-skew-short-skew">Long skew / short skew</h4>
+<p>Long skew 指 vega（和/或 gamma）在上涨中增加、下跌中减少，等价于从正三阶矩中获益。Short skew 则相反，从负三阶矩中获益。</p>
+<h4 id="case-1-的-skew-量化尝试">Case 1 的 skew 量化尝试</h4>
+<p>skew 分析分两步：先忽略首次穿越时间，把世界简化到只看空间维度上的 skew；熟悉停止时间后，再在两个维度上看。这里出于教学在&quot;平日历&quot;世界里进行，即期权不分到期都按同一波动率交易。</p>
+<p>如果复制组合按 skew 曲线定价，交易员要找到在触发时刻值 0 的组合，这需要卖一个更虚的 put。设 skew 的斜率使 91.47 的波动率比 105 call 高 1.7 个点，按 Case 1 的比例复制（表 19.4），会发现行不通：risk reversal 在障碍处有 (0.45) 的残值。于是要给 put/call 对称引入 skew 修正，去找那个与 call 组合后在障碍处值 0 的 put。</p>
+<p>通过迭代求得这个 put 是 89.92（它的波动率比 105 call 高 2 个点）：89.92 put 在 98 处值 1.62，乘 <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.24em;vertical-align:-0.305em;"></span><span class="mord sqrt"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.935em;"><span class="svg-align" style="top:-3.2em;"><span class="pstrut" style="height:3.2em;"></span><span class="mord" style="padding-left:1em;"><span class="mord">105/89.92</span></span></span><span style="top:-2.895em;"><span class="pstrut" style="height:3.2em;"></span><span class="hide-tail" style="min-width:1.02em;height:1.28em;"><svg xmlns="http://www.w3.org/2000/svg" width="400em" height="1.28em" viewBox="0 0 400000 1296" preserveAspectRatio="xMinYMin slice"><path d="M263,681c0.7,0,18,39.7,52,119
+c34,79.3,68.167,158.7,102.5,238c34.3,79.3,51.8,119.3,52.5,120
+c340,-704.7,510.7,-1060.3,512,-1067
+l0 -0
+c4.7,-7.3,11,-11,19,-11
+H40000v40H1012.3
+s-271.3,567,-271.3,567c-38.7,80.7,-84,175,-136,283c-52,108,-89.167,185.3,-111.5,232
+c-22.3,46.7,-33.8,70.3,-34.5,71c-4.7,4.7,-12.3,7,-23,7s-12,-1,-12,-1
+s-109,-253,-109,-253c-72.7,-168,-109.3,-252,-110,-252c-10.7,8,-22,16.7,-34,26
+c-22,17.3,-33.3,26,-34,26s-26,-26,-26,-26s76,-59,76,-59s76,-60,76,-60z
+M1001 80h400000v40h-400000z"/></svg></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.305em;"><span></span></span></span></span></span></span></span></span> 后正好等于 1.74，即 call 的值。</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:right">资产价格</th>
+<th style="text-align:right">KO（平 vol 定价）</th>
+<th style="text-align:right">Call(15.7 vol)</th>
+<th style="text-align:right">Put(比 call 高 2 vol)</th>
+<th style="text-align:right">Risk Reversal</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right">95</td>
+<td style="text-align:right">0.00</td>
+<td style="text-align:right">1.06</td>
+<td style="text-align:right">2.94</td>
+<td style="text-align:right"></td>
+</tr>
+<tr>
+<td style="text-align:right">98</td>
+<td style="text-align:right">0.00</td>
+<td style="text-align:right">1.74</td>
+<td style="text-align:right">2.05</td>
+<td style="text-align:right">(0.45)</td>
+</tr>
+<tr>
+<td style="text-align:right">99</td>
+<td style="text-align:right">0.53</td>
+<td style="text-align:right">2.03</td>
+<td style="text-align:right">1.80</td>
+<td style="text-align:right">(0.10)</td>
+</tr>
+<tr>
+<td style="text-align:right">100</td>
+<td style="text-align:right">1.06</td>
+<td style="text-align:right">2.35</td>
+<td style="text-align:right">1.58</td>
+<td style="text-align:right">0.65</td>
+</tr>
+<tr>
+<td style="text-align:right">105</td>
+<td style="text-align:right">3.85</td>
+<td style="text-align:right">4.42</td>
+<td style="text-align:right">0.79</td>
+<td style="text-align:right">3.58</td>
+</tr>
+<tr>
+<td style="text-align:right">110</td>
+<td style="text-align:right">7.07</td>
+<td style="text-align:right">7.30</td>
+<td style="text-align:right">0.36</td>
+<td style="text-align:right">6.91</td>
+</tr>
+</tbody>
+</table>
+<p>关键提示：因为卖的是更虚的 put，整个结构的行为会与之前不同。skew 交易的第一课，是认识到不同波动率交易的期权有<strong>不同的时间衰减速度</strong>。交易员解出的复制组合今天在触发处无残值，明天却会有，因为他空头的 89.92 put 比 105 call 衰减得更快。</p>
+<p><strong>结论：正 skew 压低障碍的价值。</strong></p>
+<table>
+<thead>
+<tr>
+<th style="text-align:right">资产价格</th>
+<th style="text-align:right">KO</th>
+<th style="text-align:right">三月变化</th>
+<th style="text-align:right">Call</th>
+<th style="text-align:right">Put</th>
+<th style="text-align:right">Risk Reversal</th>
+<th style="text-align:right">净变化</th>
+<th style="text-align:right">净复制 P/L</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right">98</td>
+<td style="text-align:right">—</td>
+<td style="text-align:right"></td>
+<td style="text-align:right">0.80</td>
+<td style="text-align:right">0.38</td>
+<td style="text-align:right">0.40</td>
+<td style="text-align:right">0.40</td>
+<td style="text-align:right">0.40</td>
+</tr>
+<tr>
+<td style="text-align:right">99</td>
+<td style="text-align:right">0.38</td>
+<td style="text-align:right">(0.15)</td>
+<td style="text-align:right">1.01</td>
+<td style="text-align:right">0.29</td>
+<td style="text-align:right">0.70</td>
+<td style="text-align:right">0.20</td>
+<td style="text-align:right">0.35</td>
+</tr>
+<tr>
+<td style="text-align:right">100</td>
+<td style="text-align:right">0.77</td>
+<td style="text-align:right">(0.29)</td>
+<td style="text-align:right">1.26</td>
+<td style="text-align:right">0.22</td>
+<td style="text-align:right">1.03</td>
+<td style="text-align:right">0.02</td>
+<td style="text-align:right">0.30</td>
+</tr>
+<tr>
+<td style="text-align:right">105</td>
+<td style="text-align:right">3.06</td>
+<td style="text-align:right">(0.79)</td>
+<td style="text-align:right">3.19</td>
+<td style="text-align:right">0.05</td>
+<td style="text-align:right">3.13</td>
+<td style="text-align:right">(0.64)</td>
+<td style="text-align:right">0.15</td>
+</tr>
+<tr>
+<td style="text-align:right">110</td>
+<td style="text-align:right">6.24</td>
+<td style="text-align:right">(0.83)</td>
+<td style="text-align:right">6.26</td>
+<td style="text-align:right">—</td>
+<td style="text-align:right">6.26</td>
+<td style="text-align:right">(0.74)</td>
+<td style="text-align:right">0.08</td>
+</tr>
+</tbody>
+</table>
+<p>表 19.5 验证：三个月后，障碍上方的复制组合留下一个残值，让以&quot;肥 skew&quot;定价卖出障碍的交易员能挤出利润。这印证了 skew 交易员的直觉：在 skew 上得到的 put/call 对称会有利地衰减。最后一列的差额会先升后归零（市场不动则所有期权到期归零）。</p>
+<p><img src="images/b6ec39dae04b50aee6c8c4b76fd42b37e2d0ceffdbf2e64ff776f4efd599b6e0.jpg" alt="图 19.21 skew 溢价与到期时间"></p>
+<p><img src="images/bf58ae1fbd60b5078f185b4b03cdfd6d538c0ae09369e160718c296f69ef9989.jpg" alt="图 19.22 skew 溢价在时间与空间上的形态"></p>
+<p>图 19.21、19.22 显示 skew 溢价对到期时间的依赖。它说明存在 skew 时需要更复杂的定价工具，目前没有已知的闭式公式，必须用计入 skew 的数值方法给障碍定价。T 分解公式为：</p>
+<div class="math-display"><span class="katex-display"><span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord text"><span class="mord">Barrier option (skew)</span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord text"><span class="mord">Barrier option (no skew)</span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1.2em;vertical-align:-0.35em;"></span><span class="mord mathbb">E</span><span class="mord"><span class="delimsizing size1">[</span></span><span class="mord text"><span class="mord cjk_fallback">残值</span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="delimsizing mult"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.85em;"><span style="top:-2.85em;"><span class="pstrut" style="height:3.2em;"></span><span style="width:0.333em;height:1.2em;"><svg xmlns="http://www.w3.org/2000/svg" width="0.333em" height="1.2em" viewBox="0 0 333 1200"><path d="M145 15 v585 v0 v585 c2.667,10,9.667,15,21,15
+c10,0,16.667,-5,20,-15 v-585 v0 v-585 c-2.667,-10,-9.667,-15,-21,-15
+c-10,0,-16.667,5,-20,15z M188 15 H145 v585 v0 v585 h43z"/></svg></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.35em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord text"><span class="mord cjk_fallback">触障时间</span></span><span class="mord"><span class="delimsizing size1">]</span></span></span></span></span></span></div>
+<p>即&quot;带 skew 的障碍 = 无 skew 障碍 + 复制组合残值在触障时间上的条件期望&quot;。反射原理与 Girsanov 定理会加深对这套方法的理解。这个分解本身就是测度论语言：残值的条件期望相对触障（停止）时间求取，正是用 optional sampling / 强马氏性把路径在停时处&quot;切开&quot;的写法。</p>
+<hr>
+<h2 id="八-反射原理">八、反射原理</h2>
+<p><img src="images/9d00b493c2b39c576b29c885a202d3789ca5fd7601aa8eab89264de04539fba4.jpg" alt="图 19.23 反射原理"></p>
+<p>看障碍对称的另一个角度是反射原理（reflection principle）。对随机游走，从点 <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">a</span></span></span></span> 到点 <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6944em;"></span><span class="mord mathnormal">b</span></span></span></span>、不穿过原点（零）的路径数，等于从 <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6667em;vertical-align:-0.0833em;"></span><span class="mord">−</span><span class="mord mathnormal">a</span></span></span></span> 到 <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6944em;"></span><span class="mord mathnormal">b</span></span></span></span> 的路径数。这条原理只对算术路径成立，要套到金融市场，得用价格的对数来&quot;作弊&quot;。</p>
+<p><img src="images/79f19ef11d136e3cb62ed78f61c2be965cc1bd432a9cfb6d9487050f2131a113.jpg" alt="图 19.24 推广到期权对称"></p>
+<p>这把我们带回期权对称（图 19.24）。市场在 100、障碍在 98：从 100 到任何更高点、不触碰 98 的路径数，等于从 <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.0641em;vertical-align:-0.25em;"></span><span class="mord">9</span><span class="mord"><span class="mord">8</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span><span class="mord">/100</span></span></span></span> 到同一点的路径数。期权对称用对数定义距离以适配几何布朗运动，所以 <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mop"><span class="mord mathrm" style="margin-right:0.0139em;">Log</span></span><span class="mopen">(</span><span class="mord">100/98</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mop"><span class="mord mathrm" style="margin-right:0.0139em;">Log</span></span><span class="mopen">(</span><span class="mord">98/96.04</span><span class="mclose">)</span></span></span></span>。</p>
+<h3 id="二项树例子-用反射原理给障碍定价">二项树例子：用反射原理给障碍定价</h3>
+<p><img src="images/79ec00ca6f1b607fc4afec46fbe97dfa0684766ba3e79eb2283b02e61e6da992.jpg" alt="图 19.25 样本路径与反射原理"></p>
+<p>图 19.25 展示从 100 出发、通往价内（高于 100）部分的路径。设 20 个交易日（一个月），每天移动 .99，风险中性，初始让上行概率等于下行概率。Path 1 是从 100 通往各终端节点的路径数（即香草期权）；Path 2 是从 96.04 到同一终端节点的路径数（即香草与障碍之差）。</p>
+<p>香草定价的常规做法是用终端节点的内在价值乘该节点出现的风险中性概率。要小心：这里的风险中性是<strong>套利推导</strong>（期权 = gamma 损益的期望成本，见 Module B），而非真实概率。</p>
+<div class="math-display"><span class="katex-display"><span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.4277em;vertical-align:-0.7443em;"></span><span class="mord"><span class="mop op-limits"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.6833em;"><span style="top:-2.3557em;margin-left:0em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord text mtight"><span class="mord cjk_fallback mtight">节点处</span></span></span></span></span><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span><span class="mop"><span class="mord text"><span class="mord cjk_fallback">期望值</span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.7443em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1.4277em;vertical-align:-0.7443em;"></span><span class="mord"><span class="mop op-limits"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.6833em;"><span style="top:-2.3557em;margin-left:0em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord text mtight"><span class="mord cjk_fallback mtight">节点处</span></span></span></span></span><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span><span class="mop"><span class="mord text"><span class="mord cjk_fallback">内在价值</span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.7443em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:2.0463em;vertical-align:-0.686em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.3603em;"><span style="top:-2.314em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord text"><span class="mord cjk_fallback">总路径数</span></span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.677em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord text"><span class="mord cjk_fallback">通往该节点的路径数</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.686em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span></span></span></span></span></div>
+<p>总路径数为 <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8141em;"></span><span class="mord"><span class="mord">2</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">20</span></span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.8389em;vertical-align:-0.1944em;"></span><span class="mord">1</span><span class="mord"><span class="mpunct">,</span></span><span class="mord">048</span><span class="mord"><span class="mpunct">,</span></span><span class="mord">576</span></span></span></span>。例如 103.96 节点的期望支付 <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.3669em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.7278em;vertical-align:-0.0833em;"></span><span class="mord">3.96</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">38760/1048576</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">.1463</span></span></span></span>。把每个可能结果按概率加权可验证无漂移下加总为 100，这就是&quot;时间 <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6151em;"></span><span class="mord mathnormal">t</span></span></span></span> 资产价格的条件期望&quot;（条件指基于当前信息）。</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:right">终值</th>
+<th style="text-align:right">内在</th>
+<th style="text-align:right">路径数</th>
+<th style="text-align:right">概率(%)</th>
+<th style="text-align:right">期望值</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right">105.94</td>
+<td style="text-align:right">5.94</td>
+<td style="text-align:right">4,845</td>
+<td style="text-align:right">0.46</td>
+<td style="text-align:right">0.02745</td>
+</tr>
+<tr>
+<td style="text-align:right">103.96</td>
+<td style="text-align:right">3.96</td>
+<td style="text-align:right">38,760</td>
+<td style="text-align:right">3.70</td>
+<td style="text-align:right">0.14638</td>
+</tr>
+<tr>
+<td style="text-align:right">101.97</td>
+<td style="text-align:right">1.98</td>
+<td style="text-align:right">125,970</td>
+<td style="text-align:right">12.01</td>
+<td style="text-align:right">0.23787</td>
+</tr>
+<tr>
+<td style="text-align:right">100.99</td>
+<td style="text-align:right">0.99</td>
+<td style="text-align:right">167,960</td>
+<td style="text-align:right">16.02</td>
+<td style="text-align:right">0.15858</td>
+</tr>
+<tr>
+<td style="text-align:right">100.00</td>
+<td style="text-align:right">—</td>
+<td style="text-align:right">184,756</td>
+<td style="text-align:right">17.62</td>
+<td style="text-align:right">—</td>
+</tr>
+<tr>
+<td style="text-align:right">合计</td>
+<td style="text-align:right"></td>
+<td style="text-align:right">1,048,576</td>
+<td style="text-align:right"></td>
+<td style="text-align:right">0.872</td>
+</tr>
+</tbody>
+</table>
+<p>表 19.6 把所有节点的期望值加总，得到香草 100 call 约 0.872。Path 2 用反射原理给出&quot;不穿过障碍&quot;的路径数，障碍期权的价值就是 payoff 乘&quot;净路径/总路径&quot;。</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:right">资产价格</th>
+<th style="text-align:right">内在</th>
+<th style="text-align:right">Path 1</th>
+<th style="text-align:right">Path 2（反射）</th>
+<th style="text-align:right">净</th>
+<th style="text-align:right">概率(%)</th>
+<th style="text-align:right">期望值</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right">105.94</td>
+<td style="text-align:right">5.94</td>
+<td style="text-align:right">4845</td>
+<td style="text-align:right">1</td>
+<td style="text-align:right">4844</td>
+<td style="text-align:right">0.46</td>
+<td style="text-align:right">0.027</td>
+</tr>
+<tr>
+<td style="text-align:right">103.96</td>
+<td style="text-align:right">3.96</td>
+<td style="text-align:right">38760</td>
+<td style="text-align:right">190</td>
+<td style="text-align:right">38570</td>
+<td style="text-align:right">3.68</td>
+<td style="text-align:right">0.146</td>
+</tr>
+<tr>
+<td style="text-align:right">101.98</td>
+<td style="text-align:right">1.98</td>
+<td style="text-align:right">125970</td>
+<td style="text-align:right">4845</td>
+<td style="text-align:right">121125</td>
+<td style="text-align:right">11.55</td>
+<td style="text-align:right">0.229</td>
+</tr>
+<tr>
+<td style="text-align:right">100.99</td>
+<td style="text-align:right">0.99</td>
+<td style="text-align:right">167960</td>
+<td style="text-align:right">15504</td>
+<td style="text-align:right">152456</td>
+<td style="text-align:right">14.54</td>
+<td style="text-align:right">0.144</td>
+</tr>
+<tr>
+<td style="text-align:right">100</td>
+<td style="text-align:right">0.00</td>
+<td style="text-align:right">184756</td>
+<td style="text-align:right">38760</td>
+<td style="text-align:right">145996</td>
+<td style="text-align:right">13.92</td>
+<td style="text-align:right">—</td>
+</tr>
+<tr>
+<td style="text-align:right">合计</td>
+<td style="text-align:right"></td>
+<td style="text-align:right">1048576</td>
+<td style="text-align:right"></td>
+<td style="text-align:right"></td>
+<td style="text-align:right"></td>
+<td style="text-align:right">0.844</td>
+</tr>
+</tbody>
+</table>
+<p>表 19.7 给出 98 敲出的价格约 0.844（注意它略低于香草 0.872，差额就是被敲出的那部分）。由此得到核心恒等式：</p>
+<blockquote>
+<p>无 skew、无漂移时，资产在 <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.0576em;">S</span></span></span></span>、执行价 <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.0715em;">K</span></span></span></span>、障碍 <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.0813em;">H</span></span></span></span> 的常规敲出，等于同 strike、同到期的香草，减去同一香草但以镜像现货 <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.7519em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0576em;">S</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.7519em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">′</span></span></span></span></span></span></span></span></span></span></span></span> 定价的值——<span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.7519em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0576em;">S</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.7519em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">′</span></span></span></span></span></span></span></span></span></span></span></span> 是 <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.0576em;">S</span></span></span></span> 关于 <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.0813em;">H</span></span></span></span> 的对称倒数（<span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.7519em;"></span><span class="mord mathnormal" style="margin-right:0.0576em;">S</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0576em;">S</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.7519em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">′</span></span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.8141em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0813em;">H</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span></span></span></span>），数量按 <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.24em;vertical-align:-0.305em;"></span><span class="mord sqrt"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.935em;"><span class="svg-align" style="top:-3.2em;"><span class="pstrut" style="height:3.2em;"></span><span class="mord" style="padding-left:1em;"><span class="mord mathnormal" style="margin-right:0.0576em;">S</span><span class="mord">/</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0576em;">S</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.6779em;"><span style="top:-2.989em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">′</span></span></span></span></span></span></span></span></span></span></span><span style="top:-2.895em;"><span class="pstrut" style="height:3.2em;"></span><span class="hide-tail" style="min-width:1.02em;height:1.28em;"><svg xmlns="http://www.w3.org/2000/svg" width="400em" height="1.28em" viewBox="0 0 400000 1296" preserveAspectRatio="xMinYMin slice"><path d="M263,681c0.7,0,18,39.7,52,119
+c34,79.3,68.167,158.7,102.5,238c34.3,79.3,51.8,119.3,52.5,120
+c340,-704.7,510.7,-1060.3,512,-1067
+l0 -0
+c4.7,-7.3,11,-11,19,-11
+H40000v40H1012.3
+s-271.3,567,-271.3,567c-38.7,80.7,-84,175,-136,283c-52,108,-89.167,185.3,-111.5,232
+c-22.3,46.7,-33.8,70.3,-34.5,71c-4.7,4.7,-12.3,7,-23,7s-12,-1,-12,-1
+s-109,-253,-109,-253c-72.7,-168,-109.3,-252,-110,-252c-10.7,8,-22,16.7,-34,26
+c-22,17.3,-33.3,26,-34,26s-26,-26,-26,-26s76,-59,76,-59s76,-60,76,-60z
+M1001 80h400000v40h-400000z"/></svg></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.305em;"><span></span></span></span></span></span></span></span></span> 调整。</p>
+</blockquote>
+<p>例：三个月敲出 call，strike 100、spot 100、barrier 98，等于香草减去 <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.1901em;vertical-align:-0.345em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.8451em;"><span style="top:-2.655em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">98</span></span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.394em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">100</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.345em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span></span></span></span> 倍的&quot;以 96.04 定价的同一香草&quot;。再用 put-call parity 与 change of numeraire：以 96.04 现货定价的 100 strike call，等价于以 100 现货定价的 96.04 put。这就证明了前面的 skew 规则。推广到反向障碍或带返利的常规障碍，规则更复杂，需加上对应美式二元期权的 payoff。</p>
+<p>反射原理在这里把&quot;对称对冲&quot;从经验技巧升格为定理：障碍敲出价 = 香草价 − 镜像香草价，本质是首次穿越分布的反射公式（the reflection of Brownian motion at a level），把&quot;碰过障碍&quot;的路径用镜像路径一一计数后扣除。</p>
+<hr>
+<h2 id="九-girsanov-把漂移装回去">九、Girsanov：把漂移装回去</h2>
+<p><img src="images/39de8f1a38b991beb6dbe678a424a523118f23e1bb25b36fc02838d9c78205a9.jpg" alt="图 19.26 带测度变换的反射原理"></p>
+<p>把漂移引入上述框架并与反射原理混合很容易：在<strong>完全相同</strong>的路径结构上赋予不同概率，以补偿漂移。路径不变，只移动概率来改变 payoff。设这一个月里现货需赚 .99%，即一月后期望价为 100.99。Girsanov 定理允许交易员把每个结果的概率上调或下调，使期望回报达到 100.99，做法是平移终端概率。重新定价后，整个组合的价值随之改变（表 19.8）。</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:right">资产价格</th>
+<th style="text-align:right">内在</th>
+<th style="text-align:right">Path 1</th>
+<th style="text-align:right">Path 2</th>
+<th style="text-align:right">净</th>
+<th style="text-align:right">概率(%)</th>
+<th style="text-align:right">期望值</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right">103.96</td>
+<td style="text-align:right">3.96</td>
+<td style="text-align:right">77520</td>
+<td style="text-align:right">1140</td>
+<td style="text-align:right">76380</td>
+<td style="text-align:right">7.28</td>
+<td style="text-align:right">0.288</td>
+</tr>
+<tr>
+<td style="text-align:right">102.97</td>
+<td style="text-align:right">2.97</td>
+<td style="text-align:right">125970</td>
+<td style="text-align:right">4845</td>
+<td style="text-align:right">121125</td>
+<td style="text-align:right">11.55</td>
+<td style="text-align:right">0.343</td>
+</tr>
+<tr>
+<td style="text-align:right">101.98</td>
+<td style="text-align:right">1.98</td>
+<td style="text-align:right">167960</td>
+<td style="text-align:right">15504</td>
+<td style="text-align:right">152456</td>
+<td style="text-align:right">14.54</td>
+<td style="text-align:right">0.288</td>
+</tr>
+<tr>
+<td style="text-align:right">100.99</td>
+<td style="text-align:right">0.99</td>
+<td style="text-align:right">184756</td>
+<td style="text-align:right">38760</td>
+<td style="text-align:right">145996</td>
+<td style="text-align:right">13.92</td>
+<td style="text-align:right">0.138</td>
+</tr>
+<tr>
+<td style="text-align:right">合计</td>
+<td style="text-align:right"></td>
+<td style="text-align:right">1048576</td>
+<td style="text-align:right"></td>
+<td style="text-align:right"></td>
+<td style="text-align:right"></td>
+<td style="text-align:right">1.369</td>
+</tr>
+</tbody>
+</table>
+<p>这正是测度变换的精髓：<strong>Girsanov 改变测度而不改变路径（样本空间不变，只换概率权重）</strong>，几何上就是保持二项树的形状、只重排上下行概率。它与反射原理结合，就能在带漂移的世界里给障碍定价——把漂移吸收进概率测度，反射计数仍在原路径上进行。</p>
+<hr>
+<h2 id="十-时间对敲出期权的影响">十、时间对敲出期权的影响</h2>
+<p><img src="images/71bc3de3ec8cd27720e3b1124b4e1ebd6115952dc397aa91c4620e7edbf1ea6f.jpg" alt="图 19.27 敲出与香草随时间的演化（100 calls，barrier 98）"></p>
+<p>对常规敲出，时间的作用不算阴险（反向敲出才折磨人）。时间让底层期权更快失值，但同时加剧障碍处的不连续，两者部分抵消：将被敲掉的东西，本来价值就越来越小。图 19.27 显示这一点。</p>
+<p><img src="images/02a6b3e599effeebd7be1e5f91c7a947423d413a7d4c8b69719fd4b12d9452f6.jpg" alt="图 19.28 敲入与香草随时间的演化（100 calls，barrier 98）"></p>
+<p>对敲入，障碍主导结构的能力较弱，因为结构里没有相互冲突的期权。图 19.28 说明这一效果。</p>
+<hr>
+<h2 id="十一-首次穿越时间及其风险中性期望">十一、首次穿越时间及其风险中性期望</h2>
+<p>预期首次穿越时间（first exit time，或 stopping time）是资产价格在给定到期日条件下、预期穿越某点的时间。Module G 给出其分布与期望的计算。</p>
+<p>障碍期权与欧式二元期权不同，必须用<strong>久期相近</strong>的工具来对冲，这就要求随时知道预期首次穿越时间，这里即障碍被触及的时间。名义到期与预期停止时间之差，对应障碍在结构里的主导程度：障碍弱（对风险影响小）时，预期穿越时间等于名义久期；障碍强时则显著更短。</p>
+<p><img src="images/4515851452b9a787807955305c53b28035a59e181df29f69ba879761b8b9419b.jpg" alt="图 19.29 风险中性预期首次穿越时间：3 个月 100call/KO98，波动率 5、15、20%"></p>
+<p>图 19.29 显示：波动率上升，期权寿命缩短，障碍开始主导；波动率低时底层期权主导，预期首次穿越时间趋于香草到期。</p>
+<div class="callout callout-important"><div class="callout-title"><span class="callout-icon">★</span><span class="callout-title-text">交易规则</span></div><div class="callout-body"><p>首次穿越时间必定短于或等于名义到期，这使得任何用香草组合做的非套利静态复制都不完美。</p>
+</div></div>
+<p>许多简化的对冲法（如前面的 risk reversal 静态复制）不计入久期的模糊性，可能相当危险。许多软件商把早期学术文献里的同方差（恒定波动率）定价工具直接丢给交易员，只用一个波动率，而障碍可能提前到期，这在波动率期限结构上斜时导致<strong>高估</strong>，下斜（backwardation）时导致<strong>低估</strong>。</p>
+<p>这条风险管理规则的后果是：</p>
+<ul>
+<li>任何针对障碍的 vega 对冲，都要按首次穿越时间匹配障碍 payoff。</li>
+<li>对冲障碍带来的远期敞口要谨慎。首次穿越会移动、变长或变短；变长就要延长对冲久期，这种再平衡消耗巨大交易成本，因此建议在比名义更短的久期上对冲。</li>
+<li>首次穿越时间依赖波动率。市场有波动率曲线（正或负）时，它会相应变长或变短。</li>
+</ul>
+<p>这一节把&quot;障碍的真实久期是分布化的随机变量&quot;这件事讲透了。理论上，首次穿越时间 <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.5806em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.1132em;">τ</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3283em;"><span style="top:-2.55em;margin-left:-0.1132em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.0813em;">H</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mop">in<span style="margin-right:0.0778em;">f</span></span><span class="mopen">{</span><span class="mord mathnormal">s</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">:</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.8333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0576em;">S</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1514em;"><span style="top:-2.55em;margin-left:-0.0576em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">s</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.0813em;">H</span><span class="mclose">}</span></span></span></span> 是一个停时，它有自己的（逆高斯型）分布；用单一波动率给障碍定价，等于把这个分布塌缩成一个点，必然在期限结构非平时定价错误。</p>
+<hr>
+<h2 id="十二-障碍期权定价的难点与近似法">十二、障碍期权定价的难点与近似法</h2>
+<p>既然首次穿越时间不确定，定价就必须知道它落在期限结构的什么位置。目前给交易员用的多数系统定价有误，有两种&quot;凑合（fudge）&quot;的办法：</p>
+<ol>
+<li><strong>单波动率凑合法。</strong> 计算量小但欠准，作者只建议用它修补定价公式的瑕疵，它只给半个答案。</li>
+<li><strong>在 forward-forward 曲线上定价（Dupire 方法）。</strong> 计算量大但通常能准确给出真值与合适的对冲，缺点是实现繁重、收敛困难。</li>
+</ol>
+<h3 id="单波动率凑合法">单波动率凑合法</h3>
+<ul>
+<li>第一步：定出市场的隐含现货波动率曲线。</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>月</th>
+<th>1</th>
+<th>2</th>
+<th>3</th>
+<th>4</th>
+<th>5</th>
+<th>6</th>
+<th>7</th>
+<th>8</th>
+<th>9</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>波动率</td>
+<td>9.9</td>
+<td>10.25</td>
+<td>10.5</td>
+<td>10.7</td>
+<td>10.85</td>
+<td>10.95</td>
+<td>11.1</td>
+<td>11.2</td>
+<td>11.3</td>
+</tr>
+</tbody>
+</table>
+<p><img src="images/7828f8c45bef14f2d8f37bb37f9551bba13cf03ab7a2ccebcd582e963a5cdcef.jpg" alt="图 19.30 停止时间：波动率期限结构"></p>
+<ul>
+<li>第二步：求预期停止时间。注意它是分布而非定点。设其约为 6 个月，则在图 19.30 上插值得波动率 10.95，用它定义敲出期权。</li>
+<li>第三步：用合成 risk reversal 给敲出定价。主期权（前例的 105 call）按名义到期定价；第二个期权按首次穿越时间的参数定价，从而给 risk reversal 加上一个 skew 维度。</li>
+<li>第四步：求停止时间到终点之间的 forward-forward。用第 9 章的公式得 FFwd(6,9)=12%，用于确定同名义久期敲入的价值。</li>
+</ul>
+<div class="callout callout-important"><div class="callout-title"><span class="callout-icon">★</span><span class="callout-title-text">风险管理规则</span></div><div class="callout-body"><p>停止时间是分布而非定点，所以对应期权头寸的远期资产对冲必须<strong>分散</strong>布置，以匹配首次穿越时间的分布。</p>
+</div></div>
+<h3 id="更准确的方法-dupire-derman-kani-技术">更准确的方法：Dupire-Derman-Kani 技术</h3>
+<p>1992 年 Dupire 提出二维波动率过程的开创性想法：空间（spot/strike）与时间（到期）的任意两点之间，存在一个由 skew 和 forward-forward 波动率共同隐含的局部波动率。Dupire（1993）、Derman 和 Kani（1994）随后给出数值技术，把时间切成节点间的更小段，构成一个基于日历的&quot;时间-速度&quot;函数，在二项（或多项）树上使用某种柔性节点。</p>
+<p>这对任何路径依赖结构意义重大：障碍不只依赖单一波动率，而依赖每个节点的波动率，用二维波动率曲面能更精确地给障碍定价，从而<strong>同时绕开 forward-forward 问题和停止时间的估计</strong>。在伯克利，Mark Rubinstein 独立发现了隐含二项树，研究由期权价格导出的两个资产价格之间的横向波动率——Dupire 与 Derman-Kani 探索 <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.0576em;">S</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">t</span><span class="mclose">)</span></span></span></span> 与 <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.0576em;">S</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.8778em;vertical-align:-0.1944em;"></span><span class="mord">Δ</span><span class="mord mathnormal" style="margin-right:0.0576em;">S</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">t</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">Δ</span><span class="mord mathnormal">t</span><span class="mclose">)</span></span></span></span> 之间的过程，Rubinstein 探索的是 <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.0576em;">S</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">t</span><span class="mclose">)</span></span></span></span> 与 <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.0576em;">S</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">Δ</span><span class="mord mathnormal" style="margin-right:0.0576em;">S</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">t</span><span class="mclose">)</span></span></span></span> 之间的过程。</p>
+<p>实现的主要障碍是：需要大量步数才能让树收敛到稳定价格，既耗时又有收敛困难，至今没有商用系统实现这套方法。</p>
+<h3 id="附加复杂性-方差比">附加复杂性：方差比</h3>
+<p>期权交易员按某个频率（可观测的时间间隔）对冲，关心的是自己介入尺度上的波动率；几分钟对冲一次的人不在乎 tick 波动率。但障碍期权响应的是<strong>无穷小尺度</strong>的波动率，两者可能显著不同（见第 6 章）。</p>
+<p>障碍期权定价假设布朗运动的极小/极大值分布遵循与布朗运动本身相同的波动率。最直观的看法是：障碍 = 香草的风险中性贴现概率 payoff（call 为 <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.7667em;vertical-align:-0.0833em;"></span><span class="mord mathnormal" style="margin-right:0.0576em;">S</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.0715em;">K</span></span></span></span>，put 为 <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.7667em;vertical-align:-0.0833em;"></span><span class="mord mathnormal" style="margin-right:0.0715em;">K</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.0576em;">S</span></span></span></span>），<strong>条件于该期间停止时间未被触及</strong>。给常规期权加上这个条件，就是它与香草的差别。但停止时间的条件可能对极小/极大值分布敏感。第 6 章的 Parkinson number 分析提示：某日极值的分布可能与对数正态（甚至正态，一日之内差别不大）预期显著不同。</p>
+<div class="callout callout-important"><div class="callout-title"><span class="callout-icon">★</span><span class="callout-title-text">交易规则</span></div><div class="callout-body"><p>均值回复市场里，障碍期权的障碍分量被高估；趋势市场里被低估。</p>
+</div></div>
+<p>原因是：敲出更可能在市场有高日内负自相关时被敲出，而期权按收盘到收盘的波动率定价。要记住，结构是被屏幕上一个价格打印触发的，不是资产的终端状态触发的。Taleb 的经验是：每个市场，包括处于趋势中的市场（周采样波动率高于日采样），在一日框架内都会呈现均值回复，原因是参与者的执行滑点、高波动时买卖价差扩大等。</p>
+<div class="callout callout-important"><div class="callout-title"><span class="callout-icon">★</span><span class="callout-title-text">交易规则</span></div><div class="callout-body"><p>若收盘到收盘波动率低于 Parkinson number，障碍分量被常规方法低估；否则可视为高估。</p>
+</div></div>
+<p>理论上，这条对应&quot;已实现波动率的尺度依赖&quot;：障碍触发取决于路径的连续上确界 <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.0226em;vertical-align:-0.3393em;"></span><span class="mop"><span class="mop">sup</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.201em;"><span style="top:-2.4559em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">s</span><span class="mrel mtight">≤</span><span class="mord mathnormal mtight">t</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.3393em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0576em;">S</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1514em;"><span style="top:-2.55em;margin-left:-0.0576em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">s</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>，而非终值，因此它对样本路径的极值统计（由 Parkinson 高低价估计量刻画）敏感，而标准 BSM 只用收盘波动率，丢掉了这层信息。</p>
+<hr>
+<h2 id="十三-练习-加入-put">十三、练习：加入 put</h2>
+<p>作为练习，读者可重做前面的例子，给一个 98 put 在 105 敲出、以及同一个 put 在 105 敲入定价。作者认为 put 不过是合成 call，更愿意把时间花在差异真正出现的地方。换句话说，put 的障碍分析可由 call 经 put-call parity 与镜像规则平移得到，真正的新内容只在反向障碍（下一章）才出现。</p>
+<hr>
+<h2 id="十四-本章综述-理论与实务的对照">十四、本章综述：理论与实务的对照</h2>
+<table>
+<thead>
+<tr>
+<th>Taleb 的实务命题</th>
+<th>对应的理论命题</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>障碍处 delta 跳变，对冲滑点大、动态对冲贵</td>
+<td>payoff 在障碍处不连续 ⇒ delta 不连续；停时处的对冲误差</td>
+</tr>
+<tr>
+<td>障碍滑点补偿 = 在障碍处支付的小额数字期权</td>
+<td>美式二元期权的价值 <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6667em;vertical-align:-0.0833em;"></span><span class="mord">×</span></span></span></span> 触障概率</td>
+</tr>
+<tr>
+<td>敲入 + 敲出 = 香草（同 strike、同到期）</td>
+<td>&quot;碰障/未碰障&quot;对样本空间的划分，payoff 线性叠加</td>
+</tr>
+<tr>
+<td>short barrier 规则：敲入敲出配成香草，障碍处对冲注销</td>
+<td>两者 gap delta 大小相等、符号相反</td>
+</tr>
+<tr>
+<td>波动率非线性地拉近障碍；long barrier 凹 vega、short barrier 凸 vega</td>
+<td>极值（上确界）分布对 <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal" style="margin-right:0.0359em;">σ</span></span></span></span> 的非线性依赖</td>
+</tr>
+<tr>
+<td>平远期下敲出 delta 不超过 1；上斜远期下 call delta 可超 1</td>
+<td>drift 项进入 PDE；delta&gt;1 ⇒ 某处负 gamma</td>
+</tr>
+<tr>
+<td>障碍 ≈ risk reversal，put/call 对称 <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.7519em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0715em;">K</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.7519em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">′</span></span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1.0641em;vertical-align:-0.25em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.1389em;">F</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span><span class="mord">/</span><span class="mord mathnormal" style="margin-right:0.0715em;">K</span></span></span></span></td>
+<td>对数正态对称、change of numeraire、几何平均 <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.04em;vertical-align:-0.1133em;"></span><span class="mord sqrt"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.9267em;"><span class="svg-align" style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="mord" style="padding-left:0.833em;"><span class="mord mathnormal" style="margin-right:0.0715em;">K</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0715em;">K</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.6779em;"><span style="top:-2.989em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">′</span></span></span></span></span></span></span></span></span></span></span><span style="top:-2.8867em;"><span class="pstrut" style="height:3em;"></span><span class="hide-tail" style="min-width:0.853em;height:1.08em;"><svg xmlns="http://www.w3.org/2000/svg" width="400em" height="1.08em" viewBox="0 0 400000 1080" preserveAspectRatio="xMinYMin slice"><path d="M95,702
+c-2.7,0,-7.17,-2.7,-13.5,-8c-5.8,-5.3,-9.5,-10,-9.5,-14
+c0,-2,0.3,-3.3,1,-4c1.3,-2.7,23.83,-20.7,67.5,-54
+c44.2,-33.3,65.8,-50.3,66.5,-51c1.3,-1.3,3,-2,5,-2c4.7,0,8.7,3.3,12,10
+s173,378,173,378c0.7,0,35.3,-71,104,-213c68.7,-142,137.5,-285,206.5,-429
+c69,-144,104.5,-217.7,106.5,-221
+l0 -0
+c5.3,-9.3,12,-14,20,-14
+H400000v40H845.2724
+s-225.272,467,-225.272,467s-235,486,-235,486c-2.7,4.7,-9,7,-19,7
+c-6,0,-10,-1,-12,-3s-194,-422,-194,-422s-65,47,-65,47z
+M834 80h400000v40h-400000z"/></svg></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.1133em;"><span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.1389em;">F</span></span></span></span></td>
+</tr>
+<tr>
+<td>正 skew 压低敲出 call 的价；不同 vol 的腿衰减速度不同</td>
+<td>skew 定价 + 期权时间衰减随隐含波动率变化</td>
+</tr>
+<tr>
+<td>敲出 = 香草 − 镜像香草（<span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.7519em;"></span><span class="mord mathnormal" style="margin-right:0.0576em;">S</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0576em;">S</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.7519em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">′</span></span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.8141em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0813em;">H</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span></span></span></span>，比例 <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.24em;vertical-align:-0.305em;"></span><span class="mord sqrt"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.935em;"><span class="svg-align" style="top:-3.2em;"><span class="pstrut" style="height:3.2em;"></span><span class="mord" style="padding-left:1em;"><span class="mord mathnormal" style="margin-right:0.0576em;">S</span><span class="mord">/</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0576em;">S</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.6779em;"><span style="top:-2.989em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">′</span></span></span></span></span></span></span></span></span></span></span><span style="top:-2.895em;"><span class="pstrut" style="height:3.2em;"></span><span class="hide-tail" style="min-width:1.02em;height:1.28em;"><svg xmlns="http://www.w3.org/2000/svg" width="400em" height="1.28em" viewBox="0 0 400000 1296" preserveAspectRatio="xMinYMin slice"><path d="M263,681c0.7,0,18,39.7,52,119
+c34,79.3,68.167,158.7,102.5,238c34.3,79.3,51.8,119.3,52.5,120
+c340,-704.7,510.7,-1060.3,512,-1067
+l0 -0
+c4.7,-7.3,11,-11,19,-11
+H40000v40H1012.3
+s-271.3,567,-271.3,567c-38.7,80.7,-84,175,-136,283c-52,108,-89.167,185.3,-111.5,232
+c-22.3,46.7,-33.8,70.3,-34.5,71c-4.7,4.7,-12.3,7,-23,7s-12,-1,-12,-1
+s-109,-253,-109,-253c-72.7,-168,-109.3,-252,-110,-252c-10.7,8,-22,16.7,-34,26
+c-22,17.3,-33.3,26,-34,26s-26,-26,-26,-26s76,-59,76,-59s76,-60,76,-60z
+M1001 80h400000v40h-400000z"/></svg></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.305em;"><span></span></span></span></span></span></span></span></span>）</td>
+<td>布朗运动的反射原理 + put-call parity</td>
+</tr>
+<tr>
+<td>在不变路径上移动概率装回漂移</td>
+<td>Girsanov 测度变换（改测度不改路径）</td>
+</tr>
+<tr>
+<td>障碍真实久期短于名义、且是分布</td>
+<td>首次穿越时间 <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.5806em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.1132em;">τ</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3283em;"><span style="top:-2.55em;margin-left:-0.1132em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.0813em;">H</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span> 是停时，服从逆高斯型分布</td>
+</tr>
+<tr>
+<td>单波动率定价在期限结构非平时系统性错价</td>
+<td>把停时分布塌缩为点 ⇒ 上斜高估、下斜低估</td>
+</tr>
+<tr>
+<td>均值回复市场障碍被高估、趋势市场被低估</td>
+<td>障碍依赖路径上确界 ⇒ 对极值统计（Parkinson）敏感</td>
+</tr>
+<tr>
+<td>二维局部波动率给障碍精确定价</td>
+<td>Dupire-Derman-Kani 局部波动率 / 隐含二项树</td>
+</tr>
+</tbody>
+</table>
+<h3 id="核心观点">核心观点</h3>
+<p>第一，<strong>障碍把香草变成路径依赖，全部新风险都集中在障碍这条不连续线上</strong>。delta 在那里跳变，对冲成本、滑点、流动性洞都由此而来。</p>
+<p>第二，<strong>敲入与敲出是同一枚硬币</strong>。互补恒等式不仅给定价关系，还给出 short barrier 这条最干净的对冲思路：把两条腿配成香草，障碍处的跳变自动注销。</p>
+<p>第三，<strong>障碍可以近似读成 risk reversal，但这只是教学脚手架</strong>。它在平远期、稳定 skew 下成立；利差一大、skew 一动，半个 risk reversal 会变成整个，gamma 在障碍右侧变号，近似就崩了。</p>
+<p>第四，<strong>障碍的真实久期是分布化的停时</strong>。用单一波动率、用香草静态复制，在原理上就是错的，错的方向由波动率期限结构的斜率决定。</p>
+<p>第五，<strong>障碍响应无穷小尺度的波动率与路径极值</strong>，所以收盘波动率、均值回复与趋势、Parkinson number 都会进入它的真实价值。</p>
+<h3 id="面对一张新障碍结构的操作清单">面对一张新障碍结构的操作清单</h3>
+<ol>
+<li>它是常规还是反向？期权在虚值还是实值处生灭？（决定本章方法是否够用，还是要等第 20 章）</li>
+<li>障碍处 delta 跳变多大？平掉对冲的滑点成本，等于一个多大的数字期权？</li>
+<li>能否用 short barrier 把它和互补的敲入/敲出配成香草，注销障碍处的跳变？</li>
+<li>把它读成 risk reversal：对称 put/call 的执行价 <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.7519em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0715em;">K</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.7519em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">′</span></span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1.0641em;vertical-align:-0.25em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.1389em;">F</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span><span class="mord">/</span><span class="mord mathnormal" style="margin-right:0.0715em;">K</span></span></span></span>、比例 <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.24em;vertical-align:-0.305em;"></span><span class="mord sqrt"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.935em;"><span class="svg-align" style="top:-3.2em;"><span class="pstrut" style="height:3.2em;"></span><span class="mord" style="padding-left:1em;"><span class="mord"><span class="mord mathnormal" style="margin-right:0.0715em;">K</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.6779em;"><span style="top:-2.989em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">′</span></span></span></span></span></span></span></span></span><span class="mord">/</span><span class="mord mathnormal" style="margin-right:0.0715em;">K</span></span></span><span style="top:-2.895em;"><span class="pstrut" style="height:3.2em;"></span><span class="hide-tail" style="min-width:1.02em;height:1.28em;"><svg xmlns="http://www.w3.org/2000/svg" width="400em" height="1.28em" viewBox="0 0 400000 1296" preserveAspectRatio="xMinYMin slice"><path d="M263,681c0.7,0,18,39.7,52,119
+c34,79.3,68.167,158.7,102.5,238c34.3,79.3,51.8,119.3,52.5,120
+c340,-704.7,510.7,-1060.3,512,-1067
+l0 -0
+c4.7,-7.3,11,-11,19,-11
+H40000v40H1012.3
+s-271.3,567,-271.3,567c-38.7,80.7,-84,175,-136,283c-52,108,-89.167,185.3,-111.5,232
+c-22.3,46.7,-33.8,70.3,-34.5,71c-4.7,4.7,-12.3,7,-23,7s-12,-1,-12,-1
+s-109,-253,-109,-253c-72.7,-168,-109.3,-252,-110,-252c-10.7,8,-22,16.7,-34,26
+c-22,17.3,-33.3,26,-34,26s-26,-26,-26,-26s76,-59,76,-59s76,-60,76,-60z
+M1001 80h400000v40h-400000z"/></svg></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.305em;"><span></span></span></span></span></span></span></span></span> 是多少？在障碍处是否归零？</li>
+<li>skew 是正是负？触发价相对执行价在上还是在下，决定它 long skew 还是 short skew？</li>
+<li>远期曲线平不平？利差会不会让半个 risk reversal 变成整个、让 delta 越过 1、让 gamma 变号？</li>
+<li>预期首次穿越时间落在期限结构哪里？该用哪个波动率？远期对冲是否按停时分布分散布置？</li>
+<li>市场更像均值回复还是趋势？收盘波动率与 Parkinson number 孰高孰低？障碍分量被高估还是低估？</li>
+</ol>
+<h3 id="一句话收束">一句话收束</h3>
+<p>障碍期权最该记住的一句：<strong>它名义上是一张香草，真实身份是写在一个不连续边界上的、久期随机的路径依赖结构；你能否对冲它，取决于你能否同时管好障碍处的跳变、停时的分布和路径极值这三件被普通 BSM 丢掉的东西。</strong></p>
+
+<nav class="pager-row"><a class="pager prev" href="chapter-18-binary-options-american-style.html"><span class="pager-dir">← 上一篇</span><span class="pager-name">美式二元期权</span></a><a class="pager next" href="chapter-20-barrier-options-ii.html"><span class="pager-dir">下一篇 →</span><span class="pager-name">障碍期权</span></a></nav>
+</article>
+<nav class="toc" aria-label="本章目录"><div class="toc-title">本章目录</div><ul><li class="toc-l2"><a href="#导读-本章要解决的问题">导读：本章要解决的问题</a></li>
+<li class="toc-l2"><a href="#一-障碍期权的分类-常规与反向">一、障碍期权的分类：常规与反向</a></li>
+<li class="toc-l2"><a href="#二-敲出期权-折价的代价藏在障碍处">二、敲出期权：折价的代价藏在障碍处</a></li>
+<li class="toc-l3"><a href="#障碍处的-delta-不连续是核心难点">障碍处的 delta 不连续是核心难点</a></li>
+<li class="toc-l3"><a href="#谁在买敲出期权">谁在买敲出期权</a></li>
+<li class="toc-l3"><a href="#卖方为什么要多买-delta">卖方为什么要多买 delta</a></li>
+<li class="toc-l2"><a href="#三-敲入期权-敲出的镜像">三、敲入期权：敲出的镜像</a></li>
+<li class="toc-l3"><a href="#互补恒等式与-short-barrier-规则">互补恒等式与 short barrier 规则</a></li>
+<li class="toc-l2"><a href="#四-波动率的影响-障碍如何非线性地逼近">四、波动率的影响：障碍如何非线性地逼近</a></li>
+<li class="toc-l2"><a href="#五-加入漂移-远期线带来的复杂性">五、加入漂移：远期线带来的复杂性</a></li>
+<li class="toc-l3"><a href="#risk-reversals">Risk reversals</a></li>
+<li class="toc-l2"><a href="#六-put-call-对称与障碍期权的对冲">六、Put/Call 对称与障碍期权的对冲</a></li>
+<li class="toc-l3"><a href="#option-wizard-期权对称">Option Wizard：期权对称</a></li>
+<li class="toc-l3"><a href="#用-risk-reversal-近似复制障碍">用 risk reversal 近似复制障碍</a></li>
+<li class="toc-l3"><a href="#这套方法的三个好处">这套方法的三个好处</a></li>
+<li class="toc-l3"><a href="#这套方法的陷阱">这套方法的陷阱</a></li>
+<li class="toc-l2"><a href="#七-skew-环境下的障碍分解">七、Skew 环境下的障碍分解</a></li>
+<li class="toc-l2"><a href="#八-反射原理">八、反射原理</a></li>
+<li class="toc-l3"><a href="#二项树例子-用反射原理给障碍定价">二项树例子：用反射原理给障碍定价</a></li>
+<li class="toc-l2"><a href="#九-girsanov-把漂移装回去">九、Girsanov：把漂移装回去</a></li>
+<li class="toc-l2"><a href="#十-时间对敲出期权的影响">十、时间对敲出期权的影响</a></li>
+<li class="toc-l2"><a href="#十一-首次穿越时间及其风险中性期望">十一、首次穿越时间及其风险中性期望</a></li>
+<li class="toc-l2"><a href="#十二-障碍期权定价的难点与近似法">十二、障碍期权定价的难点与近似法</a></li>
+<li class="toc-l3"><a href="#单波动率凑合法">单波动率凑合法</a></li>
+<li class="toc-l3"><a href="#更准确的方法-dupire-derman-kani-技术">更准确的方法：Dupire-Derman-Kani 技术</a></li>
+<li class="toc-l3"><a href="#附加复杂性-方差比">附加复杂性：方差比</a></li>
+<li class="toc-l2"><a href="#十三-练习-加入-put">十三、练习：加入 put</a></li>
+<li class="toc-l2"><a href="#十四-本章综述-理论与实务的对照">十四、本章综述：理论与实务的对照</a></li>
+<li class="toc-l3"><a href="#核心观点">核心观点</a></li>
+<li class="toc-l3"><a href="#面对一张新障碍结构的操作清单">面对一张新障碍结构的操作清单</a></li>
+<li class="toc-l3"><a href="#一句话收束">一句话收束</a></li></ul></nav>
+</main>
+<script src="assets/app.js"></script>
+</body>
+</html>

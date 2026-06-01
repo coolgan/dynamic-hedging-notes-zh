@@ -1,0 +1,980 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>第八章：Gamma 与 Shadow Gamma（Gamma and Shadow Gamma） · Dynamic Hedging 精读笔记</title>
+<link rel="stylesheet" href="assets/katex.min.css">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<button id="menuToggle" class="menu-toggle" aria-label="目录">☰</button>
+<aside class="sidebar" id="sidebar">
+<a class="brand" href="index.html"><span class="brand-title">Dynamic Hedging 精读笔记</span><span class="brand-sub">Nassim Taleb · 动态对冲 · 中文精读笔记</span></a><div class="nav-search"><input type="search" id="navSearch" placeholder="筛选章节…" autocomplete="off"></div><div class="nav-section"><h3 class="nav-section-title">正文章节</h3><ul><li><a href="chapter-01-introduction-to-the-instruments.html"><span class="nav-tag">第一章</span><span class="nav-name">金融工具导论</span></a></li>
+<li><a href="chapter-02-the-generalized-option.html"><span class="nav-tag">第二章</span><span class="nav-name">广义期权</span></a></li>
+<li><a href="chapter-03-market-making-and-market-using.html"><span class="nav-tag">第三章</span><span class="nav-name">做市与用市</span></a></li>
+<li><a href="chapter-04-liquidity-and-liquidity-holes.html"><span class="nav-tag">第四章</span><span class="nav-name">流动性与流动性洞</span></a></li>
+<li><a href="chapter-05-arbitrage-and-the-arbitrageurs.html"><span class="nav-tag">第五章</span><span class="nav-name">套利与套利者</span></a></li>
+<li><a href="chapter-06-volatility-and-correlation.html"><span class="nav-tag">第六章</span><span class="nav-name">波动率与相关性</span></a></li>
+<li><a href="chapter-07-adapting-black-scholes-merton-the-delta.html"><span class="nav-tag">第七章</span><span class="nav-name">改造 Black-Scholes-Merton —— Delta</span></a></li>
+<li class="active"><a href="chapter-08-gamma-and-shadow-gamma.html"><span class="nav-tag">第八章</span><span class="nav-name">Gamma 与 Shadow Gamma</span></a></li>
+<li><a href="chapter-09-vega-and-the-volatility-surface.html"><span class="nav-tag">第九章</span><span class="nav-name">Vega 与波动率曲面</span></a></li>
+<li><a href="chapter-10-theta-and-minor-greeks.html"><span class="nav-tag">第十章</span><span class="nav-name">Theta 与次要希腊字母</span></a></li>
+<li><a href="chapter-11-the-greeks-and-their-behavior.html"><span class="nav-tag">第十一章</span><span class="nav-name">希腊字母的动态行为</span></a></li>
+<li><a href="chapter-12-fungibility-convergence-and-stacking.html"><span class="nav-tag">第12章</span><span class="nav-name">可替代性、收敛与堆叠</span></a></li>
+<li><a href="chapter-13-some-wrinkles-of-option-markets.html"><span class="nav-tag">第13章</span><span class="nav-name">期权市场的一些褶皱</span></a></li>
+<li><a href="chapter-14-bucketing-and-topography.html"><span class="nav-tag">第14章</span><span class="nav-name">分桶与地形图</span></a></li>
+<li><a href="chapter-15-beware-the-distribution.html"><span class="nav-tag">第15章</span><span class="nav-name">当心分布</span></a></li>
+<li><a href="chapter-16-option-trading-concepts.html"><span class="nav-tag">第16章</span><span class="nav-name">期权交易概念</span></a></li>
+<li><a href="chapter-17-binary-options-european-style.html"><span class="nav-tag">第17章</span><span class="nav-name">欧式二元期权</span></a></li>
+<li><a href="chapter-18-binary-options-american-style.html"><span class="nav-tag">第18章</span><span class="nav-name">美式二元期权</span></a></li>
+<li><a href="chapter-19-barrier-options-i.html"><span class="nav-tag">第19章</span><span class="nav-name">障碍期权</span></a></li>
+<li><a href="chapter-20-barrier-options-ii.html"><span class="nav-tag">第20章</span><span class="nav-name">障碍期权</span></a></li>
+<li><a href="chapter-21-compound-choosers-and-higher-order-options.html"><span class="nav-tag">第21章</span><span class="nav-name">复合期权、选择者期权与高阶期权</span></a></li>
+<li><a href="chapter-22-multiasset-options.html"><span class="nav-tag">第22章</span><span class="nav-name">多资产期权</span></a></li>
+<li><a href="chapter-23-minor-exotics-lookback-and-asian-options.html"><span class="nav-tag">第23章</span><span class="nav-name">次要奇异期权——回望与亚式期权</span></a></li></ul></div><div class="nav-section"><h3 class="nav-section-title">附录模块</h3><ul><li><a href="module-a-brownian-motion-on-a-spreadsheet.html"><span class="nav-tag">模块 A</span><span class="nav-name">电子表格上的布朗运动教程</span></a></li>
+<li><a href="module-b-risk-neutrality-explained.html"><span class="nav-tag">模块 B</span><span class="nav-name">风险中性解释</span></a></li>
+<li><a href="module-c-numeraire-relativity-and-the-two-country-paradox.html"><span class="nav-tag">模块 C</span><span class="nav-name">计价单位相对性与两国悖论</span></a></li>
+<li><a href="module-d-correlation-triangles.html"><span class="nav-tag">模块 D</span><span class="nav-name">相关性三角，一个图形化案例</span></a></li>
+<li><a href="module-e-the-value-at-risk.html"><span class="nav-tag">模块 E</span><span class="nav-name">风险价值</span></a></li>
+<li><a href="module-f-probabilistic-rankings-in-arbitrage.html"><span class="nav-tag">模块 F</span><span class="nav-name">套利中的概率排序</span></a></li>
+<li><a href="module-g-option-pricing.html"><span class="nav-tag">模块 G</span><span class="nav-name">期权定价</span></a></li></ul></div>
+</aside>
+<div class="overlay" id="overlay"></div>
+<main class="content">
+<article class="note">
+<h1 id="第八章-gamma-与-shadow-gamma-gamma-and-shadow-gamma">第八章：Gamma 与 Shadow Gamma（Gamma and Shadow Gamma）</h1>
+<blockquote>
+<p>那家伙没把二阶导数搞对。 —— 1994 年某交易员对一只号称&quot;市场中性&quot;却爆仓的对冲基金的评语</p>
+</blockquote>
+<h2 id="导读-本章要解决的问题">导读：本章要解决的问题</h2>
+<p>上一章把 delta 拆穿成&quot;原点处的一条切线&quot;，本章顺着同一条逻辑往二阶走：既然一阶量靠不住，那个本该补全它的二阶量 gamma 可靠吗？Taleb 的回答仍然是否定的，而且否定得更彻底。**gamma 作为一个解析二阶导数，在单期权上就已经左右不对称，在组合上会随现货点跳变符号，到了真实市场里它还漏掉了一件最致命的事：市场一动，波动率会跟着动。**把这层联动补回去，就是本章的主角 shadow gamma（影子 gamma）。</p>
+<p>Taleb 用一个 1994 年的真实事故开篇。一只号称&quot;市场中性&quot;的对冲基金亏掉至少 6 亿美元，一位交易员的解释只有一句：&quot;那家伙没把二阶导数搞对。&quot;这句话定下全章基调：市场中性是一阶概念，真正埋雷的在二阶以上，而且二阶本身还会被波动率这个&quot;隐藏维度&quot;重新改写。</p>
+<p>把本章压成四条主线：</p>
+<ol>
+<li><strong>gamma 在时间上不均匀</strong>。平值期权临到期 gamma 最大，虚值期权离到期越远 gamma 越大。这让日历价差的 gamma 比较变得危险，必须给每个 gamma 配一个价格区间。</li>
+<li><strong>gamma 在空间上对组合失真</strong>。组合把 gamma 变得&quot;局部化&quot;，同一本账可能在 100 long gamma、在 101.65 short gamma。解药是分别算 up-gamma 和 down-gamma，平均它们会骗人，风险逆转（risk reversal）正是被这种平均掩盖的结构。</li>
+<li><strong>不同到期的 gamma 不能直接比</strong>。后月合约的方差未必等于前月，basis 与现货相关会让远期移动不等幅，必须做波动率折算。</li>
+<li><strong>gamma 必须升级成 shadow gamma</strong>。把&quot;市场移动 ⇒ 波动率移动&quot;（biased asset 还要加上&quot;⇒ 利率差移动&quot;）这层可预测的联动嵌进 delta 的重算里。</li>
+</ol>
+<p>对我们这类读者，本章的理论价值在几处映射：up/down gamma 就是<strong>单侧二阶差分</strong>，揭示三阶量 DgammaDspot（speed）；后月 gamma 折算对应<strong>远期曲线协方差矩阵</strong>与久期加权；shadow gamma 是把 <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal" style="margin-right:0.0359em;">σ</span></span></span></span> 写成现货路径的确定性函数 <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.0359em;">σ</span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.0576em;">S</span><span class="mclose">)</span></span></span></span>，于是真实的对冲斜率里多出一项 <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord" style="margin-right:0.0556em;">∂</span><span class="mord">Δ/</span><span class="mord" style="margin-right:0.0556em;">∂</span><span class="mord mathnormal" style="margin-right:0.0359em;">σ</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">⋅</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1.0019em;vertical-align:-0.25em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0359em;">σ</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.7519em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">′</span></span></span></span></span></span></span></span></span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.0576em;">S</span><span class="mclose">)</span></span></span></span>，这正是 <strong>vanna</strong>（DdeltaDvol）通过价格-波动率联动进入有效 gamma 的机制；GARCH gamma 则把这种联动建成一个<strong>条件异方差</strong>的预测模型。笔记沿原文小节顺序展开，并在每个节点把这层映射写出来。</p>
+<hr>
+<h2 id="一-简单-gamma-它在时间上并不均匀">一、简单 Gamma：它在时间上并不均匀</h2>
+<p>gamma 是衍生品对资产价格的二阶（数学）导数，解析上很容易算：</p>
+<div class="math-display"><span class="katex-display"><span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord">Γ</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:2.1771em;vertical-align:-0.686em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.4911em;"><span style="top:-2.314em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord" style="margin-right:0.0556em;">∂</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.109em;">U</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.7401em;"><span style="top:-2.989em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.677em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord"><span class="mord" style="margin-right:0.0556em;">∂</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span><span class="mord mathnormal" style="margin-right:0.1389em;">F</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.686em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span></span></span></span></span></div>
+<p>定义没有悬念，对我们也无新意。Taleb 真正要敲的是 gamma 在空间和时间上的不均匀，尤其是它随时间的演化（即固定现货、让时间流逝时 gamma 怎么变）：</p>
+<ul>
+<li>对<strong>平值期权</strong>，gamma 在临近到期时最大；</li>
+<li>对<strong>虚值期权</strong>，gamma 在离到期还很远时最大。</li>
+</ul>
+<p>这背后的直觉用我们的语言讲很清楚。平值期权临到期时，价值函数在 strike 附近从平滑的弯曲坍缩成 <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mop">max</span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.0576em;">S</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.0715em;">K</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord">0</span><span class="mclose">)</span></span></span></span> 的尖角，曲率集中到一个越来越窄的区间，gamma 峰值因此飙升（解析上 <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord">Γ</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3283em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">A</span><span class="mord mathnormal mtight" style="margin-right:0.1389em;">T</span><span class="mord mathnormal mtight" style="margin-right:0.109em;">M</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">∝</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1.1425em;vertical-align:-0.25em;"></span><span class="mord">1/</span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.0576em;">S</span><span class="mord mathnormal" style="margin-right:0.0359em;">σ</span><span class="mord sqrt"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.8925em;"><span class="svg-align" style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="mord" style="padding-left:0.833em;"><span class="mord mathnormal">t</span></span></span><span style="top:-2.8525em;"><span class="pstrut" style="height:3em;"></span><span class="hide-tail" style="min-width:0.853em;height:1.08em;"><svg xmlns="http://www.w3.org/2000/svg" width="400em" height="1.08em" viewBox="0 0 400000 1080" preserveAspectRatio="xMinYMin slice"><path d="M95,702
+c-2.7,0,-7.17,-2.7,-13.5,-8c-5.8,-5.3,-9.5,-10,-9.5,-14
+c0,-2,0.3,-3.3,1,-4c1.3,-2.7,23.83,-20.7,67.5,-54
+c44.2,-33.3,65.8,-50.3,66.5,-51c1.3,-1.3,3,-2,5,-2c4.7,0,8.7,3.3,12,10
+s173,378,173,378c0.7,0,35.3,-71,104,-213c68.7,-142,137.5,-285,206.5,-429
+c69,-144,104.5,-217.7,106.5,-221
+l0 -0
+c5.3,-9.3,12,-14,20,-14
+H400000v40H845.2724
+s-225.272,467,-225.272,467s-235,486,-235,486c-2.7,4.7,-9,7,-19,7
+c-6,0,-10,-1,-12,-3s-194,-422,-194,-422s-65,47,-65,47z
+M834 80h400000v40h-400000z"/></svg></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.1475em;"><span></span></span></span></span></span><span class="mclose">)</span></span></span></span>，<span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6151em;"></span><span class="mord mathnormal">t</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">→</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">0</span></span></span></span> 时发散）。虚值期权则相反，离到期远时还有足够的扩散概率让现货漂到 strike 附近，曲率铺在一段较宽的价格区间上；临到期时它大概率一文不值，曲率反而塌缩到零。</p>
+<h3 id="日历价差的陷阱-短跑者与马拉松者">日历价差的陷阱：短跑者与马拉松者</h3>
+<p>gamma 的时间依赖对日历价差（calendar spread）有直接后果。</p>
+<p><img src="images/9f15507c32f12fae7a4b86f050483b121cf02a4ede05a0132bcd538931200814.jpg" alt="图 8.1 Gamma 随时间变化。A 是 3 个月期权，B 是 6 个月期权，同为 100 strike"></p>
+<p>图 8.1 里，交易员买入期权 A（3 个月）、卖出期权 B（6 个月）。平值处 gamma 为正（A 线高于 B 线），但两条线会在某个价格水平交叉。Taleb 的比喻很传神：短跑者和马拉松者，马拉松者赢长距离，短跑者赢百米冲刺，中间必有一个距离两人速度相等。短期权的 gamma 在平值附近又高又尖（百米冲刺快），离开平值衰减得也快；长期权的 gamma 矮而宽（长距离耐力好）。</p>
+<p>这张图暴露的对冲陷阱很实在：操作者常常用一笔期权交易去对冲眼前的 gamma 需求（定义在原点附近一个狭窄区域），却没给头寸提供长期稳定性。他们盯着 gamma 报告、买入&quot;恰好够用&quot;的保护，可这种保护在一个爆发的市场里可能转瞬即逝：你买的是百米冲刺的保护，市场却要跑马拉松。</p>
+<div class="callout callout-important"><div class="callout-title"><span class="callout-icon">★</span><span class="callout-title-text">风险管理规则</span></div><div class="callout-body"><p>每一个 gamma 度量都必须附带一个价格区间。</p>
+</div></div>
+<p>这条规则和第七章&quot;每个 delta 都要附带步长 <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord">Δ</span><span class="mord mathnormal" style="margin-right:0.109em;">U</span></span></span></span>&quot;是同一思路的延续：**离散世界里的希腊字母没有区间就没有意义。**一个 gamma 数字不说清它在多大的价格移动、多长的时间窗里成立，就只是一个原点附近的瞬时曲率，对真实的多日、大幅移动毫无承诺力。</p>
+<hr>
+<h2 id="二-账本的-gamma-失真-up-gamma-与-down-gamma">二、账本的 Gamma 失真：up-gamma 与 down-gamma</h2>
+<p>比 delta 更甚，gamma 度量常常太&quot;窄&quot;，无法显示一个合乎逻辑的增量内真实移动的结果。对一个账本（book），这个度量精度更差，因为期权数量的累加让 gamma 变得&quot;局部化&quot;，越来越依赖某个特定的现货区间。一本账可能在 100 处 long gamma、在 101.65 处 short gamma、再高一点又 long，取决于在给定现货点上是哪个结构占主导。</p>
+<p>实务上稳妥的做法是变动标的价格、在增量上计算对冲比率的实际变化，而且要做两次：</p>
+<ol>
+<li>把价格往北移、算 delta 的变化，得到 <strong>up-gamma</strong>；</li>
+<li>把价格往南移、算 delta 的变化，得到 <strong>down-gamma</strong>。</li>
+</ol>
+<p>up-gamma（右 gamma）是标的上移某个设定增量时离散计算的 delta 变化；down-gamma（左 gamma）是标的下移时的同一量。</p>
+<h3 id="理论映射-up-down-gamma-是单侧二阶差分-泄露了-speed">理论映射：up/down gamma 是单侧二阶差分，泄露了 speed</h3>
+<p>把两者平均、汇总成一个总 gamma 是有欺骗性的。在风险逆转情形里，gamma 一个方向为正、另一个方向为负，净掉两者会让 gamma 看起来骗人地&quot;square&quot;（中性）。用 up-gamma 和 down-gamma 分开看，才能显示<strong>三阶风险</strong>。</p>
+<p>这里的数学很直接。中心二阶差分给出对称的 gamma，但 up 与 down 分开正是两个<strong>单侧</strong>估计：</p>
+<div class="math-display"><span class="katex-display"><span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.9694em;vertical-align:-0.2861em;"></span><span class="mord"><span class="mord">Γ</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1514em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">u</span><span class="mord mathnormal mtight">p</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">≈</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:2.113em;vertical-align:-0.686em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.427em;"><span style="top:-2.314em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathnormal">h</span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.677em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord">Δ</span><span class="mopen">(</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0576em;">S</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:-0.0576em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">0</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord mathnormal">h</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord">Δ</span><span class="mopen">(</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0576em;">S</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:-0.0576em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">0</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mclose">)</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.686em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span><span class="mpunct">,</span><span class="mspace" style="margin-right:2em;"></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mord">Γ</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">d</span><span class="mord mathnormal mtight">o</span><span class="mord mathnormal mtight" style="margin-right:0.0269em;">w</span><span class="mord mathnormal mtight">n</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">≈</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:2.113em;vertical-align:-0.686em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.427em;"><span style="top:-2.314em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathnormal">h</span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.677em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord">Δ</span><span class="mopen">(</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0576em;">S</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:-0.0576em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">0</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord">Δ</span><span class="mopen">(</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0576em;">S</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:-0.0576em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">0</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord mathnormal">h</span><span class="mclose">)</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.686em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span></span></span></span></span></div>
+<p>两者之差正比于三阶导数：</p>
+<div class="math-display"><span class="katex-display"><span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.9694em;vertical-align:-0.2861em;"></span><span class="mord"><span class="mord">Γ</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1514em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">u</span><span class="mord mathnormal mtight">p</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.8333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord">Γ</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">d</span><span class="mord mathnormal mtight">o</span><span class="mord mathnormal mtight" style="margin-right:0.0269em;">w</span><span class="mord mathnormal mtight">n</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">≈</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6944em;"></span><span class="mord mathnormal">h</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">⋅</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:2.1771em;vertical-align:-0.686em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.4911em;"><span style="top:-2.314em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord" style="margin-right:0.0556em;">∂</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.109em;">U</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.7401em;"><span style="top:-2.989em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">3</span></span></span></span></span></span></span></span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.677em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord"><span class="mord" style="margin-right:0.0556em;">∂</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">3</span></span></span></span></span></span></span></span><span class="mord mathnormal" style="margin-right:0.1389em;">F</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.686em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6944em;"></span><span class="mord mathnormal">h</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">⋅</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="mord text"><span class="mord">Speed</span></span></span></span></span></span></div>
+<p>Taleb 把这个三阶量叫 DgammaDspot（speed）。所以分别报 up/down gamma，本质是用一组单侧差分把被对称平均抹掉的 speed 暴露出来。一个 gamma 报表若只给中心值，就等于假设 speed 为零，而在风险逆转、临近到期、含障碍的账本里 speed 恰恰很大。</p>
+<div class="callout callout-note"><div class="callout-title"><span class="callout-icon">✎</span><span class="callout-title-text">定义：风险逆转（risk reversal）</span></div><div class="callout-body"><p>任何在某个增量上 up-gamma 与 down-gamma 符号相反的头寸。</p>
+</div></div>
+<h3 id="option-wizard-交易员的-gamma-本就包含一点三阶">Option Wizard：交易员的&quot;gamma&quot;本就包含一点三阶</h3>
+<div class="callout callout-note"><div class="callout-title"><span class="callout-icon">✎</span><span class="callout-title-text">Option Wizard：给风险经理的更多陷阱</span></div><div class="callout-body"><p>没有市场经验的风险经理常指责交易员&quot;把三阶导数塞进分析里&quot;。但交易员需要在每个环节都用尽可能有力的度量，哪怕他口中的&quot;gamma&quot;超出了它理论上的范围。</p>
+</div></div>
+<p>Taleb 这句话点破了交易语言与教科书定义的错位：交易员把&quot;带一点 gamma 的东西&quot;叫 delta，把&quot;带一点 DdeltaDvol 的东西&quot;叫 gamma。这谈不上用词不严谨，它是离散对冲的现实要求：你在一个有限步长上重算对冲比率，得到的数天然混入了高一阶的信息。风险经理若按教科书的纯二阶定义去卡交易员，反而是把更贫信息的度量强加给更富信息的实务。</p>
+<h3 id="例-一个常规期权的不稳定-delta">例：一个常规期权的不稳定 delta</h3>
+<p>交易员 long 2,000M 的 110 call，还剩 1 个月到期，初始 delta 是 36M，他做到 delta 中性（小小的 1.8%），波动率 15.7%。表 8.1 给出 up-gamma 和 down-gamma 的变化：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:right">资产</th>
+<th style="text-align:right">Delta</th>
+<th style="text-align:right">Up-Gamma</th>
+<th style="text-align:right">Down-Gamma</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right">93.5</td>
+<td style="text-align:right">-36</td>
+<td style="text-align:right">0</td>
+<td style="text-align:right">0</td>
+</tr>
+<tr>
+<td style="text-align:right">95</td>
+<td style="text-align:right">-35</td>
+<td style="text-align:right">1</td>
+<td style="text-align:right">1</td>
+</tr>
+<tr>
+<td style="text-align:right">96</td>
+<td style="text-align:right">-33</td>
+<td style="text-align:right">3</td>
+<td style="text-align:right">1</td>
+</tr>
+<tr>
+<td style="text-align:right">97</td>
+<td style="text-align:right">-30</td>
+<td style="text-align:right">5</td>
+<td style="text-align:right">3</td>
+</tr>
+<tr>
+<td style="text-align:right">98</td>
+<td style="text-align:right">-25</td>
+<td style="text-align:right">9</td>
+<td style="text-align:right">5</td>
+</tr>
+<tr>
+<td style="text-align:right">99</td>
+<td style="text-align:right">-16</td>
+<td style="text-align:right">16</td>
+<td style="text-align:right">9</td>
+</tr>
+<tr>
+<td style="text-align:right">99.5</td>
+<td style="text-align:right">-9</td>
+<td style="text-align:right">20</td>
+<td style="text-align:right">12</td>
+</tr>
+<tr>
+<td style="text-align:right">100.0</td>
+<td style="text-align:right">0</td>
+<td style="text-align:right">25</td>
+<td style="text-align:right">16</td>
+</tr>
+<tr>
+<td style="text-align:right">100.5</td>
+<td style="text-align:right">11</td>
+<td style="text-align:right">30</td>
+<td style="text-align:right">20</td>
+</tr>
+<tr>
+<td style="text-align:right">101</td>
+<td style="text-align:right">25</td>
+<td style="text-align:right">37</td>
+<td style="text-align:right">25</td>
+</tr>
+<tr>
+<td style="text-align:right">102</td>
+<td style="text-align:right">62</td>
+<td style="text-align:right">52</td>
+<td style="text-align:right">37</td>
+</tr>
+<tr>
+<td style="text-align:right">103</td>
+<td style="text-align:right">114</td>
+<td style="text-align:right">71</td>
+<td style="text-align:right">52</td>
+</tr>
+<tr>
+<td style="text-align:right">104</td>
+<td style="text-align:right">185</td>
+<td style="text-align:right">91</td>
+<td style="text-align:right">71</td>
+</tr>
+<tr>
+<td style="text-align:right">105</td>
+<td style="text-align:right">276</td>
+<td style="text-align:right">111</td>
+<td style="text-align:right">91</td>
+</tr>
+<tr>
+<td style="text-align:right">106</td>
+<td style="text-align:right">387</td>
+<td style="text-align:right">131</td>
+<td style="text-align:right">111</td>
+</tr>
+<tr>
+<td style="text-align:right">107</td>
+<td style="text-align:right">518</td>
+<td style="text-align:right">146</td>
+<td style="text-align:right">131</td>
+</tr>
+<tr>
+<td style="text-align:right">107.5</td>
+<td style="text-align:right">589</td>
+<td style="text-align:right">152</td>
+<td style="text-align:right">139</td>
+</tr>
+</tbody>
+</table>
+<p><img src="images/b0892e9d4716d0e480c125710b5881d80e9b9b81ff4faf7c38f4a490f5c44c6a.jpg" alt="图 8.2 单一期权的不稳定 delta"></p>
+<p>图 8.2 让任何人都能看出 delta 变化率的不稳定：每个价位上 up-gamma 与 down-gamma 都有差异。就连这样一个最普通的单腿 call，速度（speed）也无处不在：100 处 up-gamma 25、down-gamma 16，差了 9，这 9 就是被对称 gamma 抹掉的三阶信息。</p>
+<h3 id="例-风险逆转-gamma-必须相对原点度量">例：风险逆转，gamma 必须相对原点度量</h3>
+<p>经典的风险逆转（图 8.3、表 8.2）说明 gamma 必须相对原点来度量：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:right">资产</th>
+<th style="text-align:right">Delta</th>
+<th style="text-align:right">Up-Gamma</th>
+<th style="text-align:right">Down-Gamma</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right">93.5</td>
+<td style="text-align:right">449</td>
+<td style="text-align:right">-140</td>
+<td style="text-align:right">-165</td>
+</tr>
+<tr>
+<td style="text-align:right">95</td>
+<td style="text-align:right">249</td>
+<td style="text-align:right">-98</td>
+<td style="text-align:right">-126</td>
+</tr>
+<tr>
+<td style="text-align:right">96</td>
+<td style="text-align:right">151</td>
+<td style="text-align:right">-71</td>
+<td style="text-align:right">-98</td>
+</tr>
+<tr>
+<td style="text-align:right">97</td>
+<td style="text-align:right">80</td>
+<td style="text-align:right">-47</td>
+<td style="text-align:right">-71</td>
+</tr>
+<tr>
+<td style="text-align:right">98</td>
+<td style="text-align:right">33</td>
+<td style="text-align:right">-26</td>
+<td style="text-align:right">-47</td>
+</tr>
+<tr>
+<td style="text-align:right">99</td>
+<td style="text-align:right">7</td>
+<td style="text-align:right">-7</td>
+<td style="text-align:right">-26</td>
+</tr>
+<tr>
+<td style="text-align:right">99.5</td>
+<td style="text-align:right">2</td>
+<td style="text-align:right">2</td>
+<td style="text-align:right">-16</td>
+</tr>
+<tr>
+<td style="text-align:right">100.0</td>
+<td style="text-align:right">0</td>
+<td style="text-align:right">11</td>
+<td style="text-align:right">-7</td>
+</tr>
+<tr>
+<td style="text-align:right">100.5</td>
+<td style="text-align:right">3</td>
+<td style="text-align:right">20</td>
+<td style="text-align:right">2</td>
+</tr>
+<tr>
+<td style="text-align:right">101</td>
+<td style="text-align:right">11</td>
+<td style="text-align:right">29</td>
+<td style="text-align:right">11</td>
+</tr>
+<tr>
+<td style="text-align:right">102</td>
+<td style="text-align:right">40</td>
+<td style="text-align:right">48</td>
+<td style="text-align:right">29</td>
+</tr>
+<tr>
+<td style="text-align:right">103</td>
+<td style="text-align:right">87</td>
+<td style="text-align:right">68</td>
+<td style="text-align:right">48</td>
+</tr>
+<tr>
+<td style="text-align:right">104</td>
+<td style="text-align:right">156</td>
+<td style="text-align:right">90</td>
+<td style="text-align:right">68</td>
+</tr>
+<tr>
+<td style="text-align:right">105</td>
+<td style="text-align:right">245</td>
+<td style="text-align:right">111</td>
+<td style="text-align:right">90</td>
+</tr>
+<tr>
+<td style="text-align:right">106</td>
+<td style="text-align:right">356</td>
+<td style="text-align:right">130</td>
+<td style="text-align:right">111</td>
+</tr>
+<tr>
+<td style="text-align:right">107</td>
+<td style="text-align:right">486</td>
+<td style="text-align:right">146</td>
+<td style="text-align:right">130</td>
+</tr>
+<tr>
+<td style="text-align:right">107.5</td>
+<td style="text-align:right">558</td>
+<td style="text-align:right">152</td>
+<td style="text-align:right">139</td>
+</tr>
+</tbody>
+</table>
+<p><img src="images/8f7794dfa44f599daf0a68319978a1b94d24c4e17d3f9653d454449f1870ae19.jpg" alt="图 8.3 风险逆转的 gamma"></p>
+<p>看原点 100：up-gamma 是 +11，down-gamma 是 -7，符号相反。这正是风险逆转的定义特征。如果一个风险系统在这里报一个平均后的 gamma，它会显示接近中性，把&quot;上涨 long gamma、下跌 short gamma&quot;这个真实的、非常重要的不对称完全埋掉。交易员在下跌时是 short 曲率（卖出的那侧 wing），在上涨时是 long 曲率，这种结构在 delta 中性的伪装下尤其危险，因为它恰恰在市场下行、波动率上升时让你两头挨打。</p>
+<hr>
+<h2 id="三-后月-gamma-的修正-不同到期不能直接比">三、后月 Gamma 的修正：不同到期不能直接比</h2>
+<p>日历价差常常产生两个不同水平的 gamma：一个到期上 long gamma，对另一个到期 short gamma。这看似稳定，问题在于两个到期未必有相同的方差。basis（现金与期货之差）可能与现货正相关，导致不同远期之间移动不等幅。这种情况下，对 gamma 的静态分析就会误导。需要修正，是因为 BSM 不允许利率移动。</p>
+<p>Taleb 用一个 CME 的 SP500 日历价差举例：</p>
+<table>
+<thead>
+<tr>
+<th>合约</th>
+<th>头寸</th>
+<th style="text-align:right">Delta</th>
+<th style="text-align:right">Gamma</th>
+<th style="text-align:right">真实 Gamma（折成前月当量）</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Sep（90 天）</td>
+<td>Long 2000 张</td>
+<td style="text-align:right">1030</td>
+<td style="text-align:right">100</td>
+<td style="text-align:right">100</td>
+</tr>
+<tr>
+<td>March（270 天）</td>
+<td>Short 2000 张</td>
+<td style="text-align:right">(1054)</td>
+<td style="text-align:right">(58)</td>
+<td style="text-align:right">(65)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="第一项调整-现值导致的敞口差异">第一项调整：现值导致的敞口差异</h3>
+<p>后月相对前月可能有更低或更高的波动率敞口，这来自现值化。当期货曲线贴水交易（后月低于前月）时，6 个月到期的一单位商品比 3 个月到期的一单位商品要小，于是一张 6 个月合约的敞口小于 3 个月的。升水时则相反。不过这个效应很弱，会被影响后月合约波动率的其他因素淹没。</p>
+<h3 id="第二项调整-basis-稳定性导致的-gamma-差异">第二项调整：basis 稳定性导致的 gamma 差异</h3>
+<p>后月还可能因 basis（现金-期货关系）的稳定性而有更高或更低的 gamma。检查后月相对前月波动率的方法有几种：</p>
+<ul>
+<li><strong>单因子法</strong>：用每个月份的相对波动率。6 个月可能比 1 个月波动率更高或更低，交易员据此折算 gamma。</li>
+<li><strong>更复杂的协方差矩阵法</strong>：用远期曲线的协方差矩阵构造，基本方法见第 12 章。</li>
+</ul>
+<p>在上面的例子里，操作者凭经验发现 March 比 September 多 12% 的波动率，意味着每当 September 移动 1 点，March 移动 1.12 点。他需要对这个差异做对冲，于是把 gamma 乘以 1.12，得到 65 个 gamma 而非 58。</p>
+<div class="callout callout-important"><div class="callout-title"><span class="callout-icon">★</span><span class="callout-title-text">风险管理规则</span></div><div class="callout-body"><p>不同到期的 gamma 未经适当调整不能相互比较。</p>
+</div></div>
+<h3 id="理论映射-gamma-折算就是远期曲线的久期加权">理论映射：gamma 折算就是远期曲线的久期加权</h3>
+<p>这一节对我们是一个关于<strong>因子结构</strong>的提醒。把不同到期的 gamma 直接相加，隐含假设了整条远期曲线平行移动、且各点等波动。现实里前月与后月的远期由不同的曲线节点驱动，它们的协动结构由一个协方差矩阵刻画。单因子法用的是相对波动率 <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.0528em;">β</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1.0361em;vertical-align:-0.2861em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0359em;">σ</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-left:-0.0359em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">ba</span><span class="mord mathnormal mtight">c</span><span class="mord mathnormal mtight" style="margin-right:0.0315em;">k</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mord">/</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0359em;">σ</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-left:-0.0359em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.1076em;">f</span><span class="mord mathnormal mtight" style="margin-right:0.0278em;">r</span><span class="mord mathnormal mtight">o</span><span class="mord mathnormal mtight">n</span><span class="mord mathnormal mtight">t</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em;"><span></span></span></span></span></span></span></span></span></span>，把后月 gamma 折成&quot;前月当量&quot;：</p>
+<div class="math-display"><span class="katex-display"><span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.2439em;vertical-align:-0.3013em;"></span><span class="mord"><span class="mord">Γ</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.9426em;"><span style="top:-2.3987em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">ba</span><span class="mord mathnormal mtight">c</span><span class="mord mathnormal mtight" style="margin-right:0.0315em;">k</span></span></span></span><span style="top:-3.1809em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">e</span><span class="mord mathnormal mtight" style="margin-right:0.0359em;">q</span><span class="mord mathnormal mtight">u</span><span class="mord mathnormal mtight">i</span><span class="mord mathnormal mtight" style="margin-right:0.0359em;">v</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.3013em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.8333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord">Γ</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">ba</span><span class="mord mathnormal mtight">c</span><span class="mord mathnormal mtight" style="margin-right:0.0315em;">k</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.0528em;">β</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.7278em;vertical-align:-0.0833em;"></span><span class="mord">58</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">1.12</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">≈</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">65</span></span></span></span></span></div>
+<p>这等价于用前月作 numeraire、用 beta 把后月的曲率投影过来，和固定收益里把不同久期的 DV01 折算到一个基准点的做法同构。Taleb 把这个留到第 12 章（fungibility、convergence、stacking）展开，这里先立规矩：<strong>gamma 是有&quot;币种&quot;的量，币种就是它所属的到期/远期节点，不换算就相加等于把不同币种的钱直接相加。</strong></p>
+<hr>
+<h2 id="四-shadow-gamma-把-市场动则波动率动-嵌进-delta">四、Shadow Gamma：把&quot;市场动则波动率动&quot;嵌进 delta</h2>
+<p>通常 gamma 本身什么都说明不了，因为头寸对波动率变化（或 skew 价格）敏感，需要更丰富的分析技术。这要求把&quot;移动所决定的其他因素的预期效应&quot;（如波动率、有时是利率）嵌进来。</p>
+<p>Taleb 点名一个大多数从业者犯的基础错误：运行头寸时不考虑标的资产的移动与市场其他要素的变化相联系。**市场的跳跃总是伴随波动率的跳跃。**一个不计入这一点的 gamma 数字毫无意义。</p>
+<div class="callout callout-important"><div class="callout-title"><span class="callout-icon">★</span><span class="callout-title-text">风险管理规则</span></div><div class="callout-body"><p>凡是能够有把握预测的，都需要纳入风险分析。忽略它们会让希腊字母度量变成纯粹的理论操练。</p>
+</div></div>
+<p>Taleb 特意区分&quot;预测（predicting）&quot;与&quot;建模（modeling）&quot;，并说这与保留 BSM 不冲突：他推荐预测而非建模，因为预测允许交易员改变主意，而建模会把观点冻结进一套无法挣脱的估计量装置。这句话值得我们这类容易往&quot;建一个随机波动率模型&quot;方向跑的读者记住：shadow gamma 的精神是<strong>启发式、可随时修正的情景预测，而非又一个需要估计参数、一旦设定就锁死的模型</strong>。它解决的恰恰是第七章&quot;好模型为什么会死&quot;里那个参数估计风险问题：与其去估 vvol 和相关性，不如直接画一张&quot;现货-波动率&quot;的映射表，手动、可改、对自己负责。</p>
+<div class="callout callout-note"><div class="callout-title"><span class="callout-icon">✎</span><span class="callout-title-text">定义：shadow gamma</span></div><div class="callout-body"><p>shadow gamma 是在计入波动率变化及其对头寸影响的前提下，对 delta 变化的预测；头寸用新的波动率参数重新估值。</p>
+</div></div>
+<h3 id="例-long-the-wings-的隔夜-gamma-交易">例：long the wings 的隔夜 gamma 交易</h3>
+<p>一个交易员 long the wings（即 long 虚值期权）。他估计如果市场朝任一方向剧烈移动，波动率应当上升。为简化，假设资产是&quot;平行&quot;的，上移与下移对参数造成相同变化。他想在期权市场收盘后，通过隔夜交易 gamma 来兑现这个效应。</p>
+<p>初始假设：在 98 或 102 时波动率会高一个点。结果是：在 98.00 的隔夜未来，交易员可以买 731 单位标的而非 645；在 102 的隔夜未来，可以卖 698 单位而非 612。</p>
+<p><img src="images/1d36f2095cf632a474db0c92ec2cc56a44668865d686f2657595a287d2afb1af.jpg" alt="图 8.4 比较 gamma 与 shadow gamma 的 P/L"></p>
+<p>表 8.3 给出 shadow gamma 的细节（节选）：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:right">资产</th>
+<th style="text-align:right">P/L（波动率不变）</th>
+<th style="text-align:right">P/L（波动率高 100bp）</th>
+<th style="text-align:right">Delta（波动率不变）</th>
+<th style="text-align:right">Delta（波动率高 100bp）</th>
+<th style="text-align:right">Delta 差</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right">96</td>
+<td style="text-align:right">279</td>
+<td style="text-align:right">352</td>
+<td style="text-align:right">-1,605</td>
+<td style="text-align:right">-1,730</td>
+<td style="text-align:right">-126</td>
+</tr>
+<tr>
+<td style="text-align:right">97</td>
+<td style="text-align:right">146</td>
+<td style="text-align:right">207</td>
+<td style="text-align:right">-1,071</td>
+<td style="text-align:right">-1,185</td>
+<td style="text-align:right">-114</td>
+</tr>
+<tr>
+<td style="text-align:right">98</td>
+<td style="text-align:right">61</td>
+<td style="text-align:right">112</td>
+<td style="text-align:right">-645</td>
+<td style="text-align:right">-731</td>
+<td style="text-align:right">-86</td>
+</tr>
+<tr>
+<td style="text-align:right">99</td>
+<td style="text-align:right">15</td>
+<td style="text-align:right">59</td>
+<td style="text-align:right">-300</td>
+<td style="text-align:right">-346</td>
+<td style="text-align:right">-47</td>
+</tr>
+<tr>
+<td style="text-align:right">100</td>
+<td style="text-align:right">0</td>
+<td style="text-align:right">39</td>
+<td style="text-align:right">0</td>
+<td style="text-align:right">-1</td>
+<td style="text-align:right">-2</td>
+</tr>
+<tr>
+<td style="text-align:right">101</td>
+<td style="text-align:right">15</td>
+<td style="text-align:right">58</td>
+<td style="text-align:right">292</td>
+<td style="text-align:right">337</td>
+<td style="text-align:right">44</td>
+</tr>
+<tr>
+<td style="text-align:right">102</td>
+<td style="text-align:right">59</td>
+<td style="text-align:right">110</td>
+<td style="text-align:right">612</td>
+<td style="text-align:right">698</td>
+<td style="text-align:right">86</td>
+</tr>
+<tr>
+<td style="text-align:right">103</td>
+<td style="text-align:right">139</td>
+<td style="text-align:right">200</td>
+<td style="text-align:right">991</td>
+<td style="text-align:right">1,109</td>
+<td style="text-align:right">118</td>
+</tr>
+<tr>
+<td style="text-align:right">104</td>
+<td style="text-align:right">260</td>
+<td style="text-align:right">334</td>
+<td style="text-align:right">1,450</td>
+<td style="text-align:right">1,588</td>
+<td style="text-align:right">137</td>
+</tr>
+</tbody>
+</table>
+<p>交易员因此可以在上涨时卖更多期货、在下跌时买更多期货。**真实的 gamma 比单因子矩阵显示的更强。**常规矩阵显示 up-gamma 为 292，shadow gamma 是 337；常规 down-gamma 是 300，shadow down-gamma 是 346。shadow gamma 双向起作用：通过更紧的期货再平衡，short gamma 的对冲者也能更准确地对冲 P/L 的变化。</p>
+<h3 id="理论映射-shadow-gamma-把-vanna-通过-σ-s-引入有效-gamma">理论映射：shadow gamma 把 vanna 通过 σ(S) 引入有效 gamma</h3>
+<p>这一节是本章理论核心。常规 gamma 把波动率当常数，只算 <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord" style="margin-right:0.0556em;">∂</span><span class="mord">Δ/</span><span class="mord" style="margin-right:0.0556em;">∂</span><span class="mord mathnormal" style="margin-right:0.0576em;">S</span></span></span></span>。shadow gamma 承认波动率是现货的函数 <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal" style="margin-right:0.0359em;">σ</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.0359em;">σ</span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.0576em;">S</span><span class="mclose">)</span></span></span></span>，于是真实（有效）的 delta 变化要用全导数：</p>
+<div class="math-display"><span class="katex-display"><span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:2.0574em;vertical-align:-0.686em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.3714em;"><span style="top:-2.314em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathnormal">d</span><span class="mord mathnormal" style="margin-right:0.0576em;">S</span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.677em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathnormal">d</span><span class="mord">Δ</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.686em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:3.5199em;vertical-align:-2.1484em;"></span><span class="minner munder"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.3714em;"><span style="top:-1.3591em;"><span class="pstrut" style="height:3.3714em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord text mtight"><span class="mord cjk_fallback mtight">常规</span><span class="mord mtight"> gamma</span></span></span></span></span><span style="top:-3.3714em;"><span class="pstrut" style="height:3.3714em;"></span><span class="minner munder"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.3714em;"><span class="svg-align" style="top:-2.0374em;"><span class="pstrut" style="height:3.3714em;"></span><span class="stretchy" style="height:0.548em;min-width:1.6em;"><span class="brace-left" style="height:0.548em;"><svg xmlns="http://www.w3.org/2000/svg" width="400em" height="0.548em" viewBox="0 0 400000 548" preserveAspectRatio="xMinYMin slice"><path d="M0 6l6-6h17c12.688 0 19.313.3 20 1 4 4 7.313 8.3 10 13
+ 35.313 51.3 80.813 93.8 136.5 127.5 55.688 33.7 117.188 55.8 184.5 66.5.688
+ 0 2 .3 4 1 18.688 2.7 76 4.3 172 5h399450v120H429l-6-1c-124.688-8-235-61.7
+-331-161C60.687 138.7 32.312 99.3 7 54L0 41V6z"/></svg></span><span class="brace-center" style="height:0.548em;"><svg xmlns="http://www.w3.org/2000/svg" width="400em" height="0.548em" viewBox="0 0 400000 548" preserveAspectRatio="xMidYMin slice"><path d="M199572 214
+c100.7 8.3 195.3 44 280 108 55.3 42 101.7 93 139 153l9 14c2.7-4 5.7-8.7 9-14
+ 53.3-86.7 123.7-153 211-199 66.7-36 137.3-56.3 212-62h199568v120H200432c-178.3
+ 11.7-311.7 78.3-403 201-6 8-9.7 12-11 12-.7.7-6.7 1-18 1s-17.3-.3-18-1c-1.3 0
+-5-4-11-12-44.7-59.3-101.3-106.3-170-141s-145.3-54.3-229-60H0V214z"/></svg></span><span class="brace-right" style="height:0.548em;"><svg xmlns="http://www.w3.org/2000/svg" width="400em" height="0.548em" viewBox="0 0 400000 548" preserveAspectRatio="xMaxYMin slice"><path d="M399994 0l6 6v35l-6 11c-56 104-135.3 181.3-238 232-57.3
+ 28.7-117 45-179 50H-300V214h399897c43.3-7 81-15 113-26 100.7-33 179.7-91 237
+-174 2.7-5 6-9 10-13 .7-1 7.3-1 20-1h17z"/></svg></span></span></span><span style="top:-3.3714em;"><span class="pstrut" style="height:3.3714em;"></span><span class="mord"><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.3714em;"><span style="top:-2.314em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord" style="margin-right:0.0556em;">∂</span><span class="mord mathnormal" style="margin-right:0.0576em;">S</span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.677em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord" style="margin-right:0.0556em;">∂</span><span class="mord">Δ</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.686em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:1.334em;"><span></span></span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:2.1484em;"><span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:3.2068em;vertical-align:-1.8354em;"></span><span class="minner munder"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.3714em;"><span style="top:-1.536em;"><span class="pstrut" style="height:3.3714em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord text mtight"><span class="mord mtight">vanna</span></span></span></span></span><span style="top:-3.3714em;"><span class="pstrut" style="height:3.3714em;"></span><span class="minner munder"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.3714em;"><span class="svg-align" style="top:-2.0374em;"><span class="pstrut" style="height:3.3714em;"></span><span class="stretchy" style="height:0.548em;min-width:1.6em;"><span class="brace-left" style="height:0.548em;"><svg xmlns="http://www.w3.org/2000/svg" width="400em" height="0.548em" viewBox="0 0 400000 548" preserveAspectRatio="xMinYMin slice"><path d="M0 6l6-6h17c12.688 0 19.313.3 20 1 4 4 7.313 8.3 10 13
+ 35.313 51.3 80.813 93.8 136.5 127.5 55.688 33.7 117.188 55.8 184.5 66.5.688
+ 0 2 .3 4 1 18.688 2.7 76 4.3 172 5h399450v120H429l-6-1c-124.688-8-235-61.7
+-331-161C60.687 138.7 32.312 99.3 7 54L0 41V6z"/></svg></span><span class="brace-center" style="height:0.548em;"><svg xmlns="http://www.w3.org/2000/svg" width="400em" height="0.548em" viewBox="0 0 400000 548" preserveAspectRatio="xMidYMin slice"><path d="M199572 214
+c100.7 8.3 195.3 44 280 108 55.3 42 101.7 93 139 153l9 14c2.7-4 5.7-8.7 9-14
+ 53.3-86.7 123.7-153 211-199 66.7-36 137.3-56.3 212-62h199568v120H200432c-178.3
+ 11.7-311.7 78.3-403 201-6 8-9.7 12-11 12-.7.7-6.7 1-18 1s-17.3-.3-18-1c-1.3 0
+-5-4-11-12-44.7-59.3-101.3-106.3-170-141s-145.3-54.3-229-60H0V214z"/></svg></span><span class="brace-right" style="height:0.548em;"><svg xmlns="http://www.w3.org/2000/svg" width="400em" height="0.548em" viewBox="0 0 400000 548" preserveAspectRatio="xMaxYMin slice"><path d="M399994 0l6 6v35l-6 11c-56 104-135.3 181.3-238 232-57.3
+ 28.7-117 45-179 50H-300V214h399897c43.3-7 81-15 113-26 100.7-33 179.7-91 237
+-174 2.7-5 6-9 10-13 .7-1 7.3-1 20-1h17z"/></svg></span></span></span><span style="top:-3.3714em;"><span class="pstrut" style="height:3.3714em;"></span><span class="mord"><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.3714em;"><span style="top:-2.314em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord" style="margin-right:0.0556em;">∂</span><span class="mord mathnormal" style="margin-right:0.0359em;">σ</span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.677em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord" style="margin-right:0.0556em;">∂</span><span class="mord">Δ</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.686em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:1.334em;"><span></span></span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:1.8354em;"><span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">⋅</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:2.0574em;vertical-align:-0.686em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.3714em;"><span style="top:-2.314em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathnormal">d</span><span class="mord mathnormal" style="margin-right:0.0576em;">S</span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.677em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathnormal">d</span><span class="mord mathnormal" style="margin-right:0.0359em;">σ</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.686em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span></span></span></span></span></div>
+<p>第二项里的 <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord" style="margin-right:0.0556em;">∂</span><span class="mord">Δ/</span><span class="mord" style="margin-right:0.0556em;">∂</span><span class="mord mathnormal" style="margin-right:0.0359em;">σ</span></span></span></span> 正是 <strong>vanna（DdeltaDvol）</strong>，<span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal">d</span><span class="mord mathnormal" style="margin-right:0.0359em;">σ</span><span class="mord">/</span><span class="mord mathnormal">d</span><span class="mord mathnormal" style="margin-right:0.0576em;">S</span></span></span></span> 是交易员预测的波动率对现货的斜率。long wings 的头寸 vanna 结构使得：上涨且波动率升时 delta 更高、下跌且波动率升时 delta（绝对值）更高，两个方向都让有效 gamma 大于常规 gamma（337 &gt; 292，346 &gt; 300）。这就是为什么 Taleb 说&quot;真实 gamma 更强&quot;：它多了 vanna×斜率这一项。把 <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.0359em;">σ</span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.0576em;">S</span><span class="mclose">)</span></span></span></span> 设成确定性函数，shadow gamma 因此是一个<strong>局部波动率（local volatility）风味的启发式</strong>，但 Taleb 故意不把它写成需要标定的随机过程，保留手动预测的灵活性。</p>
+<p>Taleb 给出离散公式。对标的变动 <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8056em;vertical-align:-0.0556em;"></span><span class="mord mathnormal">x</span><span class="mord">%</span></span></span></span>，假设波动率上升 <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord text"><span class="mord">Sig</span></span><span class="mopen">(</span><span class="mord mathnormal">x</span><span class="mclose">)</span></span></span></span>（不进一步用多项式复杂化）。在点 <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.5806em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal">x</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">0</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>（<span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.791em;vertical-align:-0.0391em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0637em;">ν</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.7519em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">′</span></span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">&lt;</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6891em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal">x</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">0</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">&lt;</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal" style="margin-right:0.0637em;">ν</span></span></span></span>）：</p>
+<div class="math-display"><span class="katex-display"><span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord text"><span class="mord">Shadow up-gamma</span></span><span class="mopen">(</span><span class="mord"><span class="mord mathnormal">x</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">0</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:2.263em;vertical-align:-0.836em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.427em;"><span style="top:-2.314em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathnormal">x</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord"><span class="mord mathnormal">x</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">0</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.677em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord">Δ</span><span class="mopen">(</span><span class="mord mathnormal">x</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.2222em;">V</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord text"><span class="mord">Sig</span></span><span class="mopen">(</span><span class="mord mathnormal">x</span><span class="mclose">))</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord">Δ</span><span class="mopen">(</span><span class="mord"><span class="mord mathnormal">x</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">0</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.2222em;">V</span><span class="mclose">)</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.836em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span></span></span></span></span></div>
+<div class="math-display"><span class="katex-display"><span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord text"><span class="mord">Shadow down-gamma</span></span><span class="mopen">(</span><span class="mord"><span class="mord mathnormal">x</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">0</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:2.2649em;vertical-align:-0.836em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.4289em;"><span style="top:-2.314em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord"><span class="mord mathnormal">x</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">0</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord"><span class="mord mathnormal">x</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.6779em;"><span style="top:-2.989em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">′</span></span></span></span></span></span></span></span></span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.677em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord">Δ</span><span class="mopen">(</span><span class="mord"><span class="mord mathnormal">x</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">0</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.2222em;">V</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord">Δ</span><span class="mopen">(</span><span class="mord"><span class="mord mathnormal">x</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.7519em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">′</span></span></span></span></span></span></span></span></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.2222em;">V</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord text"><span class="mord">Sig</span></span><span class="mopen">(</span><span class="mord mathnormal">x</span><span class="mclose">))</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.836em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span></span></span></span></span></div>
+<p>注意这两个差分里，移动后的那一端用的是被抬高的波动率 <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.7667em;vertical-align:-0.0833em;"></span><span class="mord mathnormal" style="margin-right:0.2222em;">V</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord text"><span class="mord">Sig</span></span><span class="mopen">(</span><span class="mord mathnormal">x</span><span class="mclose">)</span></span></span></span>，移动前的中心点用原波动率 <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.2222em;">V</span></span></span></span>。这正是上面全导数在离散化时的实现：把波动率联动直接焊进 delta 的两侧重算。更高级的版本（表 8.3）则用远期与现金之间的精确关联、投影更夸张的现金移动。</p>
+<h3 id="进阶-预期波动率-现货依赖网格-volatility-map">进阶：预期波动率/现货依赖网格（volatility map）</h3>
+<p>资深期权交易员可以从记忆里评估一次市场移动对波动率的冲击，结果就是一张波动率地图（表 8.4）。Taleb 坦承这不过是一个预测，但通常好过&quot;用常数波动率看移动&quot;的常见方法。</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:right">起始价</th>
+<th style="text-align:right">一日后价格</th>
+<th style="text-align:right">由此产生的波动率变化（3 个月期权）</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right">100</td>
+<td style="text-align:right">105</td>
+<td style="text-align:right">1</td>
+</tr>
+<tr>
+<td style="text-align:right">100</td>
+<td style="text-align:right">104</td>
+<td style="text-align:right">0.5</td>
+</tr>
+<tr>
+<td style="text-align:right">100</td>
+<td style="text-align:right">103</td>
+<td style="text-align:right">不变</td>
+</tr>
+<tr>
+<td style="text-align:right">100</td>
+<td style="text-align:right">102</td>
+<td style="text-align:right">-0.5</td>
+</tr>
+<tr>
+<td style="text-align:right">100</td>
+<td style="text-align:right">101</td>
+<td style="text-align:right">-0.2</td>
+</tr>
+<tr>
+<td style="text-align:right">100</td>
+<td style="text-align:right">100</td>
+<td style="text-align:right">不变</td>
+</tr>
+<tr>
+<td style="text-align:right">100</td>
+<td style="text-align:right">99</td>
+<td style="text-align:right">不变</td>
+</tr>
+<tr>
+<td style="text-align:right">100</td>
+<td style="text-align:right">98</td>
+<td style="text-align:right">0.5</td>
+</tr>
+<tr>
+<td style="text-align:right">100</td>
+<td style="text-align:right">97</td>
+<td style="text-align:right">1</td>
+</tr>
+<tr>
+<td style="text-align:right">100</td>
+<td style="text-align:right">96</td>
+<td style="text-align:right">2</td>
+</tr>
+<tr>
+<td style="text-align:right">100</td>
+<td style="text-align:right">95</td>
+<td style="text-align:right">3</td>
+</tr>
+<tr>
+<td style="text-align:right">100</td>
+<td style="text-align:right">94</td>
+<td style="text-align:right">4</td>
+</tr>
+<tr>
+<td style="text-align:right">100</td>
+<td style="text-align:right">93</td>
+<td style="text-align:right">7（恐慌）</td>
+</tr>
+<tr>
+<td style="text-align:right">100</td>
+<td style="text-align:right">92</td>
+<td style="text-align:right">10</td>
+</tr>
+<tr>
+<td style="text-align:right">100</td>
+<td style="text-align:right">91</td>
+<td style="text-align:right">10</td>
+</tr>
+<tr>
+<td style="text-align:right">100</td>
+<td style="text-align:right">90</td>
+<td style="text-align:right">10</td>
+</tr>
+</tbody>
+</table>
+<p>这张地图有两个不对称值得读出来。其一，<strong>大移动（尤其在平静期之后）会抬高波动率</strong>，这一点无可否认。其二，<strong>下跌引发的波动率上升远大于上涨</strong>：跌到 93 波动率跳 7（恐慌），跌到 92 以下直接跳 10；而涨到 105 只升 1。这就是 biased asset（下跌时引发焦虑的非对称资产）的特征，也是 skew 的来源。Taleb 提醒，这张地图其实可以反过来从市场期权价格里用 skew 和 smile 分析技术导出：市场骗不了太久，它早已发现大移动通常伴随波动率跳升，也相信某些移动（典型如股指的上涨）通常以折磨人的缓慢速度发生，并通过期权价格表达这种行为。</p>
+<p>**Threshold shadow gamma（阈值 shadow gamma）**是 shadow gamma 的一个变体，对应这样一种信念：波动率的预期变化不是移动的线性函数，需要用&quot;移动的时间表（schedules）&quot;。Taleb 在这里给了一句很务实的方法论建议：与其用数学方法，不如直接让交易员画情景分析。这与&quot;预测优于建模&quot;一脉相承：把非线性的波动率反应交给交易员的经验判断去画一条折线，而不是去拟合一个多项式。</p>
+<hr>
+<h2 id="五-shadow-gamma-与-skew">五、Shadow Gamma 与 Skew</h2>
+<p>对 biased asset（第 15 章），gamma 需要计入波动率的行为以及沿&quot;skew 曲线&quot;的移动。如果上行 strike 与下行 strike 的期权波动率之间存在不对称，gamma 就需要计入：一个平值期权的波动率可能随移动而升或降。未来波动率的线索，可以从当前虚值 call 和虚值 put 各自的交易位置读出来。</p>
+<p>skew gamma 也叫&quot;非对称 shadow gamma（asymmetrical shadow gamma）&quot;。</p>
+<p>这一节其实是上一节 <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal">d</span><span class="mord mathnormal" style="margin-right:0.0359em;">σ</span><span class="mord">/</span><span class="mord mathnormal">d</span><span class="mord mathnormal" style="margin-right:0.0576em;">S</span></span></span></span> 那一项的精细化。前面的 long wings 例子为简化假设了上下对称（<span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord text"><span class="mord">Sig</span></span><span class="mopen">(</span><span class="mord mathnormal">x</span><span class="mclose">)</span></span></span></span> 不分方向），现实中 biased asset 的波动率反应是非对称的：下跌时 <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal">d</span><span class="mord mathnormal" style="margin-right:0.0359em;">σ</span><span class="mord">/</span><span class="mord mathnormal">d</span><span class="mord mathnormal" style="margin-right:0.0576em;">S</span></span></span></span> 的绝对值远大于上涨（正如表 8.4）。于是 shadow gamma 的两侧不再镜像，down 侧的 vanna 修正项更大。从曲面角度看，沿 skew 曲线移动意味着当现货下跌时，不仅整体波动率水平上移，平值点在 skew 上的相对位置也变了，这两层效应叠加成 skew gamma。读市场的虚值 call/put 报价，等于读出市场对 <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal">d</span><span class="mord mathnormal" style="margin-right:0.0359em;">σ</span><span class="mord">/</span><span class="mord mathnormal">d</span><span class="mord mathnormal" style="margin-right:0.0576em;">S</span></span></span></span> 这条斜率的定价，可以用来校准自己手画的 volatility map。</p>
+<hr>
+<h2 id="六-garch-gamma">六、GARCH Gamma</h2>
+<p>ARCH 是一种交易员避而不谈的波动率建模方法，它对应计量经济学家意识到的一件事：<strong>波动率成簇移动（clusters）</strong>。一个大移动会引发另一个大移动，平静日后面大概率还是平静日。对交易员来说，这种洞见毫不稀奇，但 ARCH 为学术界提供了异方差思维的框架。</p>
+<p>Engle 和 Rosenberg (1995) 的 GARCH gamma 是 shadow gamma 的第一次学术发现。市场移动时未来波动率也会移动，这个信息需要被纳入未来的 delta，现在与未来 delta 之差就叫 GARCH gamma。</p>
+<p>Taleb 把两者的区别讲得很清楚：表面上 GARCH gamma 听起来像 shadow gamma，但 <strong>shadow gamma 不对未来市场的实际波动率行为做任何断言，而 GARCH gamma 同时预测未来的历史波动率和隐含波动率</strong>。shadow gamma 只是一个启发式得到的预测，把期权价格当成标的路径的一个确定性函数。</p>
+<h3 id="理论映射-两者都在估计-δ-σ-dσ-ds-差别在-dσ-ds-从哪来">理论映射：两者都在估计 ∂Δ/∂σ·dσ/dS，差别在 dσ/dS 从哪来</h3>
+<p>用我们前面的全导数框架看，GARCH gamma 和 shadow gamma 解决的是同一个项 <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord" style="margin-right:0.0556em;">∂</span><span class="mord">Δ/</span><span class="mord" style="margin-right:0.0556em;">∂</span><span class="mord mathnormal" style="margin-right:0.0359em;">σ</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">⋅</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal">d</span><span class="mord mathnormal" style="margin-right:0.0359em;">σ</span><span class="mord">/</span><span class="mord mathnormal">d</span><span class="mord mathnormal" style="margin-right:0.0576em;">S</span></span></span></span>，分歧只在 <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal">d</span><span class="mord mathnormal" style="margin-right:0.0359em;">σ</span><span class="mord">/</span><span class="mord mathnormal">d</span><span class="mord mathnormal" style="margin-right:0.0576em;">S</span></span></span></span> 的来源。GARCH 把它建成一个条件方差过程：</p>
+<div class="math-display"><span class="katex-display"><span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.1111em;vertical-align:-0.247em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0359em;">σ</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.8641em;"><span style="top:-2.453em;margin-left:-0.0359em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">t</span></span></span><span style="top:-3.113em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.247em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6667em;vertical-align:-0.0833em;"></span><span class="mord mathnormal" style="margin-right:0.0359em;">ω</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1.1694em;vertical-align:-0.3053em;"></span><span class="mord mathnormal" style="margin-right:0.0037em;">α</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mord mathnormal">ε</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.8641em;"><span style="top:-2.453em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">t</span><span class="mbin mtight">−</span><span class="mord mtight">1</span></span></span></span><span style="top:-3.113em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.3053em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1.1694em;vertical-align:-0.3053em;"></span><span class="mord mathnormal" style="margin-right:0.0528em;">β</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0359em;">σ</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.8641em;"><span style="top:-2.453em;margin-left:-0.0359em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">t</span><span class="mbin mtight">−</span><span class="mord mtight">1</span></span></span></span><span style="top:-3.113em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.3053em;"><span></span></span></span></span></span></span></span></span></span></span></div>
+<p>一个大的 <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6389em;vertical-align:-0.2083em;"></span><span class="mord"><span class="mord mathnormal">ε</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">t</span><span class="mbin mtight">−</span><span class="mord mtight">1</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2083em;"><span></span></span></span></span></span></span></span></span></span>（市场移动）通过 <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal" style="margin-right:0.0037em;">α</span></span></span></span> 直接抬高下一期的条件方差，于是 GARCH 给出的是一个有统计模型支撑、对历史与隐含波动率都做预测的 <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal">d</span><span class="mord mathnormal" style="margin-right:0.0359em;">σ</span><span class="mord">/</span><span class="mord mathnormal">d</span><span class="mord mathnormal" style="margin-right:0.0576em;">S</span></span></span></span>。shadow gamma 则把这个斜率交给交易员的 volatility map，是一条手画的、确定性的、可随时修改的曲线。Taleb 的偏好仍然落在后者：GARCH 更严谨，但它把观点冻进了估计量；shadow gamma 牺牲严谨换来&quot;我随时能改主意&quot;的灵活。对实盘，能改主意往往比统计上更优更重要。</p>
+<hr>
+<h2 id="七-进阶-shadow-gamma-当利率差也随价格移动">七、进阶 Shadow Gamma：当利率差也随价格移动</h2>
+<div class="callout callout-note"><div class="callout-title"><span class="callout-icon">✎</span><span class="callout-title-text">定义：advanced shadow gamma</span></div><div class="callout-body"><p>进阶 shadow gamma 计入交易员预期的、伴随资产价格变化而来的波动率与利率（或 carry）移动；此外，波动率曲线和利率曲线都被预期做非平行移动。</p>
+</div></div>
+<p>进阶 shadow gamma 适用于价格变化和波动率都与利率相关的商品。带&quot;弱势一方&quot;的货币对常常呈现这种困难：墨西哥比索很难在不引发利率防御性上升、波动率随之上升的情况下相对 OECD 货币贬值。&quot;区间&quot;内的货币（如旧 ERM）同样如此，弱势方需要用高到令人却步的利率来吓退投机者和其他央行的祸害。这导致必须用更复杂的因子来运行远期。</p>
+<p>分析逻辑是：在一个 biased asset 里，如果现金货币下跌 10%，除了波动率上升，操作者还需要预测利率差会扩大。利率差的扩大会让后月比前月移动得更远，这种不平衡制造出额外的 gamma，可以解读为更高或更低。如果货币出现（不太可能的）上涨，利率差会收窄，但收窄的幅度不同（非对称）。</p>
+<h3 id="例-syldavia-货币的远期放大效应">例：Syldavia 货币的远期放大效应</h3>
+<p>设想虚构货币 Syldavia，货币对符号 SYL-USD：</p>
+<div class="math-display"><span class="katex-display"><span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0077em;">R</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-left:-0.0077em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">d</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mord text"><span class="mord cjk_fallback">（美元，一年）</span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1.0361em;vertical-align:-0.2861em;"></span><span class="mord">6%</span><span class="mpunct">,</span><span class="mspace" style="margin-right:1em;"></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0077em;">R</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-left:-0.0077em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.1076em;">f</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em;"><span></span></span></span></span></span></span><span class="mord text"><span class="mord cjk_fallback">（</span><span class="mord">Syldavia</span><span class="mord cjk_fallback">，一年）</span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.9444em;vertical-align:-0.1944em;"></span><span class="mord">20%</span><span class="mpunct">,</span><span class="mspace" style="margin-right:1em;"></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord text"><span class="mord">Spot</span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">100</span></span></span></span></span></div>
+<p>满足抛补利率平价的一年期远期价为</p>
+<div class="math-display"><span class="katex-display"><span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.1389em;">F</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.7278em;vertical-align:-0.0833em;"></span><span class="mord">100</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mop">exp</span><span class="mopen">(</span><span class="mord">0.06</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">0.20</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">≈</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">86.93</span></span></span></span></span></div>
+<p>危机中货币跌到 90，这一跌会让 Syldavia 首都的一年期利率上升 2000 个基点（即 +20%）。结果远期变成</p>
+<div class="math-display"><span class="katex-display"><span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.1389em;">F</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.7278em;vertical-align:-0.0833em;"></span><span class="mord">90</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mop">exp</span><span class="mopen">(</span><span class="mord">0.06</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">0.40</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">62.79</span></span></span></span></span></div>
+<p>于是现货跌了 10 点（10%），一年期远期却挨了 24.14 点（27.75%）的打击。</p>
+<p><img src="images/a5efea3b0e699c2300f09785185f584a3163065687330ad728e870bbcf13e483.jpg" alt="图 8.5 压力时期收益率曲线的行为"></p>
+<p>表 8.5 假设交易员组合里只有一年期期权，给出价格-波动率-利率差的联动地图：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:right">起始价</th>
+<th style="text-align:right">一日后价格</th>
+<th style="text-align:right">波动率变化（1 年期权）</th>
+<th style="text-align:right">利率差变化（1 年远期）</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right">100</td>
+<td style="text-align:right">105</td>
+<td style="text-align:right">1</td>
+<td style="text-align:right">——</td>
+</tr>
+<tr>
+<td style="text-align:right">100</td>
+<td style="text-align:right">104</td>
+<td style="text-align:right">0.5</td>
+<td style="text-align:right">-0.75%</td>
+</tr>
+<tr>
+<td style="text-align:right">100</td>
+<td style="text-align:right">103</td>
+<td style="text-align:right">不变</td>
+<td style="text-align:right">-0.5</td>
+</tr>
+<tr>
+<td style="text-align:right">100</td>
+<td style="text-align:right">102</td>
+<td style="text-align:right">-0.5</td>
+<td style="text-align:right">-0.5</td>
+</tr>
+<tr>
+<td style="text-align:right">100</td>
+<td style="text-align:right">101</td>
+<td style="text-align:right">-0.2</td>
+<td style="text-align:right">0</td>
+</tr>
+<tr>
+<td style="text-align:right">100</td>
+<td style="text-align:right">100</td>
+<td style="text-align:right">不变</td>
+<td style="text-align:right">0</td>
+</tr>
+<tr>
+<td style="text-align:right">100</td>
+<td style="text-align:right">98</td>
+<td style="text-align:right">不变</td>
+<td style="text-align:right">0</td>
+</tr>
+<tr>
+<td style="text-align:right">100</td>
+<td style="text-align:right">96</td>
+<td style="text-align:right">0.5</td>
+<td style="text-align:right">2</td>
+</tr>
+<tr>
+<td style="text-align:right">100</td>
+<td style="text-align:right">94</td>
+<td style="text-align:right">1</td>
+<td style="text-align:right">4</td>
+</tr>
+<tr>
+<td style="text-align:right">100</td>
+<td style="text-align:right">92</td>
+<td style="text-align:right">2（恐慌）</td>
+<td style="text-align:right">10</td>
+</tr>
+<tr>
+<td style="text-align:right">100</td>
+<td style="text-align:right">90</td>
+<td style="text-align:right">3</td>
+<td style="text-align:right">20</td>
+</tr>
+<tr>
+<td style="text-align:right">100</td>
+<td style="text-align:right">88</td>
+<td style="text-align:right">?</td>
+<td style="text-align:right">?</td>
+</tr>
+<tr>
+<td style="text-align:right">100</td>
+<td style="text-align:right">86</td>
+<td style="text-align:right">?</td>
+<td style="text-align:right">?</td>
+</tr>
+</tbody>
+</table>
+<p>表尾的问号是 Taleb 的诚实：交易员无法预测极端情形下的反应。要更精确，可以对每个到期（6 个月、2 年）重复这个练习，做同样的预测，再评估对组合的总影响。</p>
+<h3 id="理论映射-远期的-gamma-被利率差杠杆放大">理论映射：远期的 gamma 被利率差杠杆放大</h3>
+<p>这个例子把 shadow gamma 又推进一层。现货只动 10%，远期动了 27.75%，放大倍数来自利率差进入指数：<span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.1389em;">F</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.0576em;">S</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mop">exp</span><span class="mopen">((</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0278em;">r</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-left:-0.0278em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">d</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1.0361em;vertical-align:-0.2861em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0278em;">r</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-left:-0.0278em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.1076em;">f</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em;"><span></span></span></span></span></span></span><span class="mclose">)</span><span class="mord mathnormal">t</span><span class="mclose">)</span></span></span></span>，当 <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.7167em;vertical-align:-0.2861em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0278em;">r</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-left:-0.0278em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.1076em;">f</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em;"><span></span></span></span></span></span></span></span></span></span> 随 <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.0576em;">S</span></span></span></span> 下跌而跳升时，<span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord" style="margin-right:0.0556em;">∂</span><span class="mord mathnormal" style="margin-right:0.1389em;">F</span><span class="mord">/</span><span class="mord" style="margin-right:0.0556em;">∂</span><span class="mord mathnormal" style="margin-right:0.0576em;">S</span></span></span></span> 远大于常数利率下的值。对一个写在远期上的期权，有效 gamma 因此有两个来源叠加：波动率的 vanna 项，加上&quot;远期对现货的非线性放大&quot;项。用全导数写：</p>
+<div class="math-display"><span class="katex-display"><span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:2.0574em;vertical-align:-0.686em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.3714em;"><span style="top:-2.314em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathnormal">d</span><span class="mord mathnormal" style="margin-right:0.0576em;">S</span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.677em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathnormal">d</span><span class="mord mathnormal" style="margin-right:0.1389em;">F</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.686em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mop">exp</span><span class="mopen">((</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0278em;">r</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-left:-0.0278em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">d</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1.0361em;vertical-align:-0.2861em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0278em;">r</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-left:-0.0278em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.1076em;">f</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em;"><span></span></span></span></span></span></span><span class="mclose">)</span><span class="mord mathnormal">t</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.0576em;">S</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">⋅</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mop">exp</span><span class="mopen">((</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0278em;">r</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-left:-0.0278em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">d</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1.0361em;vertical-align:-0.2861em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0278em;">r</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-left:-0.0278em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.1076em;">f</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em;"><span></span></span></span></span></span></span><span class="mclose">)</span><span class="mord mathnormal">t</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">⋅</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1.8em;vertical-align:-0.65em;"></span><span class="mord"><span class="delimsizing size2">(</span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:2.0574em;vertical-align:-0.686em;"></span><span class="mord mathnormal">t</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.3714em;"><span style="top:-2.314em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathnormal">d</span><span class="mord mathnormal" style="margin-right:0.0576em;">S</span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.677em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathnormal">d</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0278em;">r</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-left:-0.0278em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.1076em;">f</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em;"><span></span></span></span></span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.686em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span><span class="mord"><span class="delimsizing size2">)</span></span></span></span></span></span></div>
+<p>第二项在危机中（<span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.0361em;vertical-align:-0.2861em;"></span><span class="mord mathnormal">d</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0278em;">r</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-left:-0.0278em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.1076em;">f</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em;"><span></span></span></span></span></span></span><span class="mord">/</span><span class="mord mathnormal">d</span><span class="mord mathnormal" style="margin-right:0.0576em;">S</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">&lt;</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">0</span></span></span></span>，即价跌息升）与第一项同号且很大，于是远期移动被利率差放大。这正是&quot;biased asset 的弱势方&quot;在压力下既 short vol 又 short 远期凸性的数学根，也解释了为什么这类货币的期权对冲在平静期看着温和、危机里突然失控。曲线非平行移动（前月后月利率反应不同）则要求按到期分桶重算，呼应第三节后月 gamma 的折算。</p>
+<hr>
+<h2 id="八-案例研究-syldavia-大选">八、案例研究：Syldavia 大选</h2>
+<p>Taleb 用一个事件驱动的案例收束全章，它把 shadow gamma 推到极致：一个<strong>完全没有中间交易、市场从选前状态直接跳到两个结果之一</strong>的离散情景。</p>
+<p>Syldavia 面临决定性大选，要在无政府主义政权和西方式资本主义之间选择。选举宣布前六个月、国家还平静时，所有到期的波动率都是无聊的 14%；如果无政府主义者落败，预计会回到这个水平（金融市场偏好西方资本主义、厌恶无政府主义者）。目前波动率在一个月期权是 20%，一路降到一年期的 16%。</p>
+<p>为简化，假设头寸全在一个月期权。交易员账上有一组混合 strike（表 8.6）。投票结果一小时后揭晓，交易员不信任何民调，不给每个事件赋任何真实概率。Syldavia 货币现报 100 兑美元，利率 14% 对美元 6%。</p>
+<p>交易员和同行碰头，画出一张关于选举结果的路线图（图 8.6）。用这张图，他必须抛开常规希腊字母，只分析两种状态各自发生时的 P/L。</p>
+<p><img src="images/3fbbba6c6b9844a22534b0f3378d6423c945749db61e37be52d0aa05605a1cda.jpg" alt="图 8.6 Syldavia 大选的结果"></p>
+<p>表 8.6 让交易员把常规 delta/gamma 矩阵与&quot;真实&quot;分布对照（节选）：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:right">资产</th>
+<th style="text-align:right">P/L (V=14.7%)</th>
+<th style="text-align:right">P/L (V=20%)</th>
+<th style="text-align:right">P/L (V=29%)</th>
+<th style="text-align:right">Delta (V=14.7%)</th>
+<th style="text-align:right">Delta (V=20%)</th>
+<th style="text-align:right">Delta (V=29%)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right">93</td>
+<td style="text-align:right">14</td>
+<td style="text-align:right">-86</td>
+<td style="text-align:right">-225</td>
+<td style="text-align:right">334</td>
+<td style="text-align:right">383</td>
+<td style="text-align:right">462</td>
+</tr>
+<tr>
+<td style="text-align:right">95</td>
+<td style="text-align:right">52</td>
+<td style="text-align:right">-29</td>
+<td style="text-align:right">-143</td>
+<td style="text-align:right">65</td>
+<td style="text-align:right">193</td>
+<td style="text-align:right">357</td>
+</tr>
+<tr>
+<td style="text-align:right">97</td>
+<td style="text-align:right">47</td>
+<td style="text-align:right">-5</td>
+<td style="text-align:right">-80</td>
+<td style="text-align:right">-104</td>
+<td style="text-align:right">60</td>
+<td style="text-align:right">287</td>
+</tr>
+<tr>
+<td style="text-align:right">99</td>
+<td style="text-align:right">18</td>
+<td style="text-align:right">0</td>
+<td style="text-align:right">-26</td>
+<td style="text-align:right">-173</td>
+<td style="text-align:right">1</td>
+<td style="text-align:right">258</td>
+</tr>
+<tr>
+<td style="text-align:right">100</td>
+<td style="text-align:right">-8</td>
+<td style="text-align:right">起点</td>
+<td style="text-align:right">15</td>
+<td style="text-align:right">-175</td>
+<td style="text-align:right">起点</td>
+<td style="text-align:right">260</td>
+</tr>
+<tr>
+<td style="text-align:right">101</td>
+<td style="text-align:right">-17</td>
+<td style="text-align:right">1</td>
+<td style="text-align:right">26</td>
+<td style="text-align:right">-156</td>
+<td style="text-align:right">19</td>
+<td style="text-align:right">272</td>
+</tr>
+<tr>
+<td style="text-align:right">103</td>
+<td style="text-align:right">-40</td>
+<td style="text-align:right">12</td>
+<td style="text-align:right">85</td>
+<td style="text-align:right">-57</td>
+<td style="text-align:right">108</td>
+<td style="text-align:right">324</td>
+</tr>
+<tr>
+<td style="text-align:right">105</td>
+<td style="text-align:right">-34</td>
+<td style="text-align:right">48</td>
+<td style="text-align:right">158</td>
+<td style="text-align:right">127</td>
+<td style="text-align:right">252</td>
+<td style="text-align:right">407</td>
+</tr>
+<tr>
+<td style="text-align:right">107</td>
+<td style="text-align:right">16</td>
+<td style="text-align:right">116</td>
+<td style="text-align:right">250</td>
+<td style="text-align:right">379</td>
+<td style="text-align:right">431</td>
+<td style="text-align:right">510</td>
+</tr>
+</tbody>
+</table>
+<p>按常规 BSM delta，交易员在 20% 波动率、现货 100 处是中性的（那一格 delta 为 0）。但状态之间无法交易，他必须从这个练习里导出 shadow delta 和 shadow gamma。Scenario A 是无政府主义者获胜的预期 P/L（高波动率、低证券价格），Scenario B 是无政府主义者落败（低波动率、高证券价格）。</p>
+<p>交易员能发现的第一件事是：**尽管这个头寸的 BSM gamma 是平的（上涨略正、下跌略负），它却是 short shadow gamma。**上涨损失 15，下跌损失 181。两种&quot;真实&quot;结果都让他亏钱，而常规矩阵把他标成中性。</p>
+<h3 id="理论映射-常规中性掩盖的是联合分布上的-short-凸性">理论映射：常规中性掩盖的是联合分布上的 short 凸性</h3>
+<p>这个案例是全章主线的终点。常规 delta/gamma 只在&quot;波动率冻结在 20%、现货在 100 邻域&quot;这个切点上成立，它报中性。但真实世界里两个事件各自把（现货，波动率）这一对联合地推到不同的格子：A 是（下跌，波动率升到 29%），B 是（上涨，波动率降到 14.7%）。把头寸在这两个真实落点上重新估值，两边都亏（-181 和 -15），说明它在<strong>事件的联合分布上是 short 凸性的</strong>，哪怕在边际的、单维的 BSM gamma 上看着平。</p>
+<p>用我们的语言，这是一个跨越 vega 和 gamma 的联合敞口：头寸的负 P/L 同时由 <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.7224em;vertical-align:-0.0391em;"></span><span class="mord">Γ</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">&lt;</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">0</span></span></span></span>（现货大幅偏离）和不利的 vanna/vega 联动（波动率往伤害自己的方向走）共同造成。事件驱动情景下，delta 再平衡的前提（连续、可交易的路径）被取消，于是唯一有意义的风险度量就是在离散的可能落点上做<strong>全重定价</strong>，这正是第七章末尾&quot;用全重定价替代灵敏度近似&quot;在事件风险上的兑现。更进阶的期权交易假设留到第 16 章。</p>
+<hr>
+<h2 id="九-本章综述-理论与实务的对照">九、本章综述：理论与实务的对照</h2>
+<table>
+<thead>
+<tr>
+<th>Taleb 的实务命题</th>
+<th>对应的理论命题</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>平值临到期 gamma 最大、虚值离到期远 gamma 最大</td>
+<td><span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord">Γ</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3283em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">A</span><span class="mord mathnormal mtight" style="margin-right:0.1389em;">T</span><span class="mord mathnormal mtight" style="margin-right:0.109em;">M</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">∝</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1.1425em;vertical-align:-0.25em;"></span><span class="mord">1/</span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.0576em;">S</span><span class="mord mathnormal" style="margin-right:0.0359em;">σ</span><span class="mord sqrt"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.8925em;"><span class="svg-align" style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="mord" style="padding-left:0.833em;"><span class="mord mathnormal">t</span></span></span><span style="top:-2.8525em;"><span class="pstrut" style="height:3em;"></span><span class="hide-tail" style="min-width:0.853em;height:1.08em;"><svg xmlns="http://www.w3.org/2000/svg" width="400em" height="1.08em" viewBox="0 0 400000 1080" preserveAspectRatio="xMinYMin slice"><path d="M95,702
+c-2.7,0,-7.17,-2.7,-13.5,-8c-5.8,-5.3,-9.5,-10,-9.5,-14
+c0,-2,0.3,-3.3,1,-4c1.3,-2.7,23.83,-20.7,67.5,-54
+c44.2,-33.3,65.8,-50.3,66.5,-51c1.3,-1.3,3,-2,5,-2c4.7,0,8.7,3.3,12,10
+s173,378,173,378c0.7,0,35.3,-71,104,-213c68.7,-142,137.5,-285,206.5,-429
+c69,-144,104.5,-217.7,106.5,-221
+l0 -0
+c5.3,-9.3,12,-14,20,-14
+H400000v40H845.2724
+s-225.272,467,-225.272,467s-235,486,-235,486c-2.7,4.7,-9,7,-19,7
+c-6,0,-10,-1,-12,-3s-194,-422,-194,-422s-65,47,-65,47z
+M834 80h400000v40h-400000z"/></svg></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.1475em;"><span></span></span></span></span></span><span class="mclose">)</span></span></span></span>，终值尖角处曲率集中</td>
+</tr>
+<tr>
+<td>每个 gamma 必须附带价格区间</td>
+<td>离散二阶差分依赖步长，瞬时曲率无多日承诺力</td>
+</tr>
+<tr>
+<td>分别报 up-gamma 与 down-gamma</td>
+<td>单侧二阶差分，其差 <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mrel">∝</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6944em;"></span><span class="mord mathnormal">h</span><span class="mord">⋅</span></span></span></span> Speed（三阶 DgammaDspot）</td>
+</tr>
+<tr>
+<td>风险逆转：两侧 gamma 符号相反</td>
+<td>对称平均抹掉 speed，掩盖三阶风险</td>
+</tr>
+<tr>
+<td>交易员的&quot;gamma&quot;含一点 DdeltaDvol</td>
+<td>有限步长重算天然混入高一阶信息</td>
+</tr>
+<tr>
+<td>不同到期 gamma 不能直接比</td>
+<td>远期曲线协方差/久期加权，<span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.2439em;vertical-align:-0.3013em;"></span><span class="mord"><span class="mord">Γ</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.9426em;"><span style="top:-2.3987em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">ba</span><span class="mord mathnormal mtight">c</span><span class="mord mathnormal mtight" style="margin-right:0.0315em;">k</span></span></span></span><span style="top:-3.1809em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">e</span><span class="mord mathnormal mtight" style="margin-right:0.0359em;">q</span><span class="mord mathnormal mtight">u</span><span class="mord mathnormal mtight">i</span><span class="mord mathnormal mtight" style="margin-right:0.0359em;">v</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.3013em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.0528em;">β</span><span class="mord"><span class="mord">Γ</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">ba</span><span class="mord mathnormal mtight">c</span><span class="mord mathnormal mtight" style="margin-right:0.0315em;">k</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span></td>
+</tr>
+<tr>
+<td>shadow gamma：市场动则波动率动</td>
+<td>全导数 <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal">d</span><span class="mord">Δ/</span><span class="mord mathnormal">d</span><span class="mord mathnormal" style="margin-right:0.0576em;">S</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.7667em;vertical-align:-0.0833em;"></span><span class="mord">Γ</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.4445em;"></span><span class="mord text"><span class="mord">vanna</span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">⋅</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal">d</span><span class="mord mathnormal" style="margin-right:0.0359em;">σ</span><span class="mord">/</span><span class="mord mathnormal">d</span><span class="mord mathnormal" style="margin-right:0.0576em;">S</span></span></span></span></td>
+</tr>
+<tr>
+<td>真实 gamma 比单因子矩阵更强</td>
+<td>vanna×斜率项使有效 gamma 增大（337&gt;292）</td>
+</tr>
+<tr>
+<td>volatility map 下跌侧远陡于上涨侧</td>
+<td>biased asset 的 skew，<span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">∣</span><span class="mord mathnormal">d</span><span class="mord mathnormal" style="margin-right:0.0359em;">σ</span><span class="mord">/</span><span class="mord mathnormal">d</span><span class="mord mathnormal" style="margin-right:0.0576em;">S</span><span class="mord"><span class="mord">∣</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">d</span><span class="mord mathnormal mtight">o</span><span class="mord mathnormal mtight" style="margin-right:0.0269em;">w</span><span class="mord mathnormal mtight">n</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">≫</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1.0361em;vertical-align:-0.2861em;"></span><span class="mord">∣</span><span class="mord mathnormal">d</span><span class="mord mathnormal" style="margin-right:0.0359em;">σ</span><span class="mord">/</span><span class="mord mathnormal">d</span><span class="mord mathnormal" style="margin-right:0.0576em;">S</span><span class="mord"><span class="mord">∣</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1514em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">u</span><span class="mord mathnormal mtight">p</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em;"><span></span></span></span></span></span></span></span></span></span></td>
+</tr>
+<tr>
+<td>预测优于建模</td>
+<td>启发式 <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.0359em;">σ</span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.0576em;">S</span><span class="mclose">)</span></span></span></span> 保留可修正性，避开参数估计风险</td>
+</tr>
+<tr>
+<td>GARCH gamma 同时预测历史与隐含波动率</td>
+<td>条件异方差 <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.0611em;vertical-align:-0.247em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0359em;">σ</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-2.453em;margin-left:-0.0359em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">t</span></span></span><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.247em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6667em;vertical-align:-0.0833em;"></span><span class="mord mathnormal" style="margin-right:0.0359em;">ω</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1.1205em;vertical-align:-0.3064em;"></span><span class="mord mathnormal" style="margin-right:0.0037em;">α</span><span class="mord"><span class="mord mathnormal">ε</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-2.4519em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">t</span><span class="mbin mtight">−</span><span class="mord mtight">1</span></span></span></span><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.3064em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1.1205em;vertical-align:-0.3064em;"></span><span class="mord mathnormal" style="margin-right:0.0528em;">β</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0359em;">σ</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-2.4519em;margin-left:-0.0359em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">t</span><span class="mbin mtight">−</span><span class="mord mtight">1</span></span></span></span><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.3064em;"><span></span></span></span></span></span></span></span></span></span></td>
+</tr>
+<tr>
+<td>弱势货币：价跌则息升、远期被放大</td>
+<td><span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.1389em;">F</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.888em;"></span><span class="mord mathnormal" style="margin-right:0.0576em;">S</span><span class="mord"><span class="mord mathnormal">e</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.888em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mopen mtight">(</span><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.0278em;">r</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3448em;"><span style="top:-2.3488em;margin-left:-0.0278em;margin-right:0.0714em;"><span class="pstrut" style="height:2.5em;"></span><span class="sizing reset-size3 size1 mtight"><span class="mord mathnormal mtight">d</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.1512em;"><span></span></span></span></span></span></span><span class="mbin mtight">−</span><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.0278em;">r</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3448em;"><span style="top:-2.3488em;margin-left:-0.0278em;margin-right:0.0714em;"><span class="pstrut" style="height:2.5em;"></span><span class="sizing reset-size3 size1 mtight"><span class="mord mathnormal mtight" style="margin-right:0.1076em;">f</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2901em;"><span></span></span></span></span></span></span><span class="mclose mtight">)</span><span class="mord mathnormal mtight">t</span></span></span></span></span></span></span></span></span></span></span></span>，<span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.0361em;vertical-align:-0.2861em;"></span><span class="mord mathnormal">d</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0278em;">r</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-left:-0.0278em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.1076em;">f</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em;"><span></span></span></span></span></span></span><span class="mord">/</span><span class="mord mathnormal">d</span><span class="mord mathnormal" style="margin-right:0.0576em;">S</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">&lt;</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">0</span></span></span></span> 放大 <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal">d</span><span class="mord mathnormal" style="margin-right:0.1389em;">F</span><span class="mord">/</span><span class="mord mathnormal">d</span><span class="mord mathnormal" style="margin-right:0.0576em;">S</span></span></span></span></td>
+</tr>
+<tr>
+<td>大选头寸 BSM gamma 平、shadow gamma short</td>
+<td>联合（现货,波动率）分布上的 short 凸性，需全重定价</td>
+</tr>
+</tbody>
+</table>
+<h3 id="核心观点">核心观点</h3>
+<p>第一，<strong>gamma 和 delta 一样不可单独取信</strong>。它在时间上不均匀、在组合上局部化、用对称平均会埋掉三阶风险。up/down 分开报、附带价格区间，是最低限度的纪律。</p>
+<p>第二，<strong>真正的 gamma 是 shadow gamma</strong>。市场移动与波动率移动绑定，把这层联动嵌进 delta 重算，有效 gamma 才接近真实。这一项的数学身份是 vanna 乘以波动率对现货的斜率。</p>
+<p>第三，<strong>预测优于建模</strong>。shadow gamma 的价值不在数学精度，而在它是一张可随时修改的情景地图，避开了 GARCH、随机波动率那类模型的参数估计风险与观点冻结。</p>
+<p>第四，<strong>biased asset 让风险在压力下叠加</strong>。下跌引发波动率升，弱势货币的下跌还引发利率差扩大、远期被杠杆放大，几股力量在危机里同向叠加，平静期的温和 gamma 会突然失控。</p>
+<p>第五，<strong>事件风险只能靠全重定价</strong>。当路径被取消、市场直接跳到离散结果时，常规希腊字母失效，唯一可靠的是在每个可能落点上重估整个组合的 P/L。</p>
+<h3 id="面对一个-gamma-数字的操作清单">面对一个 gamma 数字的操作清单</h3>
+<ol>
+<li>这个 gamma 附带价格区间和时间窗了吗？它在多大移动、多长时间里成立？</li>
+<li>是 up-gamma 还是 down-gamma？两者符号一致吗？若相反，这是不是一个被中性伪装的风险逆转？</li>
+<li>这个 gamma 里混了多少 speed（三阶）？单侧差分之差告诉我什么？</li>
+<li>组合里有没有把不同到期的 gamma 直接相加？后月需要乘 <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.0528em;">β</span></span></span></span> 折算吗？</li>
+<li>我用的是常规 gamma 还是 shadow gamma？波动率对现货的斜率 <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal">d</span><span class="mord mathnormal" style="margin-right:0.0359em;">σ</span><span class="mord">/</span><span class="mord mathnormal">d</span><span class="mord mathnormal" style="margin-right:0.0576em;">S</span></span></span></span> 我估了吗？</li>
+<li>这是不是 biased asset？下跌侧的波动率反应是否远大于上涨侧（skew gamma）？</li>
+<li>标的是弱势货币吗？价跌时利率差会扩大、把远期放大吗？要不要按到期分桶重算？</li>
+<li>有没有临近的事件（选举、数据、政策）会让市场跳过我的再平衡区间？</li>
+<li>若路径被取消，在每个离散落点上做全重定价，头寸的真实 shadow gamma 是 long 还是 short？</li>
+<li>我买的 gamma 保护是百米冲刺型还是马拉松型？它能撑过一个爆发的市场吗？</li>
+</ol>
+<h3 id="一句话收束">一句话收束</h3>
+<p>本章最该记住的一句：**gamma 与其当成一个数，不如当成一张地图，它在不同价格、不同时间、不同波动率状态下取不同的值；而真正会让你亏钱的，是市场移动时波动率（biased asset 还有利率差）跟着一起动的那部分，常规 BSM gamma 恰恰把它当成了零。**把这张地图手画出来、随时修改，比再精致的模型都更接近你账本里的真实风险。</p>
+
+<nav class="pager-row"><a class="pager prev" href="chapter-07-adapting-black-scholes-merton-the-delta.html"><span class="pager-dir">← 上一篇</span><span class="pager-name">改造 Black-Scholes-Merton —— Delta</span></a><a class="pager next" href="chapter-09-vega-and-the-volatility-surface.html"><span class="pager-dir">下一篇 →</span><span class="pager-name">Vega 与波动率曲面</span></a></nav>
+</article>
+<nav class="toc" aria-label="本章目录"><div class="toc-title">本章目录</div><ul><li class="toc-l2"><a href="#导读-本章要解决的问题">导读：本章要解决的问题</a></li>
+<li class="toc-l2"><a href="#一-简单-gamma-它在时间上并不均匀">一、简单 Gamma：它在时间上并不均匀</a></li>
+<li class="toc-l3"><a href="#日历价差的陷阱-短跑者与马拉松者">日历价差的陷阱：短跑者与马拉松者</a></li>
+<li class="toc-l2"><a href="#二-账本的-gamma-失真-up-gamma-与-down-gamma">二、账本的 Gamma 失真：up-gamma 与 down-gamma</a></li>
+<li class="toc-l3"><a href="#理论映射-up-down-gamma-是单侧二阶差分-泄露了-speed">理论映射：up/down gamma 是单侧二阶差分，泄露了 speed</a></li>
+<li class="toc-l3"><a href="#option-wizard-交易员的-gamma-本就包含一点三阶">Option Wizard：交易员的&quot;gamma&quot;本就包含一点三阶</a></li>
+<li class="toc-l3"><a href="#例-一个常规期权的不稳定-delta">例：一个常规期权的不稳定 delta</a></li>
+<li class="toc-l3"><a href="#例-风险逆转-gamma-必须相对原点度量">例：风险逆转，gamma 必须相对原点度量</a></li>
+<li class="toc-l2"><a href="#三-后月-gamma-的修正-不同到期不能直接比">三、后月 Gamma 的修正：不同到期不能直接比</a></li>
+<li class="toc-l3"><a href="#第一项调整-现值导致的敞口差异">第一项调整：现值导致的敞口差异</a></li>
+<li class="toc-l3"><a href="#第二项调整-basis-稳定性导致的-gamma-差异">第二项调整：basis 稳定性导致的 gamma 差异</a></li>
+<li class="toc-l3"><a href="#理论映射-gamma-折算就是远期曲线的久期加权">理论映射：gamma 折算就是远期曲线的久期加权</a></li>
+<li class="toc-l2"><a href="#四-shadow-gamma-把-市场动则波动率动-嵌进-delta">四、Shadow Gamma：把&quot;市场动则波动率动&quot;嵌进 delta</a></li>
+<li class="toc-l3"><a href="#例-long-the-wings-的隔夜-gamma-交易">例：long the wings 的隔夜 gamma 交易</a></li>
+<li class="toc-l3"><a href="#理论映射-shadow-gamma-把-vanna-通过-σ-s-引入有效-gamma">理论映射：shadow gamma 把 vanna 通过 σ(S) 引入有效 gamma</a></li>
+<li class="toc-l3"><a href="#进阶-预期波动率-现货依赖网格-volatility-map">进阶：预期波动率/现货依赖网格（volatility map）</a></li>
+<li class="toc-l2"><a href="#五-shadow-gamma-与-skew">五、Shadow Gamma 与 Skew</a></li>
+<li class="toc-l2"><a href="#六-garch-gamma">六、GARCH Gamma</a></li>
+<li class="toc-l3"><a href="#理论映射-两者都在估计-δ-σ-dσ-ds-差别在-dσ-ds-从哪来">理论映射：两者都在估计 ∂Δ/∂σ·dσ/dS，差别在 dσ/dS 从哪来</a></li>
+<li class="toc-l2"><a href="#七-进阶-shadow-gamma-当利率差也随价格移动">七、进阶 Shadow Gamma：当利率差也随价格移动</a></li>
+<li class="toc-l3"><a href="#例-syldavia-货币的远期放大效应">例：Syldavia 货币的远期放大效应</a></li>
+<li class="toc-l3"><a href="#理论映射-远期的-gamma-被利率差杠杆放大">理论映射：远期的 gamma 被利率差杠杆放大</a></li>
+<li class="toc-l2"><a href="#八-案例研究-syldavia-大选">八、案例研究：Syldavia 大选</a></li>
+<li class="toc-l3"><a href="#理论映射-常规中性掩盖的是联合分布上的-short-凸性">理论映射：常规中性掩盖的是联合分布上的 short 凸性</a></li>
+<li class="toc-l2"><a href="#九-本章综述-理论与实务的对照">九、本章综述：理论与实务的对照</a></li>
+<li class="toc-l3"><a href="#核心观点">核心观点</a></li>
+<li class="toc-l3"><a href="#面对一个-gamma-数字的操作清单">面对一个 gamma 数字的操作清单</a></li>
+<li class="toc-l3"><a href="#一句话收束">一句话收束</a></li></ul></nav>
+</main>
+<script src="assets/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,890 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>第14章：分桶与地形图（Bucketing and Topography） · Dynamic Hedging 精读笔记</title>
+<link rel="stylesheet" href="assets/katex.min.css">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<button id="menuToggle" class="menu-toggle" aria-label="目录">☰</button>
+<aside class="sidebar" id="sidebar">
+<a class="brand" href="index.html"><span class="brand-title">Dynamic Hedging 精读笔记</span><span class="brand-sub">Nassim Taleb · 动态对冲 · 中文精读笔记</span></a><div class="nav-search"><input type="search" id="navSearch" placeholder="筛选章节…" autocomplete="off"></div><div class="nav-section"><h3 class="nav-section-title">正文章节</h3><ul><li><a href="chapter-01-introduction-to-the-instruments.html"><span class="nav-tag">第一章</span><span class="nav-name">金融工具导论</span></a></li>
+<li><a href="chapter-02-the-generalized-option.html"><span class="nav-tag">第二章</span><span class="nav-name">广义期权</span></a></li>
+<li><a href="chapter-03-market-making-and-market-using.html"><span class="nav-tag">第三章</span><span class="nav-name">做市与用市</span></a></li>
+<li><a href="chapter-04-liquidity-and-liquidity-holes.html"><span class="nav-tag">第四章</span><span class="nav-name">流动性与流动性洞</span></a></li>
+<li><a href="chapter-05-arbitrage-and-the-arbitrageurs.html"><span class="nav-tag">第五章</span><span class="nav-name">套利与套利者</span></a></li>
+<li><a href="chapter-06-volatility-and-correlation.html"><span class="nav-tag">第六章</span><span class="nav-name">波动率与相关性</span></a></li>
+<li><a href="chapter-07-adapting-black-scholes-merton-the-delta.html"><span class="nav-tag">第七章</span><span class="nav-name">改造 Black-Scholes-Merton —— Delta</span></a></li>
+<li><a href="chapter-08-gamma-and-shadow-gamma.html"><span class="nav-tag">第八章</span><span class="nav-name">Gamma 与 Shadow Gamma</span></a></li>
+<li><a href="chapter-09-vega-and-the-volatility-surface.html"><span class="nav-tag">第九章</span><span class="nav-name">Vega 与波动率曲面</span></a></li>
+<li><a href="chapter-10-theta-and-minor-greeks.html"><span class="nav-tag">第十章</span><span class="nav-name">Theta 与次要希腊字母</span></a></li>
+<li><a href="chapter-11-the-greeks-and-their-behavior.html"><span class="nav-tag">第十一章</span><span class="nav-name">希腊字母的动态行为</span></a></li>
+<li><a href="chapter-12-fungibility-convergence-and-stacking.html"><span class="nav-tag">第12章</span><span class="nav-name">可替代性、收敛与堆叠</span></a></li>
+<li><a href="chapter-13-some-wrinkles-of-option-markets.html"><span class="nav-tag">第13章</span><span class="nav-name">期权市场的一些褶皱</span></a></li>
+<li class="active"><a href="chapter-14-bucketing-and-topography.html"><span class="nav-tag">第14章</span><span class="nav-name">分桶与地形图</span></a></li>
+<li><a href="chapter-15-beware-the-distribution.html"><span class="nav-tag">第15章</span><span class="nav-name">当心分布</span></a></li>
+<li><a href="chapter-16-option-trading-concepts.html"><span class="nav-tag">第16章</span><span class="nav-name">期权交易概念</span></a></li>
+<li><a href="chapter-17-binary-options-european-style.html"><span class="nav-tag">第17章</span><span class="nav-name">欧式二元期权</span></a></li>
+<li><a href="chapter-18-binary-options-american-style.html"><span class="nav-tag">第18章</span><span class="nav-name">美式二元期权</span></a></li>
+<li><a href="chapter-19-barrier-options-i.html"><span class="nav-tag">第19章</span><span class="nav-name">障碍期权</span></a></li>
+<li><a href="chapter-20-barrier-options-ii.html"><span class="nav-tag">第20章</span><span class="nav-name">障碍期权</span></a></li>
+<li><a href="chapter-21-compound-choosers-and-higher-order-options.html"><span class="nav-tag">第21章</span><span class="nav-name">复合期权、选择者期权与高阶期权</span></a></li>
+<li><a href="chapter-22-multiasset-options.html"><span class="nav-tag">第22章</span><span class="nav-name">多资产期权</span></a></li>
+<li><a href="chapter-23-minor-exotics-lookback-and-asian-options.html"><span class="nav-tag">第23章</span><span class="nav-name">次要奇异期权——回望与亚式期权</span></a></li></ul></div><div class="nav-section"><h3 class="nav-section-title">附录模块</h3><ul><li><a href="module-a-brownian-motion-on-a-spreadsheet.html"><span class="nav-tag">模块 A</span><span class="nav-name">电子表格上的布朗运动教程</span></a></li>
+<li><a href="module-b-risk-neutrality-explained.html"><span class="nav-tag">模块 B</span><span class="nav-name">风险中性解释</span></a></li>
+<li><a href="module-c-numeraire-relativity-and-the-two-country-paradox.html"><span class="nav-tag">模块 C</span><span class="nav-name">计价单位相对性与两国悖论</span></a></li>
+<li><a href="module-d-correlation-triangles.html"><span class="nav-tag">模块 D</span><span class="nav-name">相关性三角，一个图形化案例</span></a></li>
+<li><a href="module-e-the-value-at-risk.html"><span class="nav-tag">模块 E</span><span class="nav-name">风险价值</span></a></li>
+<li><a href="module-f-probabilistic-rankings-in-arbitrage.html"><span class="nav-tag">模块 F</span><span class="nav-name">套利中的概率排序</span></a></li>
+<li><a href="module-g-option-pricing.html"><span class="nav-tag">模块 G</span><span class="nav-name">期权定价</span></a></li></ul></div>
+</aside>
+<div class="overlay" id="overlay"></div>
+<main class="content">
+<article class="note">
+<h1 id="第14章-分桶与地形图-bucketing-and-topography">第14章：分桶与地形图（Bucketing and Topography）</h1>
+<blockquote>
+<p>Never hire a very well dressed option trader. —— T.G.</p>
+</blockquote>
+<h2 id="导读-本章要解决的问题">导读：本章要解决的问题</h2>
+<p>前面几章把单只期权的希腊字母和它们的动态行为讲透了。本章换一个视角：你面对的往往不再是单张合约，而是一整本 book（成百上千笔到期、行权价各异、还掺着障碍和二元期权的组合），怎么把它的风险看清楚。Taleb 开宗明义，这一章讲的是机构常用的风险管理方法，与第 9 章讲 vega 的分析衔接，并且把它列为&quot;懂期权、却从未审视过一整本 book 的人&quot;的必读。</p>
+<p>把全章压缩成几条主线：</p>
+<ol>
+<li><strong>分桶（bucketing）是把风险沿某个参数按时间区间切片</strong>，于是得到 delta 桶、vega 桶、gamma 桶。它是静态方法：假设市场不动，不显示凸性，也看不到组合对标的的高阶矩。</li>
+<li><strong>直分桶（straight bucketing）只适用于到期已知、且即刻起算的产品</strong>，即欧式香草期权。一旦遇到美式、路径依赖、障碍、递延执行、变量 bet，敞口会在桶之间游移，直分桶会严重误导。</li>
+<li><strong>解决游移问题的是 forward-forward 桶（远期桶）</strong>：把敞口按&quot;从某时刻到另一时刻&quot;的区间来切，并用只扰动单个桶波动率的模拟（局部 vega）来填格。</li>
+<li><strong>地形图（topography）把风险铺在&quot;时间 × 标的价格&quot;的二维地图上</strong>，让交易员超越希腊字母、回到&quot;我在交易我的头寸&quot;而非&quot;我在交易我的希腊字母&quot;。它分两种：行权价（静态）地形图和 gamma（动态）地形图。</li>
+<li><strong>路径依赖期权连地形图都难画</strong>，因为终点相同不代表路径相同，障碍和回望的敞口取决于走过的路。障碍支付地形图（payoff topography）专门用来标出那些平时不显形、却能在 pin 上吞掉巨款的&quot;负区&quot;。</li>
+</ol>
+<p>贯穿全章的母题是：<strong>把一本 book 的风险压缩成几个希腊字母总数，会丢掉它在时间和空间上的分布信息，而风险恰恰藏在分布里。</strong> 笔记沿原文 STATIC STRAIGHT BUCKETING → FORWARD-FORWARD BUCKET → TOPOGRAPHY（静态/动态/障碍支付）的顺序展开，并在每处把交易员的做法接回它对应的数学结构。</p>
+<hr>
+<h2 id="一-静态直分桶-把风险沿时间切片">一、静态直分桶：把风险沿时间切片</h2>
+<p>分桶（bucketing）指的是把头寸的风险相对于某个特定参数、按时间区间拆开。操作者由此得到 delta 桶、vega 桶、gamma 桶等等。Taleb 强调它是一种<strong>静态</strong>风险管理方法，因为它假设市场是常数。它有几个先天的盲区：真正的凸性显示不出来；vega 和 rho 在某些工具组合里会随资产水平变化，或随参数本身变化而增减，而这种效应对复合、障碍和其他奇异期权尤其&quot;凶猛&quot;（beastly）。可以提前看出，分桶不会显示组合对资产价格敏感度的高阶矩。</p>
+<p>直分桶（straight bucketing）是一个简单方法，显示从现金到到期时刻 <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6151em;"></span><span class="mord mathnormal">t</span></span></span></span> 之间的敞口。它只适用于到期已知、确定、且<strong>即刻起算</strong>的产品。这个限定很关键，下一节会看到它被打破时分桶如何失效。</p>
+<h3 id="一个欧式期权的分桶算例-gbp-usd-6-个月-call">一个欧式期权的分桶算例：GBP-USD 6 个月 call</h3>
+<p>Taleb 用一个英镑兑美元的货币头寸演示。现货 1.6050，交易员买入一个 6 个月（183 天）的 call，名义 GBP 1 亿，价格 4.578%，付出 4,578,000 美元，对冲为 50 个 delta。参数：183 天美元利率 5.8438%（360 天基准），英镑利率 6.915%（360 天基准）。远期由下式给出：</p>
+<div class="math-display"><span class="katex-display"><span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6944em;"></span><span class="mord text"><span class="mord">Forward</span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.8778em;vertical-align:-0.1944em;"></span><span class="mord text"><span class="mord">Spot</span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:2.363em;vertical-align:-0.936em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.427em;"><span style="top:-2.314em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord">1</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mopen">(</span><span class="mord">183/360</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord">0.06915</span><span class="mclose">)</span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.677em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord">1</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mopen">(</span><span class="mord">183/360</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord">0.058438</span><span class="mclose">)</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.936em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">1.5973</span></span></span></span></span></div>
+<p>这就是覆盖利率平价：远期等于现货乘以两国货币市场计息因子之比。表 14.1 显示了 delta、gamma、vega、Rho1、Rho2（全部以美元计、未加权）。之所以叫&quot;直&quot;分桶，是因为 6 个月里的敞口对应一个从时刻 0 开始、到 6 个月结束的敞口，整段连续地挂在 6m 那一列。</p>
+<table>
+<thead>
+<tr>
+<th>(000)</th>
+<th style="text-align:right">All</th>
+<th>1w</th>
+<th>1m</th>
+<th>2m</th>
+<th>3m</th>
+<th style="text-align:right">6m</th>
+<th>9m</th>
+<th>1y</th>
+<th>2y</th>
+<th>5y+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Delta</td>
+<td style="text-align:right">(79850)</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td style="text-align:right">(82656)</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Gamma</td>
+<td style="text-align:right">8355</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td style="text-align:right">8355</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Vega</td>
+<td style="text-align:right">438</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td style="text-align:right">438</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Rho1</td>
+<td style="text-align:right">385</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td style="text-align:right">385</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Rho2</td>
+<td style="text-align:right">(408)</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td style="text-align:right">(408)</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3 id="各行的实务解读与-spot-delta-forward-delta-之别">各行的实务解读与 spot delta / forward delta 之别</h3>
+<p>表里的 delta 是<strong>远期 delta 的现值</strong>。这一点呼应第 1 章那条&quot;用 forward delta 而非 cash delta&quot;的规则：6m 桶里 82656 是远期口径，换算成现货 delta 要除以美元计息因子：</p>
+<div class="math-display"><span class="katex-display"><span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="mord text"><span class="mord">spot delta</span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:2.2574em;vertical-align:-0.936em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.3214em;"><span style="top:-2.314em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord">1</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mopen">(</span><span class="mord">1.83/360</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord">0.06915</span><span class="mclose">)</span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.677em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord">82656</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.936em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">79850</span><span class="mspace"> </span><span class="mopen">(</span><span class="mord text"><span class="mord cjk_fallback">千</span></span><span class="mclose">)</span></span></span></span></span></div>
+<p>gamma 是 GBP 8,355,000，含义是市场上涨 1% 头寸增值这么多、下跌则等额减值。Taleb 老实地标注这是个近似：上涨时实际不会正好涨这么多，因为有三阶导数（speed），而此刻期权平值、正处于 gamma 最大处。vega 直截了当：波动率上升 1 个百分点，赚 438,000 美元。</p>
+<p>rho 一行最值得拆。Rho2（外币）对应期权对外币（英镑）利率变动 100 基点的敏感度，算法是 delta 乘以利率、按 183 天插值：</p>
+<div class="math-display"><span class="katex-display"><span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord">183/360</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.7278em;vertical-align:-0.0833em;"></span><span class="mord">82656</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="mord">100</span><span class="mord text"><span class="mord">bp</span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.8389em;vertical-align:-0.1944em;"></span><span class="mord">420</span><span class="mord"><span class="mpunct">,</span></span><span class="mord">168</span></span></span></span></span></div>
+<p>再用美元利率取现值得到 408,000（假设无凸性）。Rho1（本币）是同一个数，减去权利金融资的敞口。权利金 4.57M，美元利率上升会增加每日权利金融资成本：</p>
+<div class="math-display"><span class="katex-display"><span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.7667em;vertical-align:-0.0833em;"></span><span class="mord">4.57</span><span class="mord text"><span class="mord">M</span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">183/360</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.8389em;vertical-align:-0.1944em;"></span><span class="mord">23</span><span class="mord"><span class="mpunct">,</span></span><span class="mord">200</span></span></span></span></span></div>
+<p>于是净 Rho1 大致是 <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8389em;vertical-align:-0.1944em;"></span><span class="mord">408</span><span class="mord"><span class="mpunct">,</span></span><span class="mord">000</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.8389em;vertical-align:-0.1944em;"></span><span class="mord">23</span><span class="mord"><span class="mpunct">,</span></span><span class="mord">200</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.8389em;vertical-align:-0.1944em;"></span><span class="mord">384</span><span class="mord"><span class="mpunct">,</span></span><span class="mord">800</span></span></span></span>。这解释了为什么货币期权要拆成两个 rho：一个对外币利率（经由远期/delta），一个对本币利率（经由远期再叠加权利金贴现的反向效应），两者并不对称。</p>
+<p>Taleb 还补了一句凸性的方向：凸性会降低&quot;外币利率上升带来的负 P/L&quot;、放大&quot;外币利率下降带来的正 P/L&quot;，本币利率方向相反。这就是 rho 本身也带二阶项的提醒，而静态分桶恰恰把这一层抹掉了。</p>
+<h3 id="理论映射-分桶是把价值微分按期限做的线性分解">理论映射：分桶是把价值微分按期限做的线性分解</h3>
+<p>把分桶形式化，它就是把组合价值的全微分按到期分段、并只保留一阶系数：</p>
+<div class="math-display"><span class="katex-display"><span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6944em;"></span><span class="mord mathnormal">d</span><span class="mord mathnormal" style="margin-right:0.2222em;">V</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:2.4521em;vertical-align:-1.3021em;"></span><span class="mop op-limits"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.05em;"><span style="top:-1.8479em;margin-left:0em;"><span class="pstrut" style="height:3.05em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.0315em;">k</span></span></span></span><span style="top:-3.05em;"><span class="pstrut" style="height:3.05em;"></span><span><span class="mop op-symbol large-op">∑</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:1.3021em;"><span></span></span></span></span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="delimsizing size2">(</span></span><span class="mord"><span class="mord">Δ</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.0315em;">k</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">d</span><span class="mord mathnormal" style="margin-right:0.0576em;">S</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1.2091em;vertical-align:-0.345em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.8451em;"><span style="top:-2.655em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">2</span></span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.394em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">1</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.345em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span><span class="mord"><span class="mord">Γ</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.0315em;">k</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">d</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0576em;">S</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8641em;"><span style="top:-3.113em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.8444em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathcal" style="margin-right:0.0822em;">V</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-left:-0.0822em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.0315em;">k</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">d</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0359em;">σ</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-left:-0.0359em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.0315em;">k</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.9805em;vertical-align:-0.2861em;"></span><span class="mord"><span class="mord mathnormal">ρ</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">1</span><span class="mpunct mtight">,</span><span class="mord mathnormal mtight" style="margin-right:0.0315em;">k</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">d</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0278em;">r</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:-0.0278em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">1</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1.8em;vertical-align:-0.65em;"></span><span class="mord"><span class="mord mathnormal">ρ</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">2</span><span class="mpunct mtight">,</span><span class="mord mathnormal mtight" style="margin-right:0.0315em;">k</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">d</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0278em;">r</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:-0.0278em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mord"><span class="delimsizing size2">)</span></span></span></span></span></span></div>
+<p>其中 <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6944em;"></span><span class="mord mathnormal" style="margin-right:0.0315em;">k</span></span></span></span> 标记到期桶。直分桶把每笔期权的全部敏感度整段挂在它名义到期对应的那个 <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6944em;"></span><span class="mord mathnormal" style="margin-right:0.0315em;">k</span></span></span></span> 上。它的静态性体现在：各 <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord">Γ</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.0315em;">k</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>、<span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathcal" style="margin-right:0.0822em;">V</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-left:-0.0822em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.0315em;">k</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span> 被当成常数，桶与桶之间不耦合，对 <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.5806em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0359em;">σ</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-left:-0.0359em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.0315em;">k</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span> 的扰动假设只影响本桶。这套近似对欧式期权基本成立（敞口不会跨桶），却对路径依赖工具失效，因为后者的&quot;有效到期&quot;本身是随机的，无法被钉在一个固定的 <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6944em;"></span><span class="mord mathnormal" style="margin-right:0.0315em;">k</span></span></span></span> 上。</p>
+<hr>
+<h2 id="二-美式与路径依赖期权-敞口会在桶之间游移">二、美式与路径依赖期权：敞口会在桶之间游移</h2>
+<p>Taleb 指出，分桶对欧式期权总体上更好用，因为它的桶只是<strong>部分不稳定</strong>：桶里的量会随期权移入/移出价内而增减（gamma 或 vega 的得失），但某一只期权的敞口<strong>不会换桶</strong>。这是直分桶成立的隐含前提。</p>
+<p>美式和路径依赖期权打破了它，因为敞口的确切久期不确定。一个敲出（knock-out）概率上升的障碍期权，它的 vega、gamma 和各希腊字母会向<strong>短期桶</strong>移动（因为它更可能早早出局）。反过来，当市场远离 strike 时，美式和路径依赖期权开始像欧式期权，敞口移向名义到期附近。</p>
+<p>波动率的移动也起同样作用。更高的波动率<strong>缩短</strong>敲出障碍期权的久期（更容易被敲掉），却<strong>矛盾地拉长</strong>美式期权的久期。这个反向效应值得记住：同样是波动率上升，对障碍是&quot;催命&quot;，对美式是&quot;续命&quot;（持有人更愿意付 carry 把期权延长一天去赌，呼应第 1 章美式的 extendible option 性质）。</p>
+<p>更棘手的是几类结构。敲入（knock-in）和递延执行（deferred strike）期权根本塞不进直桶，因为它们的敞口&quot;从一个点开始、在另一个点结束&quot;，因而依赖一个 <strong>forward-forward 桶</strong>；它们更依赖某些时间段里发生的事件，而非另一些时间段。最糟的是，有些结构（比如障碍）本质是<strong>伪装的日历价差（calendar spreads in disguise）</strong>。交易员若只看直分桶系统披露的净桶敞口，会被严重误导。</p>
+<p>看清这些工具风险的唯一办法是做<strong>动态分桶（dynamic bucketing）</strong>：要求交易员在标的的不同状态、不同波动率下逐一审视头寸，并据此匹配风险。</p>
+<h3 id="理论映射-随机久期与-伪装日历价差">理论映射：随机久期与&quot;伪装日历价差&quot;</h3>
+<p>把这一节接回理论，核心是&quot;有效到期是随机变量&quot;。欧式期权的到期是确定的 <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.1389em;">T</span></span></span></span>；障碍/美式期权的有效终止时刻是一个停时 <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal" style="margin-right:0.1132em;">τ</span></span></span></span>（首次触及障碍、或最优行权时点），它依赖路径、波动率、利率。分桶要求把敞口挂到一个确定的时间格上，而 <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal" style="margin-right:0.1132em;">τ</span></span></span></span> 的分布随市场状态漂移，于是敞口在桶间游移。波动率升高让敲出停时 <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.5806em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.1132em;">τ</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3283em;"><span style="top:-2.55em;margin-left:-0.1132em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord text mtight"><span class="mord mtight">KO</span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span> 的期望前移（久期缩短），让美式行权停时后移（久期拉长），正是 <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal" style="margin-right:0.1132em;">τ</span></span></span></span> 对参数的比较静态。</p>
+<p>&quot;障碍是伪装的日历价差&quot;也能讲清楚：一个 reverse knock-out 在障碍未触及时像长期期权、触及后归零，等价于&quot;做多一段时间的 optionality、做空另一段&quot;，净敞口在某个到期为正、另一个为负。直桶把它压成一个净数，掩盖了它在时间轴上一正一负的结构，这正是日历价差的特征。把它当成单一到期的净敞口去对冲，会在曲线移动时暴露。</p>
+<hr>
+<h2 id="三-进阶-forward-forward-桶-远期桶">三、进阶：forward-forward 桶（远期桶）</h2>
+<p>Taleb 坦言这套系统因计算复杂极少被实现，但对路径依赖期权、敲入这类产品、以及非时间齐次（non-time-homogeneous）结构（如变量 bet）来说，看到 forward-forward 期权风险是必需的。他说构建这样一个分桶系统曾长期困扰他，直到数值技术最近的进展。</p>
+<p>forward-forward 桶不再按&quot;从 0 到 <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6151em;"></span><span class="mord mathnormal">t</span></span></span></span>&quot;切，而是按&quot;从 <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.7651em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal">t</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">1</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span> 到 <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.7651em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal">t</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>&quot;的相邻区间切。示意如下：</p>
+<table>
+<thead>
+<tr>
+<th>(000)</th>
+<th style="text-align:right">0-1w</th>
+<th style="text-align:right">1w-1m</th>
+<th style="text-align:right">1m-2m</th>
+<th style="text-align:right">2m-3m</th>
+<th style="text-align:right">3m-6m</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Delta</td>
+<td style="text-align:right">82</td>
+<td style="text-align:right">82</td>
+<td style="text-align:right">82</td>
+<td style="text-align:right">82</td>
+<td style="text-align:right">82</td>
+</tr>
+<tr>
+<td>Gamma</td>
+<td style="text-align:right">8</td>
+<td style="text-align:right">8</td>
+<td style="text-align:right">8</td>
+<td style="text-align:right">8</td>
+<td style="text-align:right">8</td>
+</tr>
+<tr>
+<td>Vega</td>
+<td style="text-align:right">.4</td>
+<td style="text-align:right">.4</td>
+<td style="text-align:right">.4</td>
+<td style="text-align:right">.4</td>
+<td style="text-align:right">.4</td>
+</tr>
+<tr>
+<td>Rho1</td>
+<td style="text-align:right">.4</td>
+<td style="text-align:right">.4</td>
+<td style="text-align:right">.4</td>
+<td style="text-align:right">.4</td>
+<td style="text-align:right">.4</td>
+</tr>
+<tr>
+<td>Rho2</td>
+<td style="text-align:right">(.4)</td>
+<td style="text-align:right">(.4)</td>
+<td style="text-align:right">(.4)</td>
+<td style="text-align:right">(.4)</td>
+<td style="text-align:right">(.4)</td>
+</tr>
+</tbody>
+</table>
+<p>当组合含路径依赖期权时，计算机填格的方法相当复杂。由于没有解析方法，它必须以&quot;保持影响其他部分的参数不变&quot;的方式去移动这些格子。具体做法是把敞口拆进不同的波动率时段，对整个头寸跑下面的模拟：</p>
+<ul>
+<li><strong>只为某一个桶抬高波动率，其他桶不动。</strong> 用二叉树在该时段的节点之间跑新的更高波动率、其他时段维持常数。由此产生的价格差就是那个桶的 vega（局部 vega）。</li>
+<li>如果组合只含欧式期权，可以假设波动率不依赖于冲击的位置，而只取决于对整个组合的总体效应；于是每个桶分享相等份额的总 gamma。</li>
+<li>对非欧式工具，vega 和 gamma 是<strong>桶依赖</strong>的。</li>
+</ul>
+<p>Taleb 注明这套方法在第 9 章有详尽回顾。</p>
+<h3 id="理论映射-forward-forward-桶就是前向波动率的-vega">理论映射：forward-forward 桶就是前向波动率的 vega</h3>
+<p>这一节的数学身份是<strong>前向方差/前向波动率的敏感度</strong>。把累计方差按时间分段：</p>
+<div class="math-display"><span class="katex-display"><span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.1111em;vertical-align:-0.247em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0359em;">σ</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.8641em;"><span style="top:-2.453em;margin-left:-0.0359em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord text mtight"><span class="mord mtight">total</span></span></span></span></span><span style="top:-3.113em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.247em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.1389em;">T</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:2.3521em;vertical-align:-1.3021em;"></span><span class="mop op-limits"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.05em;"><span style="top:-1.8479em;margin-left:0em;"><span class="pstrut" style="height:3.05em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.0315em;">k</span></span></span><span style="top:-3.05em;"><span class="pstrut" style="height:3.05em;"></span><span><span class="mop op-symbol large-op">∑</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:1.3021em;"><span></span></span></span></span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0359em;">σ</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.8641em;"><span style="top:-2.453em;margin-left:-0.0359em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.1076em;">f</span><span class="mpunct mtight">,</span><span class="mord mathnormal mtight" style="margin-right:0.0315em;">k</span></span></span></span><span style="top:-3.113em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.3831em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord">Δ</span><span class="mord"><span class="mord mathnormal">t</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.0315em;">k</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span></span></div>
+<p>其中 <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.7167em;vertical-align:-0.2861em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0359em;">σ</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-left:-0.0359em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.1076em;">f</span><span class="mpunct mtight">,</span><span class="mord mathnormal mtight" style="margin-right:0.0315em;">k</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em;"><span></span></span></span></span></span></span></span></span></span> 是第 <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6944em;"></span><span class="mord mathnormal" style="margin-right:0.0315em;">k</span></span></span></span> 段的前向波动率。直分桶的 vega 是对整条曲线平移的敏感度 <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord" style="margin-right:0.0556em;">∂</span><span class="mord mathnormal" style="margin-right:0.2222em;">V</span><span class="mord">/</span><span class="mord" style="margin-right:0.0556em;">∂</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0359em;">σ</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-left:-0.0359em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord text mtight"><span class="mord mtight">total</span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>；forward-forward 桶的 vega 则是对单个时段前向波动率的敏感度 <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.0361em;vertical-align:-0.2861em;"></span><span class="mord" style="margin-right:0.0556em;">∂</span><span class="mord mathnormal" style="margin-right:0.2222em;">V</span><span class="mord">/</span><span class="mord" style="margin-right:0.0556em;">∂</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0359em;">σ</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-left:-0.0359em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.1076em;">f</span><span class="mpunct mtight">,</span><span class="mord mathnormal mtight" style="margin-right:0.0315em;">k</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em;"><span></span></span></span></span></span></span></span></span></span>，即&quot;只在 <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">[</span><span class="mord"><span class="mord mathnormal">t</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">1</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mord mathnormal">t</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mclose">]</span></span></span></span> 内抬高瞬时波动率、其余不变&quot;产生的价值变化。这正是 Taleb 描述的&quot;只为一个桶抬高波动率、用二叉树在该段节点间跑&quot;的离散实现。</p>
+<p>为什么对路径依赖期权必须这么做？因为这类期权对&quot;波动率发生在哪一段&quot;敏感，而不只对总量敏感。一个 3 个月敲出期权，前 2 周的高波动率（增加早期敲出概率）和最后 2 周的高波动率，对它的价值影响完全不同方向。直桶只给一个总 vega，掩盖了这种时间定位；forward-forward 桶把 vega 沿时间铺开，才看得见。这也是为什么 Taleb 说欧式期权可以&quot;每个桶分享相等的总 gamma&quot;（时间齐次，位置无关），而非欧式工具的 vega/gamma 必须逐桶算（位置相关）。</p>
+<hr>
+<h2 id="四-地形图-把风险铺在-时间-价格-的二维地图上">四、地形图：把风险铺在&quot;时间 × 价格&quot;的二维地图上</h2>
+<p>头寸地形图（position topography）是一种风险管理方法，它把组合的敞口分布展示在时间和可能的资产价格构成的平面上。Taleb 把它分成两类：行权价（静态）地形图和 gamma（动态）地形图。地形图的最大好处是<strong>超越希腊字母（transcending the Greeks）</strong>：它让交易员看见风险的分布，而不只是几个汇总数字。</p>
+<h3 id="行权价地形图-静态地形图">行权价地形图（静态地形图）</h3>
+<p>静态地形图是头寸的一张二维地图，横向按到期、纵向按行权价展示面值（face value）敞口的分布。</p>
+<p>Taleb 讲了一段历史。当期权交易还处在原始阶段、交易员只处理一两个到期时，他们用清算所免费发的卡片记录敞口，好快速看清库存里有什么。下面是这样一张卡片的样本（Old Days Strike Topography）：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:right">Strike</th>
+<th style="text-align:right">March P</th>
+<th style="text-align:right">March C</th>
+<th style="text-align:right">June P</th>
+<th style="text-align:right">June C</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right">65</td>
+<td style="text-align:right">26</td>
+<td style="text-align:right"></td>
+<td style="text-align:right"></td>
+<td style="text-align:right"></td>
+</tr>
+<tr>
+<td style="text-align:right">70</td>
+<td style="text-align:right">-20</td>
+<td style="text-align:right"></td>
+<td style="text-align:right"></td>
+<td style="text-align:right"></td>
+</tr>
+<tr>
+<td style="text-align:right">75</td>
+<td style="text-align:right">-20</td>
+<td style="text-align:right"></td>
+<td style="text-align:right"></td>
+<td style="text-align:right"></td>
+</tr>
+<tr>
+<td style="text-align:right">80</td>
+<td style="text-align:right">21</td>
+<td style="text-align:right"></td>
+<td style="text-align:right"></td>
+<td style="text-align:right"></td>
+</tr>
+<tr>
+<td style="text-align:right">85</td>
+<td style="text-align:right">5</td>
+<td style="text-align:right">1</td>
+<td style="text-align:right"></td>
+<td style="text-align:right"></td>
+</tr>
+<tr>
+<td style="text-align:right">90</td>
+<td style="text-align:right">11</td>
+<td style="text-align:right">2</td>
+<td style="text-align:right"></td>
+<td style="text-align:right"></td>
+</tr>
+<tr>
+<td style="text-align:right">95</td>
+<td style="text-align:right">-5</td>
+<td style="text-align:right">-19</td>
+<td style="text-align:right">11</td>
+<td style="text-align:right">-2</td>
+</tr>
+<tr>
+<td style="text-align:right">100</td>
+<td style="text-align:right">-72</td>
+<td style="text-align:right">-71</td>
+<td style="text-align:right"></td>
+<td style="text-align:right"></td>
+</tr>
+<tr>
+<td style="text-align:right">105</td>
+<td style="text-align:right">2</td>
+<td style="text-align:right">70</td>
+<td style="text-align:right"></td>
+<td style="text-align:right"></td>
+</tr>
+<tr>
+<td style="text-align:right">110</td>
+<td style="text-align:right">1</td>
+<td style="text-align:right">23</td>
+<td style="text-align:right"></td>
+<td style="text-align:right">11</td>
+</tr>
+<tr>
+<td style="text-align:right">115</td>
+<td style="text-align:right"></td>
+<td style="text-align:right">-9</td>
+<td style="text-align:right"></td>
+<td style="text-align:right"></td>
+</tr>
+</tbody>
+</table>
+<p>凭这张卡片，交易员可以越过 delta 和 gamma，去<strong>交易他的头寸，而不是交易他的希腊字母</strong>。Taleb 认为这种方法有令人钦佩的教学价值：它逼着交易员学会期权交易的精微之处，而不必求助于希腊字母报告那类&quot;伪数学&quot;方法。它让交易员的担忧从抽象的&quot;我不喜欢自己空了 22.23 个 gamma 和 71 个加权 vega&quot;，变成精确的&quot;我空了太多 105 call，需要认真的保护&quot;。这句对比是全章的态度宣言：希腊字母是汇总，地形图是结构，而风险住在结构里。</p>
+<p>但现代 book runner 没这种奢侈。既没有固定到期也没有固定行权价，那张卡片要几千行几千列才装得下一本大型场外组合的地形，而且它装不下香草以外的任何结构。于是场外 book 需要一种设计，把敞口在时间和空间的点上打包，检视集中度风险。场外行权价地形图按&quot;二维桶&quot;的净面值敞口来显示：横向（行权价方向）取网格中点之间的净面值，纵向（时间段）取点之间的净面值。所以 1W/100 这个桶，显示的是&quot;2 天到 1 周之间、且行权价在 99 到 101 之间&quot;的所有交易的净额。</p>
+<table>
+<thead>
+<tr>
+<th>Spot</th>
+<th style="text-align:right">80-</th>
+<th style="text-align:right">85</th>
+<th style="text-align:right">90</th>
+<th style="text-align:right">93</th>
+<th style="text-align:right">96</th>
+<th style="text-align:right">98</th>
+<th style="text-align:right">100</th>
+<th style="text-align:right">102</th>
+<th style="text-align:right">104</th>
+<th style="text-align:right">107</th>
+<th style="text-align:right">110</th>
+<th style="text-align:right">115</th>
+<th style="text-align:right">120+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1d</td>
+<td style="text-align:right">-83</td>
+<td style="text-align:right">86</td>
+<td style="text-align:right">-12</td>
+<td style="text-align:right">-33</td>
+<td style="text-align:right">-41</td>
+<td style="text-align:right">-10</td>
+<td style="text-align:right">-9</td>
+<td style="text-align:right">90</td>
+<td style="text-align:right">97</td>
+<td style="text-align:right">16</td>
+<td style="text-align:right">-49</td>
+<td style="text-align:right">56</td>
+<td style="text-align:right">15</td>
+</tr>
+<tr>
+<td>2d</td>
+<td style="text-align:right">47</td>
+<td style="text-align:right">9</td>
+<td style="text-align:right">18</td>
+<td style="text-align:right">68</td>
+<td style="text-align:right">-15</td>
+<td style="text-align:right">-73</td>
+<td style="text-align:right">20</td>
+<td style="text-align:right">54</td>
+<td style="text-align:right">13</td>
+<td style="text-align:right">-54</td>
+<td style="text-align:right">-67</td>
+<td style="text-align:right">-24</td>
+<td style="text-align:right">-4</td>
+</tr>
+<tr>
+<td>1w</td>
+<td style="text-align:right">-33</td>
+<td style="text-align:right">66</td>
+<td style="text-align:right">-18</td>
+<td style="text-align:right">-25</td>
+<td style="text-align:right">45</td>
+<td style="text-align:right">66</td>
+<td style="text-align:right">-35</td>
+<td style="text-align:right">50</td>
+<td style="text-align:right">-71</td>
+<td style="text-align:right">18</td>
+<td style="text-align:right">27</td>
+<td style="text-align:right">23</td>
+<td style="text-align:right">-58</td>
+</tr>
+<tr>
+<td>2w</td>
+<td style="text-align:right">-38</td>
+<td style="text-align:right">34</td>
+<td style="text-align:right">12</td>
+<td style="text-align:right">44</td>
+<td style="text-align:right">55</td>
+<td style="text-align:right">54</td>
+<td style="text-align:right">-53</td>
+<td style="text-align:right">-41</td>
+<td style="text-align:right">47</td>
+<td style="text-align:right">64</td>
+<td style="text-align:right">-28</td>
+<td style="text-align:right">-9</td>
+<td style="text-align:right">37</td>
+</tr>
+<tr>
+<td>1m</td>
+<td style="text-align:right">35</td>
+<td style="text-align:right">-17</td>
+<td style="text-align:right">-55</td>
+<td style="text-align:right">34</td>
+<td style="text-align:right">3</td>
+<td style="text-align:right">52</td>
+<td style="text-align:right">43</td>
+<td style="text-align:right">7</td>
+<td style="text-align:right">-8</td>
+<td style="text-align:right">-15</td>
+<td style="text-align:right">30</td>
+<td style="text-align:right">-27</td>
+<td style="text-align:right">13</td>
+</tr>
+<tr>
+<td>2m</td>
+<td style="text-align:right">12</td>
+<td style="text-align:right">45</td>
+<td style="text-align:right">2</td>
+<td style="text-align:right">-25</td>
+<td style="text-align:right">33</td>
+<td style="text-align:right">38</td>
+<td style="text-align:right">-20</td>
+<td style="text-align:right">15</td>
+<td style="text-align:right">5</td>
+<td style="text-align:right">-21</td>
+<td style="text-align:right">1</td>
+<td style="text-align:right">-26</td>
+<td style="text-align:right">-34</td>
+</tr>
+<tr>
+<td>3m</td>
+<td style="text-align:right">-14</td>
+<td style="text-align:right">-27</td>
+<td style="text-align:right">21</td>
+<td style="text-align:right">13</td>
+<td style="text-align:right">-28</td>
+<td style="text-align:right">-5</td>
+<td style="text-align:right">22</td>
+<td style="text-align:right">-6</td>
+<td style="text-align:right">-35</td>
+<td style="text-align:right">13</td>
+<td style="text-align:right">-24</td>
+<td style="text-align:right">39</td>
+<td style="text-align:right">6</td>
+</tr>
+<tr>
+<td>6m</td>
+<td style="text-align:right">-9</td>
+<td style="text-align:right">-11</td>
+<td style="text-align:right">1</td>
+<td style="text-align:right">23</td>
+<td style="text-align:right">20</td>
+<td style="text-align:right">-28</td>
+<td style="text-align:right">28</td>
+<td style="text-align:right">6</td>
+<td style="text-align:right">-11</td>
+<td style="text-align:right">-29</td>
+<td style="text-align:right">29</td>
+<td style="text-align:right">-15</td>
+<td style="text-align:right">-18</td>
+</tr>
+<tr>
+<td>9m</td>
+<td style="text-align:right">-2</td>
+<td style="text-align:right">-14</td>
+<td style="text-align:right">-1</td>
+<td style="text-align:right">8</td>
+<td style="text-align:right">-6</td>
+<td style="text-align:right">-6</td>
+<td style="text-align:right">0</td>
+<td style="text-align:right">-17</td>
+<td style="text-align:right">5</td>
+<td style="text-align:right">1</td>
+<td style="text-align:right">3</td>
+<td style="text-align:right">1</td>
+<td style="text-align:right">3</td>
+</tr>
+<tr>
+<td>1y</td>
+<td style="text-align:right">6</td>
+<td style="text-align:right">-7</td>
+<td style="text-align:right">-6</td>
+<td style="text-align:right">2</td>
+<td style="text-align:right">1</td>
+<td style="text-align:right">-3</td>
+<td style="text-align:right">-2</td>
+<td style="text-align:right">5</td>
+<td style="text-align:right">9</td>
+<td style="text-align:right">1</td>
+<td style="text-align:right">10</td>
+<td style="text-align:right">9</td>
+<td style="text-align:right">5</td>
+</tr>
+<tr>
+<td>2y</td>
+<td style="text-align:right">2</td>
+<td style="text-align:right">5</td>
+<td style="text-align:right">-2</td>
+<td style="text-align:right">4</td>
+<td style="text-align:right">-1</td>
+<td style="text-align:right">2</td>
+<td style="text-align:right">4</td>
+<td style="text-align:right">-1</td>
+<td style="text-align:right">-2</td>
+<td style="text-align:right">5</td>
+<td style="text-align:right">-2</td>
+<td style="text-align:right">-4</td>
+<td style="text-align:right">3</td>
+</tr>
+<tr>
+<td>3y</td>
+<td style="text-align:right">-4</td>
+<td style="text-align:right">3</td>
+<td style="text-align:right">1</td>
+<td style="text-align:right">0</td>
+<td style="text-align:right">-5</td>
+<td style="text-align:right">-2</td>
+<td style="text-align:right">0</td>
+<td style="text-align:right">-2</td>
+<td style="text-align:right">-3</td>
+<td style="text-align:right">-5</td>
+<td style="text-align:right">3</td>
+<td style="text-align:right">-4</td>
+<td style="text-align:right">5</td>
+</tr>
+<tr>
+<td>5y+</td>
+<td style="text-align:right">-1</td>
+<td style="text-align:right">4</td>
+<td style="text-align:right">0</td>
+<td style="text-align:right">1</td>
+<td style="text-align:right">-5</td>
+<td style="text-align:right">-4</td>
+<td style="text-align:right">0</td>
+<td style="text-align:right">4</td>
+<td style="text-align:right">-2</td>
+<td style="text-align:right">-4</td>
+<td style="text-align:right">-5</td>
+<td style="text-align:right">-4</td>
+<td style="text-align:right">-2</td>
+</tr>
+</tbody>
+</table>
+<p>地形图应当<strong>刻意排除大多数非香草期权</strong>，这些可以在单独的报告里处理。美式期权要小心，因为它们的名义到期并不正好是预期到期，只有软美式工具应该被放进矩阵；更彻底的处理是把美式的名义到期移到它的&quot;omega&quot;（真实到期时间）上。Taleb 提到，地形图方法的一个应用是第 9 章讲的&quot;方块法&quot;（method of squares）。</p>
+<p><strong>加入相关工具。</strong> 可以把多个相似商品相加（即假设 100% 相关）纳入一张报告。这种做法只为检视行权价集中度或 gamma/vega 的来源，因此可以简化而不至于骗了交易员。比如想在一张地形图里同时看法郎和马克的风险，就把所有 USD-FRF 的行权价折算成 USD-DEM。真正的改进则要来自一张几乎无法实操的三维地图，让相关性的斜率也进来。</p>
+<h3 id="缩放行权价地形图-用标准差代替行权价">缩放行权价地形图：用标准差代替行权价</h3>
+<p>由于&quot;贴近平值的行权价之差&quot;对短期期权比对远月结构更有意义，必须做缩放。100 和 101 这两个行权价之间的&quot;gap&quot;，对一个 5 年期权微不足道，对一个隔夜结构却很要命。表 14.5 的缩放法用<strong>标准差</strong>代替行权价来记录这种风险差异。在 15.7 的波动率下，行权价之间 1 个标准差就是 1 个百分点，即 100 到 101 之间。一年的标准差是 <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.04em;vertical-align:-0.1328em;"></span><span class="mord sqrt"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.9072em;"><span class="svg-align" style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="mord" style="padding-left:0.833em;"><span class="mord">252</span></span></span><span style="top:-2.8672em;"><span class="pstrut" style="height:3em;"></span><span class="hide-tail" style="min-width:0.853em;height:1.08em;"><svg xmlns="http://www.w3.org/2000/svg" width="400em" height="1.08em" viewBox="0 0 400000 1080" preserveAspectRatio="xMinYMin slice"><path d="M95,702
+c-2.7,0,-7.17,-2.7,-13.5,-8c-5.8,-5.3,-9.5,-10,-9.5,-14
+c0,-2,0.3,-3.3,1,-4c1.3,-2.7,23.83,-20.7,67.5,-54
+c44.2,-33.3,65.8,-50.3,66.5,-51c1.3,-1.3,3,-2,5,-2c4.7,0,8.7,3.3,12,10
+s173,378,173,378c0.7,0,35.3,-71,104,-213c68.7,-142,137.5,-285,206.5,-429
+c69,-144,104.5,-217.7,106.5,-221
+l0 -0
+c5.3,-9.3,12,-14,20,-14
+H400000v40H845.2724
+s-225.272,467,-225.272,467s-235,486,-235,486c-2.7,4.7,-9,7,-19,7
+c-6,0,-10,-1,-12,-3s-194,-422,-194,-422s-65,47,-65,47z
+M834 80h400000v40h-400000z"/></svg></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.1328em;"><span></span></span></span></span></span></span></span></span>（252 个交易日），即 15.7。所以一个隔夜的 1 点 gap，等价于一年的 15.7 点 gap。于是假设现货在 100（无漂移），报告会把&quot;隔夜 101 行权价&quot;和&quot;一年期 115.7 行权价&quot;放进同一列。</p>
+<table>
+<thead>
+<tr>
+<th>Standard Deviations</th>
+<th>-4</th>
+<th>-3</th>
+<th>-2</th>
+<th>-1.5</th>
+<th>-1</th>
+<th>-.5</th>
+<th style="text-align:right">0</th>
+<th style="text-align:right">.5</th>
+<th style="text-align:right">1</th>
+<th>1.5</th>
+<th>2</th>
+<th>3</th>
+<th>4</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1d</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td style="text-align:right">100</td>
+<td style="text-align:right">-150</td>
+<td style="text-align:right">50</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>2d</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td style="text-align:right"></td>
+<td style="text-align:right"></td>
+<td style="text-align:right"></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3 id="理论映射-缩放就是把行权价换成-moneyness-坐标">理论映射：缩放就是把行权价换成 moneyness 坐标</h3>
+<p>缩放地形图的数学身份是<strong>按 <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.04em;vertical-align:-0.1133em;"></span><span class="mord mathnormal" style="margin-right:0.0359em;">σ</span><span class="mord sqrt"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.9267em;"><span class="svg-align" style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="mord" style="padding-left:0.833em;"><span class="mord mathnormal" style="margin-right:0.1389em;">T</span></span></span><span style="top:-2.8867em;"><span class="pstrut" style="height:3em;"></span><span class="hide-tail" style="min-width:0.853em;height:1.08em;"><svg xmlns="http://www.w3.org/2000/svg" width="400em" height="1.08em" viewBox="0 0 400000 1080" preserveAspectRatio="xMinYMin slice"><path d="M95,702
+c-2.7,0,-7.17,-2.7,-13.5,-8c-5.8,-5.3,-9.5,-10,-9.5,-14
+c0,-2,0.3,-3.3,1,-4c1.3,-2.7,23.83,-20.7,67.5,-54
+c44.2,-33.3,65.8,-50.3,66.5,-51c1.3,-1.3,3,-2,5,-2c4.7,0,8.7,3.3,12,10
+s173,378,173,378c0.7,0,35.3,-71,104,-213c68.7,-142,137.5,-285,206.5,-429
+c69,-144,104.5,-217.7,106.5,-221
+l0 -0
+c5.3,-9.3,12,-14,20,-14
+H400000v40H845.2724
+s-225.272,467,-225.272,467s-235,486,-235,486c-2.7,4.7,-9,7,-19,7
+c-6,0,-10,-1,-12,-3s-194,-422,-194,-422s-65,47,-65,47z
+M834 80h400000v40h-400000z"/></svg></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.1133em;"><span></span></span></span></span></span></span></span></span> 归一化的对数 moneyness</strong>。期权的风险形态本质上由标准化变量</p>
+<div class="math-display"><span class="katex-display"><span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6944em;"></span><span class="mord mathnormal">d</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">∼</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:2.357em;vertical-align:-0.93em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.427em;"><span style="top:-2.1833em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0359em;">σ</span><span class="mord sqrt"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.9267em;"><span class="svg-align" style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="mord" style="padding-left:0.833em;"><span class="mord mathnormal" style="margin-right:0.1389em;">T</span></span></span><span style="top:-2.8867em;"><span class="pstrut" style="height:3em;"></span><span class="hide-tail" style="min-width:0.853em;height:1.08em;"><svg xmlns="http://www.w3.org/2000/svg" width="400em" height="1.08em" viewBox="0 0 400000 1080" preserveAspectRatio="xMinYMin slice"><path d="M95,702
+c-2.7,0,-7.17,-2.7,-13.5,-8c-5.8,-5.3,-9.5,-10,-9.5,-14
+c0,-2,0.3,-3.3,1,-4c1.3,-2.7,23.83,-20.7,67.5,-54
+c44.2,-33.3,65.8,-50.3,66.5,-51c1.3,-1.3,3,-2,5,-2c4.7,0,8.7,3.3,12,10
+s173,378,173,378c0.7,0,35.3,-71,104,-213c68.7,-142,137.5,-285,206.5,-429
+c69,-144,104.5,-217.7,106.5,-221
+l0 -0
+c5.3,-9.3,12,-14,20,-14
+H400000v40H845.2724
+s-225.272,467,-225.272,467s-235,486,-235,486c-2.7,4.7,-9,7,-19,7
+c-6,0,-10,-1,-12,-3s-194,-422,-194,-422s-65,47,-65,47z
+M834 80h400000v40h-400000z"/></svg></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.1133em;"><span></span></span></span></span></span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.677em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mop">ln</span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.0576em;">S</span><span class="mord">/</span><span class="mord mathnormal" style="margin-right:0.0715em;">K</span><span class="mclose">)</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.93em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span></span></span></span></span></div>
+<p>决定，而非由绝对的 <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.7667em;vertical-align:-0.0833em;"></span><span class="mord mathnormal" style="margin-right:0.0715em;">K</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.0576em;">S</span></span></span></span> 决定。两个不同到期的期权，只要它们的 <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.1767em;vertical-align:-0.25em;"></span><span class="mop">ln</span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.0576em;">S</span><span class="mord">/</span><span class="mord mathnormal" style="margin-right:0.0715em;">K</span><span class="mclose">)</span><span class="mord">/</span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.0359em;">σ</span><span class="mord sqrt"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.9267em;"><span class="svg-align" style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="mord" style="padding-left:0.833em;"><span class="mord mathnormal" style="margin-right:0.1389em;">T</span></span></span><span style="top:-2.8867em;"><span class="pstrut" style="height:3em;"></span><span class="hide-tail" style="min-width:0.853em;height:1.08em;"><svg xmlns="http://www.w3.org/2000/svg" width="400em" height="1.08em" viewBox="0 0 400000 1080" preserveAspectRatio="xMinYMin slice"><path d="M95,702
+c-2.7,0,-7.17,-2.7,-13.5,-8c-5.8,-5.3,-9.5,-10,-9.5,-14
+c0,-2,0.3,-3.3,1,-4c1.3,-2.7,23.83,-20.7,67.5,-54
+c44.2,-33.3,65.8,-50.3,66.5,-51c1.3,-1.3,3,-2,5,-2c4.7,0,8.7,3.3,12,10
+s173,378,173,378c0.7,0,35.3,-71,104,-213c68.7,-142,137.5,-285,206.5,-429
+c69,-144,104.5,-217.7,106.5,-221
+l0 -0
+c5.3,-9.3,12,-14,20,-14
+H400000v40H845.2724
+s-225.272,467,-225.272,467s-235,486,-235,486c-2.7,4.7,-9,7,-19,7
+c-6,0,-10,-1,-12,-3s-194,-422,-194,-422s-65,47,-65,47z
+M834 80h400000v40h-400000z"/></svg></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.1133em;"><span></span></span></span></span></span><span class="mclose">)</span></span></span></span> 相同，就处在曲面上&quot;风险相似&quot;的位置。把横轴从行权价换成标准差，正是把所有到期投影到同一个 moneyness 坐标系，于是隔夜的 101（1 个标准差）和一年的 115.7（同样 1 个标准差）落在同一列。<span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.04em;vertical-align:-0.1328em;"></span><span class="mord sqrt"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.9072em;"><span class="svg-align" style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="mord" style="padding-left:0.833em;"><span class="mord">252</span></span></span><span style="top:-2.8672em;"><span class="pstrut" style="height:3em;"></span><span class="hide-tail" style="min-width:0.853em;height:1.08em;"><svg xmlns="http://www.w3.org/2000/svg" width="400em" height="1.08em" viewBox="0 0 400000 1080" preserveAspectRatio="xMinYMin slice"><path d="M95,702
+c-2.7,0,-7.17,-2.7,-13.5,-8c-5.8,-5.3,-9.5,-10,-9.5,-14
+c0,-2,0.3,-3.3,1,-4c1.3,-2.7,23.83,-20.7,67.5,-54
+c44.2,-33.3,65.8,-50.3,66.5,-51c1.3,-1.3,3,-2,5,-2c4.7,0,8.7,3.3,12,10
+s173,378,173,378c0.7,0,35.3,-71,104,-213c68.7,-142,137.5,-285,206.5,-429
+c69,-144,104.5,-217.7,106.5,-221
+l0 -0
+c5.3,-9.3,12,-14,20,-14
+H400000v40H845.2724
+s-225.272,467,-225.272,467s-235,486,-235,486c-2.7,4.7,-9,7,-19,7
+c-6,0,-10,-1,-12,-3s-194,-422,-194,-422s-65,47,-65,47z
+M834 80h400000v40h-400000z"/></svg></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.1328em;"><span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">15.7</span></span></span></span> 的换算就是方差随时间线性累积、波动率随 <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.04em;vertical-align:-0.1133em;"></span><span class="mord sqrt"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.9267em;"><span class="svg-align" style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="mord" style="padding-left:0.833em;"><span class="mord mathnormal" style="margin-right:0.1389em;">T</span></span></span><span style="top:-2.8867em;"><span class="pstrut" style="height:3em;"></span><span class="hide-tail" style="min-width:0.853em;height:1.08em;"><svg xmlns="http://www.w3.org/2000/svg" width="400em" height="1.08em" viewBox="0 0 400000 1080" preserveAspectRatio="xMinYMin slice"><path d="M95,702
+c-2.7,0,-7.17,-2.7,-13.5,-8c-5.8,-5.3,-9.5,-10,-9.5,-14
+c0,-2,0.3,-3.3,1,-4c1.3,-2.7,23.83,-20.7,67.5,-54
+c44.2,-33.3,65.8,-50.3,66.5,-51c1.3,-1.3,3,-2,5,-2c4.7,0,8.7,3.3,12,10
+s173,378,173,378c0.7,0,35.3,-71,104,-213c68.7,-142,137.5,-285,206.5,-429
+c69,-144,104.5,-217.7,106.5,-221
+l0 -0
+c5.3,-9.3,12,-14,20,-14
+H400000v40H845.2724
+s-225.272,467,-225.272,467s-235,486,-235,486c-2.7,4.7,-9,7,-19,7
+c-6,0,-10,-1,-12,-3s-194,-422,-194,-422s-65,47,-65,47z
+M834 80h400000v40h-400000z"/></svg></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.1133em;"><span></span></span></span></span></span></span></span></span> 增长这条基本标度律。这让交易员在比较跨期集中度时，比较的是同等&quot;危险程度&quot;的位置，而非名义价位。</p>
+<hr>
+<h2 id="五-动态地形图-局部波动率敞口随时间的稳定性">五、动态地形图：局部波动率敞口随时间的稳定性</h2>
+<p>动态地形图是一种强有力的分析方法，它能揭示一个头寸<strong>穿越时间的稳定性</strong>。做法是保持头寸不变，向前模拟一天、两天、一周……，并披露由此得到的希腊字母地图。</p>
+<p>在头寸快速频繁变动的环境里，动态地形图的需求被放大。一个常规的 gamma 或 vega 矩阵，在风险随时间剧烈变化时会掩盖真实头寸。Taleb 的例子：如果头寸是大量 long 一周期权、short 两周期权，常规头寸报告会掩盖真正的问题——一周之后那一整周的风险。</p>
+<p><strong>计算技术。</strong> 报告不关心 delta，只关心 gamma。操作者先在不同资产价格水平上跑出今天的 gamma；然后冻结掉次日到期的期权，在所有这些价格水平上跑出&quot;一天之后&quot;的 gamma，依此类推。&quot;把日历向前推一天&quot;意味着把全局头寸当成日历日期已经前进了一天来跑。</p>
+<p>需要注意，这套报告对奇异期权表现不好，因为它们的路径依赖让每一份报告都是条件性的。换句话说，一个&quot;100 call、103 敲出&quot;的敞口，取决于前一天市场是否曾穿过 103。由此得到的 gamma 地形图（表 14.6）外观上可能与前面的相似，却是另一种动物，因为它<strong>剔除了随时间到期消失的头寸</strong>。这套技术还能进一步用相关性改进：操作者需要用市场间相关性随时间可能的变化来跑报告。</p>
+<h3 id="缺陷-路径依赖无法从动态地形图中读出">缺陷：路径依赖无法从动态地形图中读出</h3>
+<div class="callout callout-warning"><div class="callout-title"><span class="callout-icon">⚠</span><span class="callout-title-text">动态地形图对路径依赖期权无能为力</span></div><div class="callout-body"><p>没有已知办法从动态地形图里推出路径依赖期权的敞口。</p>
+</div></div>
+<p>Taleb 的例子很清楚。交易员想看&quot;一个月后市场到 102 时&quot;book 的 gamma。但只要头寸里有敲出期权，他看到的任何数字都不准。假设有个结构在 104.5 敲出：市场最终停在 102，并不意味着它没有在中途穿过 104.5；若穿过了，gamma 敞口会截然不同。回望期权同理：从高位回落（pulldown）的 gamma，会低于市场正停在极值（最高或最低）时的 gamma。</p>
+<p>路径依赖的麻烦在于：<strong>可能的路径远多于终点，而没有快速办法把这些路径都纳入可视化。</strong> 这是地形图作为&quot;二维快照&quot;的根本局限——它按终点（time × price）组织，而路径依赖期权的状态由整条轨迹决定，二维地图无法编码&quot;怎么走到这里&quot;的信息。</p>
+<h3 id="理论映射-终点可测-vs-路径可测">理论映射：终点可测 vs 路径可测</h3>
+<p>把这条缺陷形式化，关键是支付的可测性。欧式与可分桶工具的价值是终端状态 <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0576em;">S</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3283em;"><span style="top:-2.55em;margin-left:-0.0576em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.1389em;">T</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span> 的函数，因而可以在 <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord mathnormal">t</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.0576em;">S</span><span class="mclose">)</span></span></span></span> 平面上画出 gamma 地图，每个格子是良定义的。路径依赖期权的价值依赖整条路径的泛函，比如障碍期权依赖 <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.9285em;vertical-align:-0.2452em;"></span><span class="mop"><span class="mop">max</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">0</span><span class="mrel mtight">≤</span><span class="mord mathnormal mtight">u</span><span class="mrel mtight">≤</span><span class="mord mathnormal mtight">t</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2452em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0576em;">S</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1514em;"><span style="top:-2.55em;margin-left:-0.0576em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">u</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span> 是否触障、回望期权依赖运行极值 <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.109em;">M</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.2806em;"><span style="top:-2.55em;margin-left:-0.109em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">t</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.9285em;vertical-align:-0.2452em;"></span><span class="mop"><span class="mop">max</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.2952em;"><span style="top:-2.55em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">u</span><span class="mrel mtight">≤</span><span class="mord mathnormal mtight">t</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2452em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0576em;">S</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1514em;"><span style="top:-2.55em;margin-left:-0.0576em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">u</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>。这类工具的状态变量不止 <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord mathnormal">t</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.0576em;">S</span><span class="mclose">)</span></span></span></span>，至少要再加一个路径统计量（是否触障、运行极值），它们在 <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord mathnormal">t</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.0576em;">S</span><span class="mclose">)</span></span></span></span> 平面上不是单值函数。</p>
+<p>换句话说，画 gamma 地形图等于假设 <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord mathnormal">t</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.0576em;">S</span><span class="mclose">)</span></span></span></span> 是充分统计量；这对马尔可夫的终值型支付成立，对路径依赖支付不成立。要正确显示障碍期权，地图至少要升一维（加&quot;是否已触障&quot;的指示），回望则要加&quot;运行极值&quot;维。Taleb 说&quot;路径远多于终点&quot;，正是这个维数膨胀：固定终点 <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0576em;">S</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3283em;"><span style="top:-2.55em;margin-left:-0.0576em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.1389em;">T</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">102</span></span></span></span> 对应无数条路径，其中触障与未触障给出完全不同的 gamma。这把第 13 章&quot;二元/障碍期权永不 flat&quot;的判断接上了——它们的风险无法被低维快照捕捉。</p>
+<hr>
+<h2 id="六-障碍支付地形图-标出那些不显形的-负区">六、障碍支付地形图：标出那些不显形的&quot;负区&quot;</h2>
+<p>障碍支付地形图（barrier payoff topography）是一张地图，标出在一个&quot;pin&quot;上可能损失大笔资金的位置，即一个 bet 期权或 reverse knock-out 的最坏情形（详见第 17 至 20 章）。Taleb 点出这类风险的阴险之处：pin 风险可能极其巨大，却<strong>不会提前很久显形</strong>；而且 pin 没有真正附着的到期日，这让它的期望停时（expected stopping time）成为波动率、利率等的一个模糊函数。</p>
+<p>尽管如此，仍然需要看到最坏情形。好在这个披露被大大简化了，因为<strong>一个障碍的最坏情形位于到期时的 strike 上</strong>。所以只要建立支付在名义到期处的地图，就足以阻止交易员往一个负的&quot;区&quot;（zone）里继续加仓。</p>
+<p><img src="images/8448e64d5510a85ad5f87681f3091406aa81a355bbebb9a8eb621da9db2697e9.jpg" alt="图 14.1 支付地形图"></p>
+<p>图 14.1 给出这样一张地图：它把潜在的巨额支付损失标在 time × price 平面上，让交易员一眼看出哪些价位-时间区域是&quot;碰不得&quot;的负区。这与前面&quot;风险住在分布里&quot;的母题一脉相承——pin 风险在希腊字母汇总里完全看不见，只有把它铺到支付地形图上才暴露。</p>
+<h3 id="理论映射-pin-风险是支付奇点处的模糊停时">理论映射：pin 风险是支付奇点处的模糊停时</h3>
+<p>把障碍支付地形图接回理论，它处理的是两个叠加的困难。其一，reverse knock-out 和 bet（二元）期权的支付在 strike/barrier 处不连续，delta 与 gamma 在临界点附近发散变号，这就是 pin 风险的来源（第 13 章已讲过支付奇点的不可静态对冲性）。其二，触障是一个停时事件，而 pin 没有固定到期，其&quot;何时结算&quot;取决于路径首次触及障碍的时刻，是一个依赖 <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal" style="margin-right:0.0359em;">σ</span></span></span></span>、<span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal" style="margin-right:0.0278em;">r</span></span></span></span> 的随机停时，期望停时因此模糊。</p>
+<p>Taleb 给出的简化很实用：最坏情形锁定在&quot;到期时落在 strike 上&quot;。这等价于说，虽然停时分布模糊、路径众多，但损失的上确界出现在一个可计算的点——到期日、strike 处。于是不必模拟全部路径，只画名义到期处的支付地图，就能圈出负区、约束加仓行为。这是一种用最坏情形几何（worst-case geometry）替代全路径模拟的工程折中，与前面 forward-forward 桶&quot;保持其他参数不变、只动一处&quot;的思路同源：在无解析解、路径爆炸的地方，找一个守得住的标量去管住风险。</p>
+<hr>
+<h2 id="七-本章综述-理论与实务的对照">七、本章综述：理论与实务的对照</h2>
+<table>
+<thead>
+<tr>
+<th>Taleb 的实务命题</th>
+<th>对应的理论命题</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>分桶 = 把风险沿参数按时间切片</td>
+<td>价值全微分按到期分段的一阶线性分解</td>
+</tr>
+<tr>
+<td>直分桶只适用于即刻起算、到期确定的欧式</td>
+<td>终端到期 <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.1389em;">T</span></span></span></span> 确定，敞口不跨桶</td>
+</tr>
+<tr>
+<td>表中 delta 是远期 delta 的现值</td>
+<td>spot delta = forward delta / 计息因子</td>
+</tr>
+<tr>
+<td>货币期权拆 Rho1/Rho2 且不对称</td>
+<td>远期对两国利率的双重敏感 + 权利金贴现</td>
+</tr>
+<tr>
+<td>美式/障碍敞口在桶间游移</td>
+<td>有效到期是随机停时 <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal" style="margin-right:0.1132em;">τ</span></span></span></span>，随参数漂移</td>
+</tr>
+<tr>
+<td>高波动率缩短敲出、拉长美式久期</td>
+<td><span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.5806em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.1132em;">τ</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3283em;"><span style="top:-2.55em;margin-left:-0.1132em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord text mtight"><span class="mord mtight">KO</span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span> 前移 vs 行权停时后移</td>
+</tr>
+<tr>
+<td>障碍是&quot;伪装的日历价差&quot;</td>
+<td>触障前后敞口一正一负，跨到期分布</td>
+</tr>
+<tr>
+<td>forward-forward 桶</td>
+<td>前向波动率的 vega <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.0361em;vertical-align:-0.2861em;"></span><span class="mord" style="margin-right:0.0556em;">∂</span><span class="mord mathnormal" style="margin-right:0.2222em;">V</span><span class="mord">/</span><span class="mord" style="margin-right:0.0556em;">∂</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0359em;">σ</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-left:-0.0359em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.1076em;">f</span><span class="mpunct mtight">,</span><span class="mord mathnormal mtight" style="margin-right:0.0315em;">k</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em;"><span></span></span></span></span></span></span></span></span></span></td>
+</tr>
+<tr>
+<td>只抬一个桶的波动率跑二叉树</td>
+<td>局部 vega / 前向方差分段 <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.2333em;vertical-align:-0.4192em;"></span><span class="mop"><span class="mop op-symbol small-op" style="position:relative;top:0em;">∑</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1864em;"><span style="top:-2.4003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.0315em;">k</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2997em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0359em;">σ</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-2.4169em;margin-left:-0.0359em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.1076em;">f</span><span class="mpunct mtight">,</span><span class="mord mathnormal mtight" style="margin-right:0.0315em;">k</span></span></span></span><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.4192em;"><span></span></span></span></span></span></span><span class="mord">Δ</span><span class="mord"><span class="mord mathnormal">t</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.0315em;">k</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span></td>
+</tr>
+<tr>
+<td>缩放地形图用标准差代替行权价</td>
+<td>按 <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.04em;vertical-align:-0.1133em;"></span><span class="mord mathnormal" style="margin-right:0.0359em;">σ</span><span class="mord sqrt"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.9267em;"><span class="svg-align" style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="mord mathnormal" style="margin-right:0.1389em;padding-left:0.833em;">T</span></span><span style="top:-2.8867em;"><span class="pstrut" style="height:3em;"></span><span class="hide-tail" style="min-width:0.853em;height:1.08em;"><svg xmlns="http://www.w3.org/2000/svg" width="400em" height="1.08em" viewBox="0 0 400000 1080" preserveAspectRatio="xMinYMin slice"><path d="M95,702
+c-2.7,0,-7.17,-2.7,-13.5,-8c-5.8,-5.3,-9.5,-10,-9.5,-14
+c0,-2,0.3,-3.3,1,-4c1.3,-2.7,23.83,-20.7,67.5,-54
+c44.2,-33.3,65.8,-50.3,66.5,-51c1.3,-1.3,3,-2,5,-2c4.7,0,8.7,3.3,12,10
+s173,378,173,378c0.7,0,35.3,-71,104,-213c68.7,-142,137.5,-285,206.5,-429
+c69,-144,104.5,-217.7,106.5,-221
+l0 -0
+c5.3,-9.3,12,-14,20,-14
+H400000v40H845.2724
+s-225.272,467,-225.272,467s-235,486,-235,486c-2.7,4.7,-9,7,-19,7
+c-6,0,-10,-1,-12,-3s-194,-422,-194,-422s-65,47,-65,47z
+M834 80h400000v40h-400000z"/></svg></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.1133em;"><span></span></span></span></span></span></span></span></span> 归一化的 moneyness <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.1767em;vertical-align:-0.25em;"></span><span class="mop">ln</span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.0576em;">S</span><span class="mord">/</span><span class="mord mathnormal" style="margin-right:0.0715em;">K</span><span class="mclose">)</span><span class="mord">/</span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.0359em;">σ</span><span class="mord sqrt"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.9267em;"><span class="svg-align" style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="mord mathnormal" style="margin-right:0.1389em;padding-left:0.833em;">T</span></span><span style="top:-2.8867em;"><span class="pstrut" style="height:3em;"></span><span class="hide-tail" style="min-width:0.853em;height:1.08em;"><svg xmlns="http://www.w3.org/2000/svg" width="400em" height="1.08em" viewBox="0 0 400000 1080" preserveAspectRatio="xMinYMin slice"><path d="M95,702
+c-2.7,0,-7.17,-2.7,-13.5,-8c-5.8,-5.3,-9.5,-10,-9.5,-14
+c0,-2,0.3,-3.3,1,-4c1.3,-2.7,23.83,-20.7,67.5,-54
+c44.2,-33.3,65.8,-50.3,66.5,-51c1.3,-1.3,3,-2,5,-2c4.7,0,8.7,3.3,12,10
+s173,378,173,378c0.7,0,35.3,-71,104,-213c68.7,-142,137.5,-285,206.5,-429
+c69,-144,104.5,-217.7,106.5,-221
+l0 -0
+c5.3,-9.3,12,-14,20,-14
+H400000v40H845.2724
+s-225.272,467,-225.272,467s-235,486,-235,486c-2.7,4.7,-9,7,-19,7
+c-6,0,-10,-1,-12,-3s-194,-422,-194,-422s-65,47,-65,47z
+M834 80h400000v40h-400000z"/></svg></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.1133em;"><span></span></span></span></span></span><span class="mclose">)</span></span></span></span></td>
+</tr>
+<tr>
+<td>隔夜 1 点 = 一年 15.7 点</td>
+<td><span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.04em;vertical-align:-0.1328em;"></span><span class="mord sqrt"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.9072em;"><span class="svg-align" style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="mord" style="padding-left:0.833em;"><span class="mord">252</span></span></span><span style="top:-2.8672em;"><span class="pstrut" style="height:3em;"></span><span class="hide-tail" style="min-width:0.853em;height:1.08em;"><svg xmlns="http://www.w3.org/2000/svg" width="400em" height="1.08em" viewBox="0 0 400000 1080" preserveAspectRatio="xMinYMin slice"><path d="M95,702
+c-2.7,0,-7.17,-2.7,-13.5,-8c-5.8,-5.3,-9.5,-10,-9.5,-14
+c0,-2,0.3,-3.3,1,-4c1.3,-2.7,23.83,-20.7,67.5,-54
+c44.2,-33.3,65.8,-50.3,66.5,-51c1.3,-1.3,3,-2,5,-2c4.7,0,8.7,3.3,12,10
+s173,378,173,378c0.7,0,35.3,-71,104,-213c68.7,-142,137.5,-285,206.5,-429
+c69,-144,104.5,-217.7,106.5,-221
+l0 -0
+c5.3,-9.3,12,-14,20,-14
+H400000v40H845.2724
+s-225.272,467,-225.272,467s-235,486,-235,486c-2.7,4.7,-9,7,-19,7
+c-6,0,-10,-1,-12,-3s-194,-422,-194,-422s-65,47,-65,47z
+M834 80h400000v40h-400000z"/></svg></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.1328em;"><span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">15.7</span></span></span></span>，方差随时间线性累积</td>
+</tr>
+<tr>
+<td>动态地形图剔除到期消失的头寸</td>
+<td>沿时间前推的条件 gamma 快照</td>
+</tr>
+<tr>
+<td>路径依赖无法从二维地图读出</td>
+<td><span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord mathnormal">t</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.0576em;">S</span><span class="mclose">)</span></span></span></span> 非充分统计量，需加路径统计量维</td>
+</tr>
+<tr>
+<td>障碍最坏情形在到期 strike 上</td>
+<td>用最坏情形几何替代全路径模拟</td>
+</tr>
+<tr>
+<td>pin 没有固定到期、停时模糊</td>
+<td>触障停时依赖 <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.0359em;">σ</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.0278em;">r</span></span></span></span>，期望停时模糊</td>
+</tr>
+</tbody>
+</table>
+<h3 id="核心观点">核心观点</h3>
+<p>第一，<strong>汇总的希腊字母会丢掉分布信息</strong>。一本 book 的风险住在它沿时间和价格的分布里。地形图让交易员&quot;交易头寸&quot;而非&quot;交易希腊字母&quot;，这是 Taleb 给风险管理定的基调。</p>
+<p>第二，<strong>直分桶只对欧式诚实</strong>。它假设敞口不跨桶、波动率冲击只影响本桶。一旦遇到美式、障碍、敲入、递延执行，有效到期变成随机停时，敞口在桶间游移，净桶数会骗人。</p>
+<p>第三，<strong>forward-forward 桶是看清路径依赖的必需品</strong>。它把 vega 沿时间铺成前向波动率敏感度，看得见&quot;波动率发生在哪一段&quot;对路径依赖期权的不同影响，而这正是直桶抹掉的维度。</p>
+<p>第四，<strong>缩放是跨期比较的前提</strong>。用标准差而非行权价做横轴，把所有到期投影到同一 moneyness 坐标，比较的才是同等危险程度的位置。</p>
+<p>第五，<strong>路径依赖是地形图的边界</strong>。二维地图按终点组织，而路径依赖期权的状态由整条轨迹决定。障碍支付地形图用&quot;最坏情形锁定在到期 strike&quot;这一简化，圈出平时不显形的负区。</p>
+<h3 id="面对一本-book-的操作清单">面对一本 book 的操作清单</h3>
+<ol>
+<li>我看的是汇总希腊字母还是分布地形？风险集中在哪个到期、哪个行权价区？</li>
+<li>这本 book 里有多少是欧式香草、可以直分桶？有多少是美式/障碍/敲入，敞口会游移？</li>
+<li>表里的 delta 是远期口径还是现货口径？做对冲前折算了吗？</li>
+<li>货币期权的 Rho1 和 Rho2 分开看了吗？权利金融资的反向效应算进去了吗？</li>
+<li>哪些结构是&quot;伪装的日历价差&quot;？净桶敞口是否掩盖了时间轴上一正一负的结构？</li>
+<li>需要 forward-forward 桶吗？波动率发生在哪一段对我的路径依赖头寸是否方向相反？</li>
+<li>跨期比较集中度时，横轴用的是行权价还是标准差？是否按 <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.04em;vertical-align:-0.1133em;"></span><span class="mord mathnormal" style="margin-right:0.0359em;">σ</span><span class="mord sqrt"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.9267em;"><span class="svg-align" style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="mord mathnormal" style="margin-right:0.1389em;padding-left:0.833em;">T</span></span><span style="top:-2.8867em;"><span class="pstrut" style="height:3em;"></span><span class="hide-tail" style="min-width:0.853em;height:1.08em;"><svg xmlns="http://www.w3.org/2000/svg" width="400em" height="1.08em" viewBox="0 0 400000 1080" preserveAspectRatio="xMinYMin slice"><path d="M95,702
+c-2.7,0,-7.17,-2.7,-13.5,-8c-5.8,-5.3,-9.5,-10,-9.5,-14
+c0,-2,0.3,-3.3,1,-4c1.3,-2.7,23.83,-20.7,67.5,-54
+c44.2,-33.3,65.8,-50.3,66.5,-51c1.3,-1.3,3,-2,5,-2c4.7,0,8.7,3.3,12,10
+s173,378,173,378c0.7,0,35.3,-71,104,-213c68.7,-142,137.5,-285,206.5,-429
+c69,-144,104.5,-217.7,106.5,-221
+l0 -0
+c5.3,-9.3,12,-14,20,-14
+H400000v40H845.2724
+s-225.272,467,-225.272,467s-235,486,-235,486c-2.7,4.7,-9,7,-19,7
+c-6,0,-10,-1,-12,-3s-194,-422,-194,-422s-65,47,-65,47z
+M834 80h400000v40h-400000z"/></svg></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.1133em;"><span></span></span></span></span></span></span></span></span> 缩放了？</li>
+<li>动态地形图里，一周后那一整周的风险是否被常规快照掩盖了？</li>
+<li>book 里的 reverse knock-out / bet 期权的 pin 负区在哪？我是否在往负区加仓？</li>
+</ol>
+<h3 id="一句话收束">一句话收束</h3>
+<p>本章最该记住的一句：<strong>不要用几个希腊字母总数去概括一本 book，要把风险铺到时间和价格的地图上看它的分布；而当工具变成路径依赖时，连地图都要承认自己只画得出终点、画不出走过的路。</strong> 风险管理的功夫，正在于知道哪些结构能被静态分桶诚实地表示，哪些必须靠 forward-forward 桶、动态模拟和最坏情形地形图才不至于被净数欺骗。</p>
+
+<nav class="pager-row"><a class="pager prev" href="chapter-13-some-wrinkles-of-option-markets.html"><span class="pager-dir">← 上一篇</span><span class="pager-name">期权市场的一些褶皱</span></a><a class="pager next" href="chapter-15-beware-the-distribution.html"><span class="pager-dir">下一篇 →</span><span class="pager-name">当心分布</span></a></nav>
+</article>
+<nav class="toc" aria-label="本章目录"><div class="toc-title">本章目录</div><ul><li class="toc-l2"><a href="#导读-本章要解决的问题">导读：本章要解决的问题</a></li>
+<li class="toc-l2"><a href="#一-静态直分桶-把风险沿时间切片">一、静态直分桶：把风险沿时间切片</a></li>
+<li class="toc-l3"><a href="#一个欧式期权的分桶算例-gbp-usd-6-个月-call">一个欧式期权的分桶算例：GBP-USD 6 个月 call</a></li>
+<li class="toc-l3"><a href="#各行的实务解读与-spot-delta-forward-delta-之别">各行的实务解读与 spot delta / forward delta 之别</a></li>
+<li class="toc-l3"><a href="#理论映射-分桶是把价值微分按期限做的线性分解">理论映射：分桶是把价值微分按期限做的线性分解</a></li>
+<li class="toc-l2"><a href="#二-美式与路径依赖期权-敞口会在桶之间游移">二、美式与路径依赖期权：敞口会在桶之间游移</a></li>
+<li class="toc-l3"><a href="#理论映射-随机久期与-伪装日历价差">理论映射：随机久期与&quot;伪装日历价差&quot;</a></li>
+<li class="toc-l2"><a href="#三-进阶-forward-forward-桶-远期桶">三、进阶：forward-forward 桶（远期桶）</a></li>
+<li class="toc-l3"><a href="#理论映射-forward-forward-桶就是前向波动率的-vega">理论映射：forward-forward 桶就是前向波动率的 vega</a></li>
+<li class="toc-l2"><a href="#四-地形图-把风险铺在-时间-价格-的二维地图上">四、地形图：把风险铺在&quot;时间 × 价格&quot;的二维地图上</a></li>
+<li class="toc-l3"><a href="#行权价地形图-静态地形图">行权价地形图（静态地形图）</a></li>
+<li class="toc-l3"><a href="#缩放行权价地形图-用标准差代替行权价">缩放行权价地形图：用标准差代替行权价</a></li>
+<li class="toc-l3"><a href="#理论映射-缩放就是把行权价换成-moneyness-坐标">理论映射：缩放就是把行权价换成 moneyness 坐标</a></li>
+<li class="toc-l2"><a href="#五-动态地形图-局部波动率敞口随时间的稳定性">五、动态地形图：局部波动率敞口随时间的稳定性</a></li>
+<li class="toc-l3"><a href="#缺陷-路径依赖无法从动态地形图中读出">缺陷：路径依赖无法从动态地形图中读出</a></li>
+<li class="toc-l3"><a href="#理论映射-终点可测-vs-路径可测">理论映射：终点可测 vs 路径可测</a></li>
+<li class="toc-l2"><a href="#六-障碍支付地形图-标出那些不显形的-负区">六、障碍支付地形图：标出那些不显形的&quot;负区&quot;</a></li>
+<li class="toc-l3"><a href="#理论映射-pin-风险是支付奇点处的模糊停时">理论映射：pin 风险是支付奇点处的模糊停时</a></li>
+<li class="toc-l2"><a href="#七-本章综述-理论与实务的对照">七、本章综述：理论与实务的对照</a></li>
+<li class="toc-l3"><a href="#核心观点">核心观点</a></li>
+<li class="toc-l3"><a href="#面对一本-book-的操作清单">面对一本 book 的操作清单</a></li>
+<li class="toc-l3"><a href="#一句话收束">一句话收束</a></li></ul></nav>
+</main>
+<script src="assets/app.js"></script>
+</body>
+</html>

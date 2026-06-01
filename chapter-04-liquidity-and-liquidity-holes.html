@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>第四章：流动性与流动性洞（Liquidity and Liquidity Holes） · Dynamic Hedging 精读笔记</title>
+<link rel="stylesheet" href="assets/katex.min.css">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<button id="menuToggle" class="menu-toggle" aria-label="目录">☰</button>
+<aside class="sidebar" id="sidebar">
+<a class="brand" href="index.html"><span class="brand-title">Dynamic Hedging 精读笔记</span><span class="brand-sub">Nassim Taleb · 动态对冲 · 中文精读笔记</span></a><div class="nav-search"><input type="search" id="navSearch" placeholder="筛选章节…" autocomplete="off"></div><div class="nav-section"><h3 class="nav-section-title">正文章节</h3><ul><li><a href="chapter-01-introduction-to-the-instruments.html"><span class="nav-tag">第一章</span><span class="nav-name">金融工具导论</span></a></li>
+<li><a href="chapter-02-the-generalized-option.html"><span class="nav-tag">第二章</span><span class="nav-name">广义期权</span></a></li>
+<li><a href="chapter-03-market-making-and-market-using.html"><span class="nav-tag">第三章</span><span class="nav-name">做市与用市</span></a></li>
+<li class="active"><a href="chapter-04-liquidity-and-liquidity-holes.html"><span class="nav-tag">第四章</span><span class="nav-name">流动性与流动性洞</span></a></li>
+<li><a href="chapter-05-arbitrage-and-the-arbitrageurs.html"><span class="nav-tag">第五章</span><span class="nav-name">套利与套利者</span></a></li>
+<li><a href="chapter-06-volatility-and-correlation.html"><span class="nav-tag">第六章</span><span class="nav-name">波动率与相关性</span></a></li>
+<li><a href="chapter-07-adapting-black-scholes-merton-the-delta.html"><span class="nav-tag">第七章</span><span class="nav-name">改造 Black-Scholes-Merton —— Delta</span></a></li>
+<li><a href="chapter-08-gamma-and-shadow-gamma.html"><span class="nav-tag">第八章</span><span class="nav-name">Gamma 与 Shadow Gamma</span></a></li>
+<li><a href="chapter-09-vega-and-the-volatility-surface.html"><span class="nav-tag">第九章</span><span class="nav-name">Vega 与波动率曲面</span></a></li>
+<li><a href="chapter-10-theta-and-minor-greeks.html"><span class="nav-tag">第十章</span><span class="nav-name">Theta 与次要希腊字母</span></a></li>
+<li><a href="chapter-11-the-greeks-and-their-behavior.html"><span class="nav-tag">第十一章</span><span class="nav-name">希腊字母的动态行为</span></a></li>
+<li><a href="chapter-12-fungibility-convergence-and-stacking.html"><span class="nav-tag">第12章</span><span class="nav-name">可替代性、收敛与堆叠</span></a></li>
+<li><a href="chapter-13-some-wrinkles-of-option-markets.html"><span class="nav-tag">第13章</span><span class="nav-name">期权市场的一些褶皱</span></a></li>
+<li><a href="chapter-14-bucketing-and-topography.html"><span class="nav-tag">第14章</span><span class="nav-name">分桶与地形图</span></a></li>
+<li><a href="chapter-15-beware-the-distribution.html"><span class="nav-tag">第15章</span><span class="nav-name">当心分布</span></a></li>
+<li><a href="chapter-16-option-trading-concepts.html"><span class="nav-tag">第16章</span><span class="nav-name">期权交易概念</span></a></li>
+<li><a href="chapter-17-binary-options-european-style.html"><span class="nav-tag">第17章</span><span class="nav-name">欧式二元期权</span></a></li>
+<li><a href="chapter-18-binary-options-american-style.html"><span class="nav-tag">第18章</span><span class="nav-name">美式二元期权</span></a></li>
+<li><a href="chapter-19-barrier-options-i.html"><span class="nav-tag">第19章</span><span class="nav-name">障碍期权</span></a></li>
+<li><a href="chapter-20-barrier-options-ii.html"><span class="nav-tag">第20章</span><span class="nav-name">障碍期权</span></a></li>
+<li><a href="chapter-21-compound-choosers-and-higher-order-options.html"><span class="nav-tag">第21章</span><span class="nav-name">复合期权、选择者期权与高阶期权</span></a></li>
+<li><a href="chapter-22-multiasset-options.html"><span class="nav-tag">第22章</span><span class="nav-name">多资产期权</span></a></li>
+<li><a href="chapter-23-minor-exotics-lookback-and-asian-options.html"><span class="nav-tag">第23章</span><span class="nav-name">次要奇异期权——回望与亚式期权</span></a></li></ul></div><div class="nav-section"><h3 class="nav-section-title">附录模块</h3><ul><li><a href="module-a-brownian-motion-on-a-spreadsheet.html"><span class="nav-tag">模块 A</span><span class="nav-name">电子表格上的布朗运动教程</span></a></li>
+<li><a href="module-b-risk-neutrality-explained.html"><span class="nav-tag">模块 B</span><span class="nav-name">风险中性解释</span></a></li>
+<li><a href="module-c-numeraire-relativity-and-the-two-country-paradox.html"><span class="nav-tag">模块 C</span><span class="nav-name">计价单位相对性与两国悖论</span></a></li>
+<li><a href="module-d-correlation-triangles.html"><span class="nav-tag">模块 D</span><span class="nav-name">相关性三角，一个图形化案例</span></a></li>
+<li><a href="module-e-the-value-at-risk.html"><span class="nav-tag">模块 E</span><span class="nav-name">风险价值</span></a></li>
+<li><a href="module-f-probabilistic-rankings-in-arbitrage.html"><span class="nav-tag">模块 F</span><span class="nav-name">套利中的概率排序</span></a></li>
+<li><a href="module-g-option-pricing.html"><span class="nav-tag">模块 G</span><span class="nav-name">期权定价</span></a></li></ul></div>
+</aside>
+<div class="overlay" id="overlay"></div>
+<main class="content">
+<article class="note">
+<h1 id="第四章-流动性与流动性洞-liquidity-and-liquidity-holes">第四章：流动性与流动性洞（Liquidity and Liquidity Holes）</h1>
+<blockquote>
+<p>The market is a large movie theater with a small door. —— An options veteran</p>
+</blockquote>
+<h2 id="导读-本章要解决的问题">导读：本章要解决的问题</h2>
+<p>第一章把流动性称为&quot;隐形风险&quot;，放在风险经理脑后；第三章讲做市时反复提到流动性枯竭。第四章把这个隐形风险拉到台前，专门处理它。Taleb 在开篇就给了一句话定位：本章应在学习障碍期权之前读。原因下面会清楚，障碍期权和止损单一样，是<strong>把流动性洞内生地制造出来</strong>的结构。</p>
+<p>这一章要回答的核心问题是：<strong>当模型假设的&quot;可以按中价、连续、无限量地调仓&quot;在真实市场里失效时，会发生什么，损失从哪里来，以及这对期权定价和动态对冲意味着什么。</strong> 对一个金融工程读者，本章最该吸收的是两层认识。第一层是流动性的实务解剖：滑点怎么算、流动性洞怎么形成、止损和障碍期权如何把单向的强制交易喂给市场。第二层、也是更刺穿理论的一层，是 Taleb 对 BSM 基石的攻击：<strong>流动性洞暴露了 Markov 假设的脆弱</strong>。无记忆几何布朗运动假定&quot;到达当前价的路径无关紧要&quot;，但止损和障碍让下一个价格变动依赖于上一个，过程有了记忆，无套利复制赖以成立的前提被侵蚀。</p>
+<p>把全章压缩成五条主线：</p>
+<ol>
+<li>流动性是交易的一切来源，滑点（slippage）是它的实务度量，且随成交规模、波动率、时区重叠而恶化。</li>
+<li>流动性洞是均衡机制的临时失灵：低价引来加速的供给、高价引来加速的需求，价格的常规负反馈反转成正反馈。</li>
+<li>止损单和障碍期权是<strong>不可撤销的或有强制大单</strong>，持有信息的人有动机去触发它们，由此制造可预测的单向价格运动。</li>
+<li>这种可预测的路径破坏了布朗运动的 Markov 性，市场因此&quot;有记忆&quot;，新高新低附近的躁动就是证据。</li>
+<li>交易成本进入期权定价后，盈亏平衡波动率随 gamma 符号上下偏移（Leland、Whalley-Wilmott），long gamma 用限价单、short gamma 用止损单。</li>
+</ol>
+<p>下面沿原文小节顺序展开，并在每个节点补全理论映射。</p>
+<hr>
+<h2 id="一-流动性与滑点-liquidity-and-slippage">一、流动性与滑点（Liquidity and Slippage）</h2>
+<p>流动性定义为操作者就给定的一块证券进出市场的难易程度。Taleb 把它抬到极高的位置：如果要一句话概括交易（相对于投资）是关于什么的，最好的答案是对流动性的充分管理和理解。流动性是市场相关一切事物的源头。</p>
+<p>滑点（slippage）是从业者衡量流动性的指标。给定一个要执行的数量，它等于平均成交价与初始 bid/offer 中点之间的偏差。滑点对某个特定商品未必是流动性的精确度量，但它在不同市场之间提供了一个可靠的比较性度量。学术界给出过若干流动性度量，大多用成交笔数或买卖价差。</p>
+<p><strong>滑点的例子</strong>：一个基金经理需要做多日元兑美元。CME 上的 115 calls 报价 88/92，理论中价在 90。他会估计：买 4000 张合约时，第一个 1000 张要付 92，下一个 1000 张付 93，余下 2000 张一路付到 98，因为他买入会让期权交易员去对冲他们的 delta、从而把货币本身推高。加权平均价是 95.25，整个执行的滑点是 5.25 个 tick。他平仓时应当做同样的预留（假设选同一时段）。市场更波动时滑点更大（而那恰恰是基金经理可能觉得更值得介入或平仓的时候），时区重叠减少了总参与者数量时也一样。</p>
+<p>这个例子里有一个值得标记的机制：<strong>买期权会通过期权交易员的 delta 对冲推高标的</strong>。基金经理买 call，做市商卖 call 后 short delta，必须买标的对冲，于是现货被推高、期权更贵，买家的滑点被自己的对冲需求放大。这是第一章&quot;对冲制造维度&quot;在流动性层面的回声。</p>
+<p>滑点是杠杆对冲基金限制管理资本规模的主要原因。他们的总美元收益可能上升（若盈利），但百分比收益相应下降。Taleb 给了一个反讽的观察：<strong>滑点成本常常在大额成交时消失</strong>，因为许多大交易员能用买入力撑起他们正在建仓的市场，行情往往上涨并稳定在最后一笔买单成交的价位。代价总在退出时支付，平仓的滑点无可避免。</p>
+<h3 id="理论映射-滑点是凸的执行成本-是-bsm-无限可分-零冲击-假设的破口">理论映射：滑点是凸的执行成本，是 BSM &quot;无限可分、零冲击&quot; 假设的破口</h3>
+<p>滑点把 BSM 的一个隐含假设撕开：经典复制假定交易者是价格接受者，可以按市价无限量、无冲击地成交。现实里成交价是成交量的递增函数，市场冲击（market impact）使执行成本对规模呈凸性。把单位冲击近似写成线性，执行 <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8778em;vertical-align:-0.1944em;"></span><span class="mord mathnormal">Q</span></span></span></span> 份的总滑点成本约为</p>
+<div class="math-display"><span class="katex-display"><span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord text"><span class="mord">Cost</span></span><span class="mopen">(</span><span class="mord mathnormal">Q</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">≈</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1.2091em;vertical-align:-0.345em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.8451em;"><span style="top:-2.655em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">2</span></span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.394em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">1</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.345em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">λ</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mord mathnormal">Q</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8641em;"><span style="top:-3.113em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span></span></span></span></span></div>
+<p>其中 <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6944em;"></span><span class="mord mathnormal">λ</span></span></span></span> 是市场深度的倒数（深度越浅、<span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6944em;"></span><span class="mord mathnormal">λ</span></span></span></span> 越大）。成本对 <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8778em;vertical-align:-0.1944em;"></span><span class="mord mathnormal">Q</span></span></span></span> 的二次增长正是&quot;基金限制规模、百分比收益随规模下降&quot;的根：美元收益 <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.3669em;"></span><span class="mrel">∼</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.8778em;vertical-align:-0.1944em;"></span><span class="mord mathnormal">μ</span><span class="mord mathnormal">Q</span></span></span></span> 线性增长，成本 <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.3669em;"></span><span class="mrel">∼</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1.1901em;vertical-align:-0.345em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.8451em;"><span style="top:-2.655em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">2</span></span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.394em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">1</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.345em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span><span class="mord mathnormal">λ</span><span class="mord"><span class="mord mathnormal">Q</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span></span></span></span> 二次增长，净百分比收益 <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.7778em;vertical-align:-0.1944em;"></span><span class="mord mathnormal">μ</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1.1901em;vertical-align:-0.345em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.8451em;"><span style="top:-2.655em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">2</span></span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.394em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">1</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.345em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span><span class="mord mathnormal">λ</span><span class="mord mathnormal">Q</span></span></span></span> 随 <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8778em;vertical-align:-0.1944em;"></span><span class="mord mathnormal">Q</span></span></span></span> 递减。<span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6944em;"></span><span class="mord mathnormal">λ</span></span></span></span> 还随波动率上升、随参与者减少（时区重叠）而放大，这就解释了为什么 Taleb 说波动时段和时区缝隙里滑点最重。这一项在后面的 Leland 公式里会以&quot;再平衡的往返成本 <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6944em;"></span><span class="mord mathnormal" style="margin-right:0.0315em;">k</span></span></span></span>&quot;的身份正式进入波动率调整。</p>
+<hr>
+<h2 id="二-流动性洞-liquidity-holes">二、流动性洞（Liquidity Holes）</h2>
+<p>流动性洞，或叫黑洞，是市场里一个临时事件，它暂停了达成均衡的常规机制。它是自由市场机制里的一次<strong>信息故障</strong>，能对公司造成可观损害。实务上，它表现为<strong>低价带来加速的供给、高价带来加速的需求</strong>，常规的价格负反馈被反转成正反馈。</p>
+<p>流动性洞归因于信息最初影响市场的方式。典型地，当操作者意识到一条重大信息（一个事件，或市场里一笔大单），却无法判断它的规模和可能影响时，流动性洞就出现了。信息引发焦虑、阴谋论和价格冲突。多数时候操作者需要解读信息。市场本应按&quot;新闻与初始预期之差&quot;的程度移动，但后者通常未知、且难以精确估计。一个政治声明或一个经济数据的发布，可以通过扰乱正常的价格决定过程制造流动性洞。</p>
+<p>当一个止损单被执行时，操作者会因意识到这个订单、却得不到关于其规模的进一步信息而僵住。许多人暂时中止交易，于是市场摆动得更剧烈。Taleb 点出关键放大器：<strong>流动性洞本不会太危险，坏就坏在非线性衍生品有巨大的未平仓量，一些操作者持有必须执行、不管做市商价差如何的大额或有订单</strong>。障碍期权（敲入、敲出）常常是流动性洞、以及由此产生的日内波动的罪魁。</p>
+<h3 id="理论映射-流动性洞是负反馈反转为正反馈-均衡从稳定变不稳定">理论映射：流动性洞是负反馈反转为正反馈，均衡从稳定变不稳定</h3>
+<p>正常市场的价格机制是负反馈：价格上涨抑制需求、刺激供给，把价格拉回均衡，这对应一个稳定不动点。流动性洞是这个反馈符号的局部反转。当存在大量随价格触发的或有订单（止损、障碍对冲），价格下跌不再吸引买盘，反而触发更多卖盘（止损被打、敲出对冲抛售），需求曲线在该区域向上倾斜。用动力系统的语言，均衡点的局部斜率从负变正，<strong>稳定不动点变成不稳定不动点</strong>，微小扰动被放大而非衰减。这就是 Taleb 说的&quot;低价带来加速供给&quot;。它也解释了为什么一个占总成交 0.2% 的订单能撼动日成交万亿的市场，在反馈反号的区域，撬动均衡所需的力量与总成交量无关，只与触发订单的密集程度有关。</p>
+<hr>
+<h2 id="三-流动性与风险管理-liquidity-and-risk-management">三、流动性与风险管理（Liquidity and Risk Management）</h2>
+<p>Taleb 再三强调：流动性是最严重的风险管理问题。大部分意外损失，要么来自流动性不足造成的市场跳跃，要么来自把市场大幅推向自己头寸反方向的清算成本。清算成本通常被低估，因为当某人被迫采取市场行动时，其他操作者往往会&quot;退避（fade）&quot;，撤掉报价、让出空间。</p>
+<p>这一节直接连到模块 E 的 value at risk。Taleb 指出 VaR 的一个要命疏漏：<strong>大多数模拟在止损边界处排除了清算成本</strong>。市场对开始平仓的操作者毫不留情，尤其当清算方别无选择时。既然强制清算发生在承压的市场里，就可以想象流动性下降对组合平仓的影响有多大。</p>
+<h3 id="理论映射-var-假设位置可在分位点平价了结-忽略了清算的内生冲击">理论映射：VaR 假设位置可在分位点平价了结，忽略了清算的内生冲击</h3>
+<p>标准 VaR 计算的是持有期末头寸价值的某个分位点，隐含假设是你能在那个市价上平掉头寸。这把清算当成对价格无影响的外生事件。但 Taleb 的论点是清算本身是内生的、且发生在最坏时刻：被迫平仓时市场已承压（<span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6944em;"></span><span class="mord mathnormal">λ</span></span></span></span> 已经放大），而你的抛售又进一步推低价格。真实的尾部损失应当是</p>
+<div class="math-display"><span class="katex-display"><span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord text"><span class="mord">Loss</span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:2.0097em;vertical-align:-1.3263em;"></span><span class="minner munder"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.6833em;"><span style="top:-1.6737em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord text mtight"><span class="mord mtight">VaR </span><span class="mord cjk_fallback mtight">算的</span></span></span></span></span><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="minner munder"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.6833em;"><span class="svg-align" style="top:-2.352em;"><span class="pstrut" style="height:3em;"></span><span class="stretchy" style="height:0.548em;min-width:1.6em;"><span class="brace-left" style="height:0.548em;"><svg xmlns="http://www.w3.org/2000/svg" width="400em" height="0.548em" viewBox="0 0 400000 548" preserveAspectRatio="xMinYMin slice"><path d="M0 6l6-6h17c12.688 0 19.313.3 20 1 4 4 7.313 8.3 10 13
+ 35.313 51.3 80.813 93.8 136.5 127.5 55.688 33.7 117.188 55.8 184.5 66.5.688
+ 0 2 .3 4 1 18.688 2.7 76 4.3 172 5h399450v120H429l-6-1c-124.688-8-235-61.7
+-331-161C60.687 138.7 32.312 99.3 7 54L0 41V6z"/></svg></span><span class="brace-center" style="height:0.548em;"><svg xmlns="http://www.w3.org/2000/svg" width="400em" height="0.548em" viewBox="0 0 400000 548" preserveAspectRatio="xMidYMin slice"><path d="M199572 214
+c100.7 8.3 195.3 44 280 108 55.3 42 101.7 93 139 153l9 14c2.7-4 5.7-8.7 9-14
+ 53.3-86.7 123.7-153 211-199 66.7-36 137.3-56.3 212-62h199568v120H200432c-178.3
+ 11.7-311.7 78.3-403 201-6 8-9.7 12-11 12-.7.7-6.7 1-18 1s-17.3-.3-18-1c-1.3 0
+-5-4-11-12-44.7-59.3-101.3-106.3-170-141s-145.3-54.3-229-60H0V214z"/></svg></span><span class="brace-right" style="height:0.548em;"><svg xmlns="http://www.w3.org/2000/svg" width="400em" height="0.548em" viewBox="0 0 400000 548" preserveAspectRatio="xMaxYMin slice"><path d="M399994 0l6 6v35l-6 11c-56 104-135.3 181.3-238 232-57.3
+ 28.7-117 45-179 50H-300V214h399897c43.3-7 81-15 113-26 100.7-33 179.7-91 237
+-174 2.7-5 6-9 10-13 .7-1 7.3-1 20-1h17z"/></svg></span></span></span><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord text"><span class="mord cjk_fallback">分位点价格变动</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.648em;"><span></span></span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:1.3263em;"><span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:2.5354em;vertical-align:-1.6713em;"></span><span class="minner munder"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.8641em;"><span style="top:-1.3287em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord text mtight"><span class="mord mtight">VaR </span><span class="mord cjk_fallback mtight">漏掉的</span></span></span></span></span><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="minner munder"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.8641em;"><span class="svg-align" style="top:-2.007em;"><span class="pstrut" style="height:3em;"></span><span class="stretchy" style="height:0.548em;min-width:1.6em;"><span class="brace-left" style="height:0.548em;"><svg xmlns="http://www.w3.org/2000/svg" width="400em" height="0.548em" viewBox="0 0 400000 548" preserveAspectRatio="xMinYMin slice"><path d="M0 6l6-6h17c12.688 0 19.313.3 20 1 4 4 7.313 8.3 10 13
+ 35.313 51.3 80.813 93.8 136.5 127.5 55.688 33.7 117.188 55.8 184.5 66.5.688
+ 0 2 .3 4 1 18.688 2.7 76 4.3 172 5h399450v120H429l-6-1c-124.688-8-235-61.7
+-331-161C60.687 138.7 32.312 99.3 7 54L0 41V6z"/></svg></span><span class="brace-center" style="height:0.548em;"><svg xmlns="http://www.w3.org/2000/svg" width="400em" height="0.548em" viewBox="0 0 400000 548" preserveAspectRatio="xMidYMin slice"><path d="M199572 214
+c100.7 8.3 195.3 44 280 108 55.3 42 101.7 93 139 153l9 14c2.7-4 5.7-8.7 9-14
+ 53.3-86.7 123.7-153 211-199 66.7-36 137.3-56.3 212-62h199568v120H200432c-178.3
+ 11.7-311.7 78.3-403 201-6 8-9.7 12-11 12-.7.7-6.7 1-18 1s-17.3-.3-18-1c-1.3 0
+-5-4-11-12-44.7-59.3-101.3-106.3-170-141s-145.3-54.3-229-60H0V214z"/></svg></span><span class="brace-right" style="height:0.548em;"><svg xmlns="http://www.w3.org/2000/svg" width="400em" height="0.548em" viewBox="0 0 400000 548" preserveAspectRatio="xMaxYMin slice"><path d="M399994 0l6 6v35l-6 11c-56 104-135.3 181.3-238 232-57.3
+ 28.7-117 45-179 50H-300V214h399897c43.3-7 81-15 113-26 100.7-33 179.7-91 237
+-174 2.7-5 6-9 10-13 .7-1 7.3-1 20-1h17z"/></svg></span></span></span><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord text"><span class="mord cjk_fallback">清算冲击</span><span class="mord"> </span></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.8451em;"><span style="top:-2.655em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">2</span></span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.394em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">1</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.345em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span><span class="mord mathnormal">λ</span><span class="mord"><span class="mord mathnormal">Q</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8641em;"><span style="top:-3.113em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.993em;"><span></span></span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:1.6713em;"><span></span></span></span></span></span></span></span></span></span></div>
+<p>而且这两项正相关，承压时 <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6944em;"></span><span class="mord mathnormal">λ</span></span></span></span> 最大、被迫清算的概率最高，二者在尾部同时爆发。这与第三章对 VaR 的批评（相关性在压力下崩坏）是同源的：<strong>VaR 在最需要它准确的尾部，恰恰因为忽略了流动性的内生性而系统性低估风险。</strong></p>
+<hr>
+<h2 id="四-止损单与不流动性的路径-stop-orders-and-the-path-of-illiquidity">四、止损单与不流动性的路径（Stop Orders and the Path of Illiquidity）</h2>
+<p>Taleb 先给两个基础定义：</p>
+<ul>
+<li><strong>止损单（stop-loss order）</strong>：在价格于屏幕上打印出某水平时买入或卖出给定数量的指令，对成交价无条件。买入止损通常高于市价，卖出止损通常低于市价。</li>
+<li><strong>限价单（limit order）</strong>：在市场某预定价格买入或卖出给定数量的指令。市场规则保证没有价格能在不成交该订单的情况下&quot;穿过&quot;它。</li>
+</ul>
+<p>试图按成交量来衡量市场是一桩骗人的事。市场不是线性的，也不会有序地达成均衡。信息可以有害、也可以有益。<strong>在某些条件被满足时一条路径的确定性（一条条件路径）能制造这种缺口。</strong> 止损的机制能照亮&quot;路径确定性&quot;这个问题。现金产品里的止损是被市场到达某水平所触发的买卖单，因而它们像触发期权（trigger options）。一个在 SP500、624.00 买 500 手的止损，会在该水平出现官方打印时触发 broker 开始按任意价格买入。客户通常在市场里留止损来保护利润、限制损失，或在某个魔法水平被触及时入场。多数受训交易员被要求为每个未平仓头寸留止损，因为老板怕他们破坏纪律。</p>
+<p>既然止损保证一笔订单成交，就可以理解某些操作者有动机去触发那些大止损。</p>
+<p><strong>加元止损的例子</strong>：一个大型欧洲基金经理在纽约时间中午回家前，给一家加拿大银行一个 3 亿美元兑加元的止损。加元当前兑美元在 1.38，他谨慎地把止损放在 1.3750，鉴于加元的低波动这是个足够远的水平。持有这个订单的交易员知道，若美元下跌他手里可能握着一个有趣的资产。几小时无事，直到纽约交易员注意到加元跌到了 1.3780。他于是判断：只要不在任何地方撞上真实买单，他就能把市场推向止损。他可以卖出一大块美元，因为他确定能从自己手里那个 1.3750 的订单买回来。于是他尽可能笨拙地卖出 3 亿，盼着市场保持脆弱，直到客户的止损被打。他的激进卖出，不会像正常市场动态所暗示的那样招来更多买家，反而会让操作者因怀疑一条自己不掌握的信息而袖手旁观。</p>
+<p><img src="images/27d89086949c42c37e07af33d56eb3a217a4794737fe5e58f0f24fae1fa90ce4.jpg" alt="图 4.1 流动性洞"></p>
+<p>图 4.1 描绘了与这个止损相关的流动性洞：价格被推向触发价时，常规的买盘没有出现，市场出现一段真空。交易所里多数交易员都按同一原则运作，那就是<strong>或有的、被迫的大额交易</strong>。他们不需要确切信息，从 broker 在止损水平临近时的行为，就很容易嗅到止损在哪。</p>
+<h3 id="理论映射-止损-客户免费送出的触发期权-触发者在做单向-front-running">理论映射：止损 = 客户免费送出的触发期权，触发者在做单向 front-running</h3>
+<p>止损在结构上等价于客户免费写给市场的一个<strong>触发期权（trigger / one-touch option）</strong>。客户说&quot;价格触及 1.3750 就无条件卖出 3 亿&quot;，等于把一个 one-touch 的执行权交给了任何能观察到这个订单的人。持有信息的交易员的最优策略是经典的 <strong>front-running</strong>：在触发价之前先建立空头，把价格推向触发价，触发后用客户的止损单平掉自己的头寸并获利。这之所以可行，是因为止损是<strong>无条件成交、对价格不敏感</strong>的，它把一个价格不敏感的强制需求注入市场，恰好制造了第二节那个反馈反号的区域。下一节会看到，障碍期权把这件事推到极致，因为障碍连&quot;可以撤单&quot;这点缓和都没有。</p>
+<hr>
+<h2 id="五-障碍期权与流动性真空-barrier-options-and-the-liquidity-vacuum">五、障碍期权与流动性真空（Barrier Options and the Liquidity Vacuum）</h2>
+<p>近期市场的许多波动是障碍期权触发造成的。随着它们开始泛滥，市场里无法解释的跳空也开始出现。前一节里大止损是一个免费期权，但止损可以被取消，或被太晚交给交易员以致他无法妥善利用。<strong>触发期权不提供这些缓和特征：它远早地摆在做市商面前，且本质上不可撤销。</strong></p>
+<p>账上有敲出期权的期权交易员，会下一个以期权终止为条件的平 delta 订单。他不介意止损被打，因为这点小伤亡会被&quot;提前了结一项负债（那个空头期权）&quot;所抵消。如果处理得当，他还能从执行自己的止损中获利。</p>
+<p><strong>英镑敲出 call 的例子</strong>（本章最精彩的实务推演）：英镑在 1.6000 USD/GBP 交易。一个交易员 short 了 2 亿英镑（合 3.2 亿美元）名义、3 个月到期、行权价 1.60、敲出价 1.59 的英镑 call。他知道只要 1.5900 在街上一处或多处打印并成交，他的期权就被终止。期权 delta 是 78%，他对着它持有 1.56 亿英镑（多头对冲）。</p>
+<p>交易员快速判断把货币打到 1.5900 以下需要什么。赌注很大，他有动机去触发 1.5900：除了消掉期权，他还能在过程中靠玩弄止损信息赚钱，只不过这次止损是他自己的。他面对两个选择：把订单&quot;卖&quot;给现货台、付 0.10 pips（20 万美元）请现货台替他操纵市场；或者触发自己的止损。后者要等英镑第一次下跌。止损在英格兰银行（&quot;老太太&quot;）回家后、纽约下午更容易触发，最好的时间是纽约收盘、市场轮到悉尼和惠灵顿之后，不过欧洲收盘后英镑就已经足够不流动以达成此目的。</p>
+<p>交易员会在英镑下跌时卖出大部分对冲：1.5945 卖 30，软化市场；然后 1.5930 卖 20、1.5920 卖 25、1.5910 卖 20。当前共卖了 95（要平的 156 中），若市场反弹他可能有麻烦。更好的做法也许是用剩下的 65 激进地报出英镑、给市场施压：1.5900 卖 30，并希望看到 1.5890 成交以确保触发成交无法被争议；然后把余额在 1.5895 和 1.5890 拆给几个对手方，让自己的成交无可辩驳。一些对手方在缺乏充分成交证据时可能合法地质疑触发，通过和两家有声誉的公司完成交易，他能为自己辩护。</p>
+<p>Taleb 给出本章最重的理论判断：<strong>这种对商品路径的影响，削弱了布朗运动的 Markov 成分，过程现在有了记忆。</strong> 障碍和止损能让下一个价格变动依赖于前一个，远离 1.60 的下跌引发了加速。投资组合保险的灾难里发生过类似但更温和的效应：local 们察觉到一个大玩家、其下一步取决于过去的市场移动，并从中获利。</p>
+<h3 id="理论映射-触发对冲让过程非-markov-无套利复制的根基被侵蚀">理论映射：触发对冲让过程非 Markov，无套利复制的根基被侵蚀</h3>
+<p>这一段值得反复读，因为它直击 BSM 的命门。几何布朗运动是 Markov 的：</p>
+<div class="math-display"><span class="katex-display"><span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8444em;vertical-align:-0.15em;"></span><span class="mord mathnormal">d</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0576em;">S</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.2806em;"><span style="top:-2.55em;margin-left:-0.0576em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">t</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="mord mathnormal">μ</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0576em;">S</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.2806em;"><span style="top:-2.55em;margin-left:-0.0576em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">t</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">d</span><span class="mord mathnormal">t</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.8444em;vertical-align:-0.15em;"></span><span class="mord mathnormal" style="margin-right:0.0359em;">σ</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0576em;">S</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.2806em;"><span style="top:-2.55em;margin-left:-0.0576em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">t</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">d</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.1389em;">W</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.2806em;"><span style="top:-2.55em;margin-left:-0.1389em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">t</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span></span></div>
+<p>漂移和扩散只依赖当前 <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0576em;">S</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.2806em;"><span style="top:-2.55em;margin-left:-0.0576em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">t</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>，与到达 <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0576em;">S</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.2806em;"><span style="top:-2.55em;margin-left:-0.0576em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">t</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span> 的路径无关。无套利复制（Black-Scholes 推导）正是建立在这个无记忆性上，连续、无冲击地按 delta 调仓就能复制任意支付。障碍期权的对冲行为打破了这一点：当价格逼近 1.59，存在一个<strong>可预测的、由障碍清算者制造的单向价格运动</strong>。于是下一个增量 <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8444em;vertical-align:-0.15em;"></span><span class="mord mathnormal">d</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0576em;">S</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.2806em;"><span style="top:-2.55em;margin-left:-0.0576em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">t</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span> 不再只依赖 <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0576em;">S</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.2806em;"><span style="top:-2.55em;margin-left:-0.0576em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">t</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>，而依赖&quot;市场最近是否在向障碍移动&quot;这条路径信息，过程获得了记忆，变成非 Markov。</p>
+<p>形式上，这等价于扩散项里出现了路径依赖的漂移：在障碍邻域，<span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathbb">E</span><span class="mopen">[</span><span class="mord mathnormal">d</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0576em;">S</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.2806em;"><span style="top:-2.55em;margin-left:-0.0576em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">t</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">∣</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord"><span class="mord mathcal" style="margin-right:0.0993em;">F</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.2806em;"><span style="top:-2.55em;margin-left:-0.0993em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">t</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mclose">]</span></span></span></span> 依赖于整条 <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathcal" style="margin-right:0.0993em;">F</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.2806em;"><span style="top:-2.55em;margin-left:-0.0993em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">t</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span> 而非仅 <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0576em;">S</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.2806em;"><span style="top:-2.55em;margin-left:-0.0576em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">t</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>，价格出现局部正自相关（动量），与第三章正常时段的负自相关恰好相反。后果是深刻的：障碍期权的&quot;理论价&quot;是在 Markov、无操纵假设下用反射原理算出来的，而真实市场里触发点附近的路径被内生地扭曲，模型价与可对冲价之间裂开一道缝。这就是 Taleb 要求&quot;学障碍期权前先读本章&quot;的原因，<strong>障碍期权的真正风险不在定价公式，而在它把流动性洞焊死在一个价格点上、并诱使所有持仓者去操纵那个点</strong>。</p>
+<hr>
+<h2 id="六-单向流动性陷阱-one-way-liquidity-traps">六、单向流动性陷阱（One-Way Liquidity Traps）</h2>
+<p>许多市场，尤其是有偏资产（biased assets，频繁恐慌的市场），会呈现价格的非对称行为。操作者在进场时体验到一种骗人的流动性，进去之后才痛苦地发现出场是另一回事，在流动性洞发生时尤其如此。交易员在有偏资产上长期短缺的虚值 put 上，就经历这种失衡（见第 15 章）。</p>
+<p>这一节很短，但点出一个重要的不对称：<strong>流动性本身是方向性的、有偏的</strong>。进场容易不代表出场容易，恐慌市场里 put 的需求是单向的（人人都想买保护、没人愿意卖），导致虚值 put 长期短缺、买得到卖不掉。这与第三章&quot;价值交易者逆 skew 买 put 卖 call&quot;的风险直接相关：你以为捡了便宜的波动率差，可能正落进一个出不来的单向陷阱。</p>
+<hr>
+<h2 id="七-洞-black-scholes-与记忆之弊-holes-black-scholes-and-the-ills-of-memory">七、洞、Black-Scholes 与记忆之弊（Holes, Black-Scholes, and the Ills of Memory）</h2>
+<p>现代期权定价理论里套利推导方法背后的原理，是<strong>无记忆的布朗运动</strong>，它不记得现货是从哪里来到最后这个价的。这个假设似乎正受到各路金融理论家和交易员的围攻，关于&quot;过去信息与市场价格行为之间存在某种依赖&quot;的新理论占了上风。不必陷入混沌理论的时髦，似乎确有一些很可敬的、基于非线性依赖的理论，这种依赖此前被常规统计机器所漏检。市场或许终究是有某种记忆的。</p>
+<p>在期权交易员层面，尽管多数工具的成交量在增加，市场有效性看起来仍不可达。相关的是，<strong>流动性洞展示了 Markov 假设的弱点，因为到达最后一个价的路径变得相当有意义</strong>。以市场触及某水平为条件，会有某个障碍期权清算者制造的可预测价格行为，把市场推向某个已知方向。</p>
+<p>即便最流动的市场，也在最流动的时刻显出尖锐的弱点。一个日成交万亿的市场为何能被一个仅占总成交 0.2% 的订单影响，并不能被完全解释；流动性洞的经历为何没有带来免疫力（市场本应把洞当作已知事件、通过适当预期去调整其发生），也无法解释。一个显示市场有记忆的事实，是任何市场创新低或新高时周围的噪声水平和狂热活动，无关导致那里的实际波动率。<strong>触及新高新低的市场开始以跳空方式移动</strong>，止损常常需要被处理。</p>
+<h3 id="理论映射-有记忆-非鞅可预测性-但被流动性成本锁住">理论映射：有记忆 ⇒ 非鞅可预测性，但被流动性成本锁住</h3>
+<p>这一节是第三章自相关讨论的延伸，也是对 efficient market hypothesis 的限定。Markov 性和鞅性是 BSM 的两块基石：Markov 让 delta 复制成立，鞅（在风险中性测度下）让无套利定价成立。Taleb 的论点是流动性洞同时挑战两者。在障碍和止损密集的区域，价格出现可预测的方向性，</p>
+<div class="math-display"><span class="katex-display"><span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathbb">E</span><span class="mopen">[</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0576em;">S</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3283em;"><span style="top:-2.55em;margin-left:-0.0576em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">t</span><span class="mbin mtight">+</span><span class="mord mtight">Δ</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2083em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">∣</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord"><span class="mord mathcal" style="margin-right:0.0993em;">F</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.2806em;"><span style="top:-2.55em;margin-left:-0.0993em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">t</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mclose">]</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel"><span class="mrel"><span class="mord vbox"><span class="thinbox"><span class="rlap"><span class="strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="inner"><span class="mord"><span class="mrel"></span></span></span><span class="fix"></span></span></span></span></span><span class="mspace nobreak"></span><span class="mrel">=</span></span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0576em;">S</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.2806em;"><span style="top:-2.55em;margin-left:-0.0576em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">t</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace"> </span><span class="mopen">(</span><span class="mord text"><span class="mord cjk_fallback">扣除漂移后</span></span><span class="mclose">)</span></span></span></span></span></div>
+<p>即出现了局部的非鞅可预测性（动量）。但这不构成普通人的套利机会，因为提取它需要在正确时点、以低成本交易，而那恰恰是流动性最差、价差最宽的时刻。可预测性被流动性成本锁住，只有时空占优的做市商和障碍清算者能提取。这解释了 Taleb 的悖论：市场&quot;有记忆&quot;却没人能轻易免疫或套利。新高新低附近的跳空，本质是<strong>止损与障碍的密度在那些心理价位最高</strong>，触发的或有订单把局部反馈推成正号。</p>
+<hr>
+<h2 id="八-限制与市场失灵-limits-and-market-failures">八、限制与市场失灵（Limits and Market Failures）</h2>
+<p>交易所似乎明白自由市场会出现失灵，并介入、在一定事件累积后暂停交易。SP500（所有流动性洞之母）里的&quot;熔断（circuit breakers）&quot;，会在开盘落在某区间内时把市场停五分钟，然后逐步设立更宽的交易限制。熔断自 1987 年股灾以来似乎是有效的，至少作为心理缓冲、以及让交易员在恢复交易前深呼吸、评估可用信息的手段。它们已被例行触发，看起来是一个成功的实验。</p>
+<p>理论上，熔断是一个<strong>外生施加的、强制冷却的时间窗</strong>，用来打断第二节那个正反馈循环。当价格机制陷入&quot;低价引来更多卖盘&quot;的不稳定区域，流动性已经蒸发，再多的流动性也注入不进来；能阻止雪崩的办法只剩暂停时钟，让信息扩散、让初始预期重新形成，把系统推回负反馈的稳定域。这是承认&quot;市场无法靠自身在流动性洞里达成均衡&quot;的制度性补丁。</p>
+<hr>
+<h2 id="九-反向滑点-reverse-slippage">九、反向滑点（Reverse Slippage）</h2>
+<p>一些交易员擅长悄悄积累证券、制造短缺；然后注意到余额或订单流已转向对自己有利，就能让市场朝自己的方向移动。他们享受<strong>正滑点（positive slippage）</strong>。反讽的是，在不流动市场执行一个大单可能盈利，执行一个小单反而不盈利。</p>
+<p>反向滑点发生在：买入狂潮里以持续更高的价格积累、卖出狂潮里以更低价格积累。在那个阶段，积累方每天的盯市都会改善。通常积累方在期末&quot;掘&quot;市场，开始笨拙地买入、把价格推高到能引出止损单的程度。</p>
+<p>然而危险主要在退出交易时。交易员不能像建仓阶段那样推动市场，否则会造成自己的崩溃。在不流动市场尤其是交易所里，活动会被迅速察觉。交易员能辨认出一个活动来源的印记，无论它伪装得多好，他们会对一个正在出场的交易员毫不留情，因为他们对其规模有概念。<strong>出场方没有像积累方那样中途停下的自由。</strong> 反向滑点曾让一些基金经理盈利，他们制造了足够大的逼空（squeeze），从而以一个价格卸掉了自己全部库存的一大部分。</p>
+<h3 id="理论映射-滑点的符号取决于你和订单流的同向还是逆向">理论映射：滑点的符号取决于你和订单流的同向还是逆向</h3>
+<p>反向滑点说明滑点不是一个恒正的摩擦项，它的符号取决于你的交易方向与瞬时净订单流的关系。常规滑点（第一节）假设你是流动性的需求方，逆着深度成交、付出冲击成本；反向滑点里，积累方在建仓阶段是<strong>沿着</strong>别人制造的趋势成交，市场冲击为他的存量头寸贡献正的盯市。但这是一个不可持续的镜像：建仓时你藏在订单流里、可随时停手（你是可选的），平仓时你的规模已暴露、对手会 fade，且你必须出清（你是被迫的）。这正是第三节&quot;被迫清算&quot;不对称性的另一面，<strong>optionality 在建仓方手里、在平仓方手里消失</strong>，与第三章深度实值期权&quot;失去 optionality 像期货&quot;的逻辑同构。</p>
+<hr>
+<h2 id="十-流动性与三重巫时-liquidity-and-triple-witching-hour">十、流动性与三重巫时（Liquidity and Triple Witching Hour）</h2>
+<p>股指结算的机制会被专家（specialist）和股票做市商大量滥用，他们能借此诱导市场出现临时跳空、制造对自己有利的流动性洞。</p>
+<p><strong>例子</strong>：一个篮子套利者持有现金、并 short SP500 期货作为完全对冲。合约以现金结算（交易员得到前一日结算价与官方收盘价之差的补偿）。但结算后，交易员仍要平掉他的现金多头。要让套利有效，他需要在接近结算价处拿到一个买价。结算条款规定指数按所有成分股的官方收盘计算。所以程序交易员的最佳方案是用市场里的&quot;市价收盘（market on close）&quot;功能去平掉股票。于是他能和股票专家建立一个心照不宣的契约：<strong>&quot;我不在乎在哪个价位成交，只要那个数字成为用来计算指数价格的数字。&quot;</strong></p>
+<p>专家会用他们的时间和空间优势，把市场移到失衡所在的地方。卖方略多于买方造成的小失衡会带来一个&quot;卖出到期（sell expiration）&quot;。专家知道在被给定的短时间里没机会看到一个买家出价高过他，因此他能以非常有吸引力的价格拿到股票。整个操作发生得很快。值得注意的是，它已经持续了这么久，有效市场却没有调整以适应这个模式。</p>
+<p>理论映射：三重巫时是一个<strong>结算价被同时用作清算基准和套利结算基准</strong>所造成的机制漏洞。套利者只关心收盘数字本身（因为他的期货腿按它现金结算），对这个价格的水平变得不敏感，于是把一个价格不敏感的大单交给了拥有时空优势的专家。这又是第四节&quot;价格不敏感的强制订单制造流动性洞&quot;的同一模板，只不过触发者从障碍清算者换成了股票专家。它持续存在而未被套利掉，因为提取这个 edge 需要时空占优（specialist 的特权地位），普通套利者无法进入。</p>
+<hr>
+<h2 id="十一-投资组合保险-portfolio-insurance">十一、投资组合保险（Portfolio Insurance）</h2>
+<p>强制交易造成流动性洞的一个重大例证，是投资组合保险事件。它说明了一种恐慌：一个覆盖约 750 亿到 1000 亿美元、不到管理资产 3% 的程序，竟能造成如此大规模的流动性洞。投资组合保险是否造成了股灾仍有争议，但它加剧了市场运动是确定的。</p>
+<p>投资组合保险最初被作为通过<strong>动态期权复制技术</strong>为资产持有者提供的、对不利市场运动的保护来营销。长期期权流动性的缺失，为用复制代替直接买期权的技术提供了正当理由。人性如此：一个潜在的免费午餐比一个真实的期权更容易卖给基金经理。</p>
+<p>作为通过 delta 对冲来复制 put 的方法，投资组合保险是一笔<strong>负 gamma 交易</strong>。有人会争辩：即便投资组合保险是通过真实期权执行的，做市商也会 short 同样数量的 gamma，从而用他们的负曲率加剧运动。Taleb 的回答是：期权那个&quot;免费&quot;的特征把资本吸引到了资产本身，导致人们比没有这个程序时买入更多股票。关于真实期权与其动态复制等价物之间的差异，见 Grossman（1988）。</p>
+<p>Taleb 自述股灾后在 SP500 池里待了一年，试图重构 1987 年 10 月的事件，作为流动性管理的一课。他说每个交易员都该在这样的池里待几个月：起初喧嚣的节奏掩盖了真实活动，过一阵子某种秩序开始从池的行为里浮现，那时人就成了&quot;市场&quot;这个庞大躯体的一部分。</p>
+<p>他的结论是：local 们察觉到一个由低价导致的强制卖出模式。那个叫止损的免费品以这种方式可得，是很容易被察觉的。交易员迅速意识到，和止损一样，<strong>卖出的决定不会因市场更低而被解除，事实上反而被更低的价格所复合（加重）</strong>。对止损单经典的 front-running 被弄得很容易，因为这个程序只有一个论坛可用，且大部分集中在少数几个 broker 手里。一种第六感，local 们称之为&quot;池化学（pit chemistry）&quot;，让他们不费力就能识别市场订单的来源；活在中心化市场之中，他们能识别模式、认出每个玩家的签名。</p>
+<p>有人论证投资组合保险是市场均衡达成最坏可能情形的结果：<strong>不完美信息</strong>。大量焦虑源于对市场信息的无知。在市场里没有订单存在时，做市商很难为期货显示一个买价。也可以得出结论：投资组合保险成了自身初始成功的人质，更小的程序规模不会造成这样的滚雪球效应。</p>
+<h3 id="理论映射-动态复制-short-gamma-且复制需求本身是不稳定化的反馈">理论映射：动态复制 = short gamma，且复制需求本身是不稳定化的反馈</h3>
+<p>投资组合保险在数学上就是用 delta 对冲合成一个 long put。复制一个 long put 要求<strong>随价格下跌而卖出标的</strong>（put 的 delta 随 <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.0576em;">S</span></span></span></span> 下跌从 0 趋向 <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.7278em;vertical-align:-0.0833em;"></span><span class="mord">−</span><span class="mord">1</span></span></span></span>，为保持复制需不断加空），这正是负 gamma 的再平衡方向：跌时卖、涨时买，与市场同向、放大波动。把它和第二节的反馈反号合起来看，投资组合保险是一台<strong>自动化的、规模巨大的正反馈机器</strong>：价格下跌 → 复制程序卖出 → 价格进一步下跌 → 卖更多。</p>
+<p>Taleb 关于&quot;真实期权 vs 动态复制&quot;的论点尤其深刻，值得记住其理论内核：买一个真实 put，你的对手（期权卖方）确实 short gamma，会同向对冲；但<strong>真实期权的存在不会改变标的的需求</strong>。而动态复制被当成&quot;免费保护&quot;营销，诱导更多资本进入股票本身，膨胀了底层敞口。一旦下跌触发复制抛售，要平掉的不只是 put 的对冲，还有那些因虚假安全感堆进来的多头。这是 Grossman（1988）的核心：<strong>合成期权与真实期权在 Black-Scholes 世界里等价，但在有反馈、有流动性约束的真实市场里不等价</strong>，因为合成复制把卖方的对冲流公开化、规模化、并可被 front-run。&quot;成为自身成功的人质&quot;就是这个正反馈在规模足够大时的自我引爆。</p>
+<hr>
+<h2 id="十二-流动性与期权定价-liquidity-and-option-pricing">十二、流动性与期权定价（Liquidity and Option Pricing）</h2>
+<p>期权定价文献里对交易成本存在的认识在增长。若干期权理论试图调和市场微观结构理论与期权定价。**Leland（1985）**引入了一个纳入交易成本调整的盈亏平衡波动率（break-even volatility）。这个调整他叫 <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal">A</span></span></span></span>，被加到进入 BSM 方程风险中性组合复制的波动率上。对一个卖方，由此得到的盈亏平衡波动率是增广波动率：</p>
+<div class="math-display"><span class="katex-display"><span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.5806em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0359em;">σ</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3283em;"><span style="top:-2.55em;margin-left:-0.0359em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">A</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1.04em;vertical-align:-0.1061em;"></span><span class="mord mathnormal" style="margin-right:0.0359em;">σ</span><span class="mord sqrt"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.9339em;"><span class="svg-align" style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="mord" style="padding-left:0.833em;"><span class="mord">1</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord mathnormal">A</span></span></span><span style="top:-2.8939em;"><span class="pstrut" style="height:3em;"></span><span class="hide-tail" style="min-width:0.853em;height:1.08em;"><svg xmlns="http://www.w3.org/2000/svg" width="400em" height="1.08em" viewBox="0 0 400000 1080" preserveAspectRatio="xMinYMin slice"><path d="M95,702
+c-2.7,0,-7.17,-2.7,-13.5,-8c-5.8,-5.3,-9.5,-10,-9.5,-14
+c0,-2,0.3,-3.3,1,-4c1.3,-2.7,23.83,-20.7,67.5,-54
+c44.2,-33.3,65.8,-50.3,66.5,-51c1.3,-1.3,3,-2,5,-2c4.7,0,8.7,3.3,12,10
+s173,378,173,378c0.7,0,35.3,-71,104,-213c68.7,-142,137.5,-285,206.5,-429
+c69,-144,104.5,-217.7,106.5,-221
+l0 -0
+c5.3,-9.3,12,-14,20,-14
+H400000v40H845.2724
+s-225.272,467,-225.272,467s-235,486,-235,486c-2.7,4.7,-9,7,-19,7
+c-6,0,-10,-1,-12,-3s-194,-422,-194,-422s-65,47,-65,47z
+M834 80h400000v40h-400000z"/></svg></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.1061em;"><span></span></span></span></span></span></span></span></span></span></div>
+<p>其中</p>
+<div class="math-display"><span class="katex-display"><span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal">A</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:2.44em;vertical-align:-0.7884em;"></span><span class="mord sqrt"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.6516em;"><span class="svg-align" style="top:-4.4em;"><span class="pstrut" style="height:4.4em;"></span><span class="mord" style="padding-left:1em;"><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.3214em;"><span style="top:-2.314em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0359em;">π</span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.677em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.686em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span></span></span><span style="top:-3.6116em;"><span class="pstrut" style="height:4.4em;"></span><span class="hide-tail" style="min-width:1.02em;height:2.48em;"><svg xmlns="http://www.w3.org/2000/svg" width="400em" height="2.48em" viewBox="0 0 400000 2592" preserveAspectRatio="xMinYMin slice"><path d="M424,2478
+c-1.3,-0.7,-38.5,-172,-111.5,-514c-73,-342,-109.8,-513.3,-110.5,-514
+c0,-2,-10.7,14.3,-32,49c-4.7,7.3,-9.8,15.7,-15.5,25c-5.7,9.3,-9.8,16,-12.5,20
+s-5,7,-5,7c-4,-3.3,-8.3,-7.7,-13,-13s-13,-13,-13,-13s76,-122,76,-122s77,-121,77,-121
+s209,968,209,968c0,-2,84.7,-361.7,254,-1079c169.3,-717.3,254.7,-1077.7,256,-1081
+l0 -0c4,-6.7,10,-10,18,-10 H400000
+v40H1014.6
+s-87.3,378.7,-272.6,1166c-185.3,787.3,-279.3,1182.3,-282,1185
+c-2,6,-10,9,-24,9
+c-8,0,-12,-0.7,-12,-2z M1001 80
+h400000v40h-400000z"/></svg></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.7884em;"><span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:2.3014em;vertical-align:-0.93em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.3714em;"><span style="top:-2.1778em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0359em;">σ</span><span class="mord sqrt"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.9322em;"><span class="svg-align" style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="mord" style="padding-left:0.833em;"><span class="mord mathnormal" style="margin-right:0.0379em;">δ</span><span class="mord mathnormal">t</span></span></span><span style="top:-2.8922em;"><span class="pstrut" style="height:3em;"></span><span class="hide-tail" style="min-width:0.853em;height:1.08em;"><svg xmlns="http://www.w3.org/2000/svg" width="400em" height="1.08em" viewBox="0 0 400000 1080" preserveAspectRatio="xMinYMin slice"><path d="M95,702
+c-2.7,0,-7.17,-2.7,-13.5,-8c-5.8,-5.3,-9.5,-10,-9.5,-14
+c0,-2,0.3,-3.3,1,-4c1.3,-2.7,23.83,-20.7,67.5,-54
+c44.2,-33.3,65.8,-50.3,66.5,-51c1.3,-1.3,3,-2,5,-2c4.7,0,8.7,3.3,12,10
+s173,378,173,378c0.7,0,35.3,-71,104,-213c68.7,-142,137.5,-285,206.5,-429
+c69,-144,104.5,-217.7,106.5,-221
+l0 -0
+c5.3,-9.3,12,-14,20,-14
+H400000v40H845.2724
+s-225.272,467,-225.272,467s-235,486,-235,486c-2.7,4.7,-9,7,-19,7
+c-6,0,-10,-1,-12,-3s-194,-422,-194,-422s-65,47,-65,47z
+M834 80h400000v40h-400000z"/></svg></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.1078em;"><span></span></span></span></span></span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.677em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0315em;">k</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.93em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span></span></span></span></span></div>
+<p><span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal" style="margin-right:0.0359em;">σ</span></span></span></span> 是（香草）波动率，<span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6944em;"></span><span class="mord mathnormal" style="margin-right:0.0315em;">k</span></span></span></span> 是往返交易成本（百分比），<span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6944em;"></span><span class="mord mathnormal" style="margin-right:0.0379em;">δ</span><span class="mord mathnormal">t</span></span></span></span> 是组合连续两次调整之间的时间间隔。</p>
+<p>这个公式值得逐项解读，因为它把第一节的滑点直觉变成了可定价的波动率修正。<span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.24em;vertical-align:-0.305em;"></span><span class="mord sqrt"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.935em;"><span class="svg-align" style="top:-3.2em;"><span class="pstrut" style="height:3.2em;"></span><span class="mord" style="padding-left:1em;"><span class="mord">2/</span><span class="mord mathnormal" style="margin-right:0.0359em;">π</span></span></span><span style="top:-2.895em;"><span class="pstrut" style="height:3.2em;"></span><span class="hide-tail" style="min-width:1.02em;height:1.28em;"><svg xmlns="http://www.w3.org/2000/svg" width="400em" height="1.28em" viewBox="0 0 400000 1296" preserveAspectRatio="xMinYMin slice"><path d="M263,681c0.7,0,18,39.7,52,119
+c34,79.3,68.167,158.7,102.5,238c34.3,79.3,51.8,119.3,52.5,120
+c340,-704.7,510.7,-1060.3,512,-1067
+l0 -0
+c4.7,-7.3,11,-11,19,-11
+H40000v40H1012.3
+s-271.3,567,-271.3,567c-38.7,80.7,-84,175,-136,283c-52,108,-89.167,185.3,-111.5,232
+c-22.3,46.7,-33.8,70.3,-34.5,71c-4.7,4.7,-12.3,7,-23,7s-12,-1,-12,-1
+s-109,-253,-109,-253c-72.7,-168,-109.3,-252,-110,-252c-10.7,8,-22,16.7,-34,26
+c-22,17.3,-33.3,26,-34,26s-26,-26,-26,-26s76,-59,76,-59s76,-60,76,-60z
+M1001 80h400000v40h-400000z"/></svg></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.305em;"><span></span></span></span></span></span></span></span></span> 来自标准正态绝对值的期望 <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathbb">E</span><span class="mord">∣</span><span class="mord mathnormal" style="margin-right:0.0715em;">Z</span><span class="mord">∣</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1.24em;vertical-align:-0.305em;"></span><span class="mord sqrt"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.935em;"><span class="svg-align" style="top:-3.2em;"><span class="pstrut" style="height:3.2em;"></span><span class="mord" style="padding-left:1em;"><span class="mord">2/</span><span class="mord mathnormal" style="margin-right:0.0359em;">π</span></span></span><span style="top:-2.895em;"><span class="pstrut" style="height:3.2em;"></span><span class="hide-tail" style="min-width:1.02em;height:1.28em;"><svg xmlns="http://www.w3.org/2000/svg" width="400em" height="1.28em" viewBox="0 0 400000 1296" preserveAspectRatio="xMinYMin slice"><path d="M263,681c0.7,0,18,39.7,52,119
+c34,79.3,68.167,158.7,102.5,238c34.3,79.3,51.8,119.3,52.5,120
+c340,-704.7,510.7,-1060.3,512,-1067
+l0 -0
+c4.7,-7.3,11,-11,19,-11
+H40000v40H1012.3
+s-271.3,567,-271.3,567c-38.7,80.7,-84,175,-136,283c-52,108,-89.167,185.3,-111.5,232
+c-22.3,46.7,-33.8,70.3,-34.5,71c-4.7,4.7,-12.3,7,-23,7s-12,-1,-12,-1
+s-109,-253,-109,-253c-72.7,-168,-109.3,-252,-110,-252c-10.7,8,-22,16.7,-34,26
+c-22,17.3,-33.3,26,-34,26s-26,-26,-26,-26s76,-59,76,-59s76,-60,76,-60z
+M1001 80h400000v40h-400000z"/></svg></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.305em;"><span></span></span></span></span></span></span></span></span>，因为每次再平衡要买卖的数量正比于价格变动的绝对值；<span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6944em;"></span><span class="mord mathnormal" style="margin-right:0.0315em;">k</span></span></span></span> 是每次往返的成本率；<span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6944em;"></span><span class="mord mathnormal" style="margin-right:0.0379em;">δ</span><span class="mord mathnormal">t</span></span></span></span> 是再平衡间隔。注意 <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal">A</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">∝</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1.1822em;vertical-align:-0.25em;"></span><span class="mord">1/</span><span class="mord sqrt"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.9322em;"><span class="svg-align" style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="mord" style="padding-left:0.833em;"><span class="mord mathnormal" style="margin-right:0.0379em;">δ</span><span class="mord mathnormal">t</span></span></span><span style="top:-2.8922em;"><span class="pstrut" style="height:3em;"></span><span class="hide-tail" style="min-width:0.853em;height:1.08em;"><svg xmlns="http://www.w3.org/2000/svg" width="400em" height="1.08em" viewBox="0 0 400000 1080" preserveAspectRatio="xMinYMin slice"><path d="M95,702
+c-2.7,0,-7.17,-2.7,-13.5,-8c-5.8,-5.3,-9.5,-10,-9.5,-14
+c0,-2,0.3,-3.3,1,-4c1.3,-2.7,23.83,-20.7,67.5,-54
+c44.2,-33.3,65.8,-50.3,66.5,-51c1.3,-1.3,3,-2,5,-2c4.7,0,8.7,3.3,12,10
+s173,378,173,378c0.7,0,35.3,-71,104,-213c68.7,-142,137.5,-285,206.5,-429
+c69,-144,104.5,-217.7,106.5,-221
+l0 -0
+c5.3,-9.3,12,-14,20,-14
+H400000v40H845.2724
+s-225.272,467,-225.272,467s-235,486,-235,486c-2.7,4.7,-9,7,-19,7
+c-6,0,-10,-1,-12,-3s-194,-422,-194,-422s-65,47,-65,47z
+M834 80h400000v40h-400000z"/></svg></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.1078em;"><span></span></span></span></span></span></span></span></span>：<strong>再平衡越频繁（<span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6944em;"></span><span class="mord mathnormal" style="margin-right:0.0379em;">δ</span><span class="mord mathnormal">t</span></span></span></span> 越小），累积的交易成本越高，调整项越大</strong>。这是动态对冲的根本两难，更频繁的对冲降低复制误差（gamma 风险），却线性于 <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.1822em;vertical-align:-0.25em;"></span><span class="mord">1/</span><span class="mord sqrt"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.9322em;"><span class="svg-align" style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="mord" style="padding-left:0.833em;"><span class="mord mathnormal" style="margin-right:0.0379em;">δ</span><span class="mord mathnormal">t</span></span></span><span style="top:-2.8922em;"><span class="pstrut" style="height:3em;"></span><span class="hide-tail" style="min-width:0.853em;height:1.08em;"><svg xmlns="http://www.w3.org/2000/svg" width="400em" height="1.08em" viewBox="0 0 400000 1080" preserveAspectRatio="xMinYMin slice"><path d="M95,702
+c-2.7,0,-7.17,-2.7,-13.5,-8c-5.8,-5.3,-9.5,-10,-9.5,-14
+c0,-2,0.3,-3.3,1,-4c1.3,-2.7,23.83,-20.7,67.5,-54
+c44.2,-33.3,65.8,-50.3,66.5,-51c1.3,-1.3,3,-2,5,-2c4.7,0,8.7,3.3,12,10
+s173,378,173,378c0.7,0,35.3,-71,104,-213c68.7,-142,137.5,-285,206.5,-429
+c69,-144,104.5,-217.7,106.5,-221
+l0 -0
+c5.3,-9.3,12,-14,20,-14
+H400000v40H845.2724
+s-225.272,467,-225.272,467s-235,486,-235,486c-2.7,4.7,-9,7,-19,7
+c-6,0,-10,-1,-12,-3s-194,-422,-194,-422s-65,47,-65,47z
+M834 80h400000v40h-400000z"/></svg></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.1078em;"><span></span></span></span></span></span></span></span></span> 地推高交易成本。Leland 的洞见是把这笔成本折算成一个等价的波动率加点：卖方实际是在比 <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal" style="margin-right:0.0359em;">σ</span></span></span></span> 更高的 <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.5806em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0359em;">σ</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3283em;"><span style="top:-2.55em;margin-left:-0.0359em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">A</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span> 上才盈亏平衡。</p>
+<p>然而交易员需要考虑：一个期权 book 不会单调地 long 或单调地 short 波动率，盈亏平衡波动率会<strong>按头寸方向上调或下调</strong>。short premium 的玩家需要更高的波动率才能打平，long premium 的玩家需要更低的波动率。short gamma 用止损支付那个负价差，而 long premium 操作者有 stop-profits（止盈），可能吸收掉一些利润。</p>
+<p>**Whalley 与 Wilmott（1993）**把盈亏平衡波动率写成 gamma 符号的简单函数。负 gamma 时是 <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.04em;vertical-align:-0.155em;"></span><span class="mord mathnormal" style="margin-right:0.0359em;">σ</span><span class="mord sqrt"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.885em;"><span class="svg-align" style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="mord" style="padding-left:0.833em;"><span class="mord">1</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord mathnormal">A</span></span></span><span style="top:-2.845em;"><span class="pstrut" style="height:3em;"></span><span class="hide-tail" style="min-width:0.853em;height:1.08em;"><svg xmlns="http://www.w3.org/2000/svg" width="400em" height="1.08em" viewBox="0 0 400000 1080" preserveAspectRatio="xMinYMin slice"><path d="M95,702
+c-2.7,0,-7.17,-2.7,-13.5,-8c-5.8,-5.3,-9.5,-10,-9.5,-14
+c0,-2,0.3,-3.3,1,-4c1.3,-2.7,23.83,-20.7,67.5,-54
+c44.2,-33.3,65.8,-50.3,66.5,-51c1.3,-1.3,3,-2,5,-2c4.7,0,8.7,3.3,12,10
+s173,378,173,378c0.7,0,35.3,-71,104,-213c68.7,-142,137.5,-285,206.5,-429
+c69,-144,104.5,-217.7,106.5,-221
+l0 -0
+c5.3,-9.3,12,-14,20,-14
+H400000v40H845.2724
+s-225.272,467,-225.272,467s-235,486,-235,486c-2.7,4.7,-9,7,-19,7
+c-6,0,-10,-1,-12,-3s-194,-422,-194,-422s-65,47,-65,47z
+M834 80h400000v40h-400000z"/></svg></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.155em;"><span></span></span></span></span></span></span></span></span>，正 gamma 时是 <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.04em;vertical-align:-0.155em;"></span><span class="mord mathnormal" style="margin-right:0.0359em;">σ</span><span class="mord sqrt"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.885em;"><span class="svg-align" style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="mord" style="padding-left:0.833em;"><span class="mord">1</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord mathnormal">A</span></span></span><span style="top:-2.845em;"><span class="pstrut" style="height:3em;"></span><span class="hide-tail" style="min-width:0.853em;height:1.08em;"><svg xmlns="http://www.w3.org/2000/svg" width="400em" height="1.08em" viewBox="0 0 400000 1080" preserveAspectRatio="xMinYMin slice"><path d="M95,702
+c-2.7,0,-7.17,-2.7,-13.5,-8c-5.8,-5.3,-9.5,-10,-9.5,-14
+c0,-2,0.3,-3.3,1,-4c1.3,-2.7,23.83,-20.7,67.5,-54
+c44.2,-33.3,65.8,-50.3,66.5,-51c1.3,-1.3,3,-2,5,-2c4.7,0,8.7,3.3,12,10
+s173,378,173,378c0.7,0,35.3,-71,104,-213c68.7,-142,137.5,-285,206.5,-429
+c69,-144,104.5,-217.7,106.5,-221
+l0 -0
+c5.3,-9.3,12,-14,20,-14
+H400000v40H845.2724
+s-225.272,467,-225.272,467s-235,486,-235,486c-2.7,4.7,-9,7,-19,7
+c-6,0,-10,-1,-12,-3s-194,-422,-194,-422s-65,47,-65,47z
+M834 80h400000v40h-400000z"/></svg></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.155em;"><span></span></span></span></span></span></span></span></span>，于是</p>
+<div class="math-display"><span class="katex-display"><span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.0359em;">σ</span><span class="mopen">(</span><span class="mord">Γ</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1.24em;vertical-align:-0.2561em;"></span><span class="mord mathnormal" style="margin-right:0.0359em;">σ</span><span class="mord sqrt"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.9839em;"><span class="svg-align" style="top:-3.2em;"><span class="pstrut" style="height:3.2em;"></span><span class="mord" style="padding-left:1em;"><span class="mord">1</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord mathnormal">A</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord text"><span class="mord">sign</span></span><span class="mopen">(</span><span class="mord">Γ</span><span class="mclose">)</span></span></span><span style="top:-2.9439em;"><span class="pstrut" style="height:3.2em;"></span><span class="hide-tail" style="min-width:1.02em;height:1.28em;"><svg xmlns="http://www.w3.org/2000/svg" width="400em" height="1.28em" viewBox="0 0 400000 1296" preserveAspectRatio="xMinYMin slice"><path d="M263,681c0.7,0,18,39.7,52,119
+c34,79.3,68.167,158.7,102.5,238c34.3,79.3,51.8,119.3,52.5,120
+c340,-704.7,510.7,-1060.3,512,-1067
+l0 -0
+c4.7,-7.3,11,-11,19,-11
+H40000v40H1012.3
+s-271.3,567,-271.3,567c-38.7,80.7,-84,175,-136,283c-52,108,-89.167,185.3,-111.5,232
+c-22.3,46.7,-33.8,70.3,-34.5,71c-4.7,4.7,-12.3,7,-23,7s-12,-1,-12,-1
+s-109,-253,-109,-253c-72.7,-168,-109.3,-252,-110,-252c-10.7,8,-22,16.7,-34,26
+c-22,17.3,-33.3,26,-34,26s-26,-26,-26,-26s76,-59,76,-59s76,-60,76,-60z
+M1001 80h400000v40h-400000z"/></svg></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2561em;"><span></span></span></span></span></span></span></span></span></span></div>
+<p>这制造了一个变动波动率的局面，以及由此而来的复杂性。</p>
+<h3 id="理论映射-交易成本把单一波动率变成依赖头寸的-bid-ask-波动率带">理论映射：交易成本把单一波动率变成依赖头寸的 bid-ask 波动率带</h3>
+<p>Leland-Whalley-Wilmott 的结果，本质是把交易成本翻译成波动率上的买卖价差。无摩擦 BSM 用单一 <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal" style="margin-right:0.0359em;">σ</span></span></span></span> 给所有人定价；有交易成本后，波动率分裂成一个区间 <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.135em;vertical-align:-0.25em;"></span><span class="mopen">[</span><span class="mord mathnormal" style="margin-right:0.0359em;">σ</span><span class="mord sqrt"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.885em;"><span class="svg-align" style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="mord" style="padding-left:0.833em;"><span class="mord">1</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord mathnormal">A</span></span></span><span style="top:-2.845em;"><span class="pstrut" style="height:3em;"></span><span class="hide-tail" style="min-width:0.853em;height:1.08em;"><svg xmlns="http://www.w3.org/2000/svg" width="400em" height="1.08em" viewBox="0 0 400000 1080" preserveAspectRatio="xMinYMin slice"><path d="M95,702
+c-2.7,0,-7.17,-2.7,-13.5,-8c-5.8,-5.3,-9.5,-10,-9.5,-14
+c0,-2,0.3,-3.3,1,-4c1.3,-2.7,23.83,-20.7,67.5,-54
+c44.2,-33.3,65.8,-50.3,66.5,-51c1.3,-1.3,3,-2,5,-2c4.7,0,8.7,3.3,12,10
+s173,378,173,378c0.7,0,35.3,-71,104,-213c68.7,-142,137.5,-285,206.5,-429
+c69,-144,104.5,-217.7,106.5,-221
+l0 -0
+c5.3,-9.3,12,-14,20,-14
+H400000v40H845.2724
+s-225.272,467,-225.272,467s-235,486,-235,486c-2.7,4.7,-9,7,-19,7
+c-6,0,-10,-1,-12,-3s-194,-422,-194,-422s-65,47,-65,47z
+M834 80h400000v40h-400000z"/></svg></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.155em;"><span></span></span></span></span></span><span class="mpunct">,</span><span class="mspace"> </span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.0359em;">σ</span><span class="mord sqrt"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.885em;"><span class="svg-align" style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="mord" style="padding-left:0.833em;"><span class="mord">1</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord mathnormal">A</span></span></span><span style="top:-2.845em;"><span class="pstrut" style="height:3em;"></span><span class="hide-tail" style="min-width:0.853em;height:1.08em;"><svg xmlns="http://www.w3.org/2000/svg" width="400em" height="1.08em" viewBox="0 0 400000 1080" preserveAspectRatio="xMinYMin slice"><path d="M95,702
+c-2.7,0,-7.17,-2.7,-13.5,-8c-5.8,-5.3,-9.5,-10,-9.5,-14
+c0,-2,0.3,-3.3,1,-4c1.3,-2.7,23.83,-20.7,67.5,-54
+c44.2,-33.3,65.8,-50.3,66.5,-51c1.3,-1.3,3,-2,5,-2c4.7,0,8.7,3.3,12,10
+s173,378,173,378c0.7,0,35.3,-71,104,-213c68.7,-142,137.5,-285,206.5,-429
+c69,-144,104.5,-217.7,106.5,-221
+l0 -0
+c5.3,-9.3,12,-14,20,-14
+H400000v40H845.2724
+s-225.272,467,-225.272,467s-235,486,-235,486c-2.7,4.7,-9,7,-19,7
+c-6,0,-10,-1,-12,-3s-194,-422,-194,-422s-65,47,-65,47z
+M834 80h400000v40h-400000z"/></svg></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.155em;"><span></span></span></span></span></span><span class="mclose">]</span></span></span></span>。<strong>卖方（short gamma）必须用上沿 <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.04em;vertical-align:-0.155em;"></span><span class="mord mathnormal" style="margin-right:0.0359em;">σ</span><span class="mord sqrt"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.885em;"><span class="svg-align" style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="mord" style="padding-left:0.833em;"><span class="mord">1</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord mathnormal">A</span></span></span><span style="top:-2.845em;"><span class="pstrut" style="height:3em;"></span><span class="hide-tail" style="min-width:0.853em;height:1.08em;"><svg xmlns="http://www.w3.org/2000/svg" width="400em" height="1.08em" viewBox="0 0 400000 1080" preserveAspectRatio="xMinYMin slice"><path d="M95,702
+c-2.7,0,-7.17,-2.7,-13.5,-8c-5.8,-5.3,-9.5,-10,-9.5,-14
+c0,-2,0.3,-3.3,1,-4c1.3,-2.7,23.83,-20.7,67.5,-54
+c44.2,-33.3,65.8,-50.3,66.5,-51c1.3,-1.3,3,-2,5,-2c4.7,0,8.7,3.3,12,10
+s173,378,173,378c0.7,0,35.3,-71,104,-213c68.7,-142,137.5,-285,206.5,-429
+c69,-144,104.5,-217.7,106.5,-221
+l0 -0
+c5.3,-9.3,12,-14,20,-14
+H400000v40H845.2724
+s-225.272,467,-225.272,467s-235,486,-235,486c-2.7,4.7,-9,7,-19,7
+c-6,0,-10,-1,-12,-3s-194,-422,-194,-422s-65,47,-65,47z
+M834 80h400000v40h-400000z"/></svg></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.155em;"><span></span></span></span></span></span></span></span></span> 定价才能覆盖再平衡成本，买方（long gamma）只能指望下沿 <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.04em;vertical-align:-0.155em;"></span><span class="mord mathnormal" style="margin-right:0.0359em;">σ</span><span class="mord sqrt"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.885em;"><span class="svg-align" style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="mord" style="padding-left:0.833em;"><span class="mord">1</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord mathnormal">A</span></span></span><span style="top:-2.845em;"><span class="pstrut" style="height:3em;"></span><span class="hide-tail" style="min-width:0.853em;height:1.08em;"><svg xmlns="http://www.w3.org/2000/svg" width="400em" height="1.08em" viewBox="0 0 400000 1080" preserveAspectRatio="xMinYMin slice"><path d="M95,702
+c-2.7,0,-7.17,-2.7,-13.5,-8c-5.8,-5.3,-9.5,-10,-9.5,-14
+c0,-2,0.3,-3.3,1,-4c1.3,-2.7,23.83,-20.7,67.5,-54
+c44.2,-33.3,65.8,-50.3,66.5,-51c1.3,-1.3,3,-2,5,-2c4.7,0,8.7,3.3,12,10
+s173,378,173,378c0.7,0,35.3,-71,104,-213c68.7,-142,137.5,-285,206.5,-429
+c69,-144,104.5,-217.7,106.5,-221
+l0 -0
+c5.3,-9.3,12,-14,20,-14
+H400000v40H845.2724
+s-225.272,467,-225.272,467s-235,486,-235,486c-2.7,4.7,-9,7,-19,7
+c-6,0,-10,-1,-12,-3s-194,-422,-194,-422s-65,47,-65,47z
+M834 80h400000v40h-400000z"/></svg></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.155em;"><span></span></span></span></span></span></span></span></span>。</strong> 这正是隐含波动率 bid-ask spread 的微观来源，价差宽度由 <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal">A</span></span></span></span> 决定，而 <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal">A</span></span></span></span> 随交易成本 <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6944em;"></span><span class="mord mathnormal" style="margin-right:0.0315em;">k</span></span></span></span>、随再平衡频率 <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.1822em;vertical-align:-0.25em;"></span><span class="mord">1/</span><span class="mord sqrt"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.9322em;"><span class="svg-align" style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="mord" style="padding-left:0.833em;"><span class="mord mathnormal" style="margin-right:0.0379em;">δ</span><span class="mord mathnormal">t</span></span></span><span style="top:-2.8922em;"><span class="pstrut" style="height:3em;"></span><span class="hide-tail" style="min-width:0.853em;height:1.08em;"><svg xmlns="http://www.w3.org/2000/svg" width="400em" height="1.08em" viewBox="0 0 400000 1080" preserveAspectRatio="xMinYMin slice"><path d="M95,702
+c-2.7,0,-7.17,-2.7,-13.5,-8c-5.8,-5.3,-9.5,-10,-9.5,-14
+c0,-2,0.3,-3.3,1,-4c1.3,-2.7,23.83,-20.7,67.5,-54
+c44.2,-33.3,65.8,-50.3,66.5,-51c1.3,-1.3,3,-2,5,-2c4.7,0,8.7,3.3,12,10
+s173,378,173,378c0.7,0,35.3,-71,104,-213c68.7,-142,137.5,-285,206.5,-429
+c69,-144,104.5,-217.7,106.5,-221
+l0 -0
+c5.3,-9.3,12,-14,20,-14
+H400000v40H845.2724
+s-225.272,467,-225.272,467s-235,486,-235,486c-2.7,4.7,-9,7,-19,7
+c-6,0,-10,-1,-12,-3s-194,-422,-194,-422s-65,47,-65,47z
+M834 80h400000v40h-400000z"/></svg></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.1078em;"><span></span></span></span></span></span></span></span></span> 上升。</p>
+<p>符号依赖 <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord text"><span class="mord">sign</span></span><span class="mopen">(</span><span class="mord">Γ</span><span class="mclose">)</span></span></span></span> 的深层含义是：交易成本对凸性的两侧不对称地作用。short gamma 者再平衡是&quot;高买低卖&quot;（与市场同向），每次调整都付价差、还撞上扩散的不利方向，所以成本加在波动率上；long gamma 者再平衡是&quot;低买高卖&quot;（逆市场），他可以挂限价单、甚至赚取价差，所以成本是负的、波动率往下调。这给出了下一节那条交易员铁律的理论根据。</p>
+<h3 id="期权交易员的规模经济与不对称">期权交易员的规模经济与不对称</h3>
+<p>在处理交易成本时，期权交易员有巨大的规模经济，因为他们组合里的<strong>总净 gamma 有时会等于总毛 gamma（绝对值之和）的几千分之一</strong>。也就是说，组合里成百上千个期权的 gamma 大量相互抵消，只剩很小的净额需要对冲，这让任何单个期权的管理成本变得微不足道。这是第三章&quot;单个期权不流动、但希腊字母整体很流动&quot;的定量版：做市商真正要对冲的是净 gamma，而非每个期权的毛 gamma。</p>
+<p>另一个更难评估的因素是期权成本的不对称：期权卖方和买方并非彼此的镜像，因为两者的效用函数不同。</p>
+<h3 id="交易员铁律-long-gamma-用限价单-short-gamma-用止损单">交易员铁律：long gamma 用限价单，short gamma 用止损单</h3>
+<div class="callout callout-important"><div class="callout-title"><span class="callout-icon">★</span><span class="callout-title-text">风险管理规则</span></div><div class="callout-body"><p>期权交易员的口诀：long gamma 时用限价单（limit orders），short gamma 时用止损单（stop orders）。</p>
+</div></div>
+<p>short gamma 时&quot;坐在 bid 或 offer 上&quot;的交易员被说成&quot;省小钱、误大事（penny-wise and pound-foolish）&quot;，他后面将不得不&quot;追（chase）&quot;市场。反过来，long gamma 时还付价差的交易员是在自欺。&quot;让市场来找你（let the market come to you）&quot;是老练交易员的建议。</p>
+<p>表 4.1 给出 short 与 long gamma 在执行次要交易（动态对冲）时的特征：</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Long Gamma</th>
+<th>Short Gamma</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>买入单</td>
+<td>市场走低时可以买</td>
+<td>市场走高时必须买</td>
+</tr>
+<tr>
+<td></td>
+<td>在市场挂买价，若市场穿过其水平可保证成交</td>
+<td>留止损单，被给定价格的官方打印触发后变市价单</td>
+</tr>
+<tr>
+<td>卖出单</td>
+<td>市场走高时可以卖</td>
+<td>市场走低时必须卖</td>
+</tr>
+<tr>
+<td></td>
+<td>在市场挂卖价，若市场穿过其水平可保证成交</td>
+<td>留止损单，被官方打印触发后变市价单</td>
+</tr>
+</tbody>
+</table>
+<p>这张表是本章实务的结晶，它的逻辑链是：<strong>gamma 符号决定再平衡方向，再平衡方向决定你是流动性的提供者还是需求者，这又决定你该用限价单还是止损单。</strong></p>
+<p>short gamma 者的再平衡是顺势的（涨了要追买、跌了要追卖），他没有选择是否对冲的自由，所有调整都必须承担交易成本，无论他是不是做市商。他用止损单调整 gamma，止损在给定价格官方成交时触发。SP500 在 455.00 的止损会让 order filler 在 455.00 官方成交后按市场最优价买入，成交价是 455.00 加买卖价差，于是产生交易成本。而且价差通常在市场移动时变宽，而这种移动恰恰伴随再平衡的需要，成本雪上加霜。</p>
+<p>long gamma 者的再平衡是逆势的（跌了可以买、涨了可以卖），他承担的交易成本更少、甚至没有。老练的 long gamma 玩家的订单与市场反向，他懂得把订单挂在市场里而非不必要地付价差。在官方交易所，订单不能被市场违反，市场不能在不保证成交其订单的情况下穿过它；货币里通过 OTC broker 下的订单也是如此。Taleb（自承属此派、不喜欢 short gamma）主张：<strong>一个娴熟的 long premium 交易员实际上能赚取交易成本，因为他能成为现金市场里的二级做市商。</strong> 例：SP500 在 449.80，long gamma 的期权做市商可以在 450.00 挂单，市场不成交他的单就不能穿过。假设没有他时市场是 449.50/450.05，他在 450.00 报出，就能指望赚取部分价差。做市商虽能 match，但某种池礼仪给&quot;paper&quot;以和做市商一起成交的权利；在芝加哥这样的池里 broker 很强势、能比 local 拿到更好的成交。于是交易成本被限制在佣金，对大玩家是可忽略的成本。</p>
+<h3 id="理论映射-负自相关让-long-gamma-的对冲变成赚-edge-与隐含价差">理论映射：负自相关让 long gamma 的对冲变成赚 edge，与隐含价差</h3>
+<p>在更进阶的层面，每个已知市场都在短期观测上经历价格的负自相关，这也可解释为均值回复（见第三章图 3.3 的自相关图）。任何关于隐含买卖价差（implicit bid-offer spread）的讨论都应考虑这个效应，隐含价差比名义价差宽，因为后者只能满足小额交易。在一些不太流动的市场（如个股），显性价差比隐含价差宽，因为做市商显示的市场比其交易意图更宽，他们挂出的价格代表一个短期权。这种均值回复让做市商获得 edge，并由此让娴熟的正 gamma 玩家在执行对冲时获利。</p>
+<p>这把两条线索缝在了一起。第三章的 bid-ask bounce 制造短期负自相关，对一个 long gamma、用限价单逆市挂单的交易员，这个负自相关正是他的朋友：价格短期反转意味着他挂在 449.50 的买单成交后，价格大概率反弹，他既完成了对冲、又赚了 bounce 那一段。于是 <strong>long gamma + 限价单的组合，把交易成本从负 carry 变成了正 edge</strong>，这是 Leland 公式里正 gamma 用下沿波动率 <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.04em;vertical-align:-0.155em;"></span><span class="mord mathnormal" style="margin-right:0.0359em;">σ</span><span class="mord sqrt"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.885em;"><span class="svg-align" style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="mord" style="padding-left:0.833em;"><span class="mord">1</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord mathnormal">A</span></span></span><span style="top:-2.845em;"><span class="pstrut" style="height:3em;"></span><span class="hide-tail" style="min-width:0.853em;height:1.08em;"><svg xmlns="http://www.w3.org/2000/svg" width="400em" height="1.08em" viewBox="0 0 400000 1080" preserveAspectRatio="xMinYMin slice"><path d="M95,702
+c-2.7,0,-7.17,-2.7,-13.5,-8c-5.8,-5.3,-9.5,-10,-9.5,-14
+c0,-2,0.3,-3.3,1,-4c1.3,-2.7,23.83,-20.7,67.5,-54
+c44.2,-33.3,65.8,-50.3,66.5,-51c1.3,-1.3,3,-2,5,-2c4.7,0,8.7,3.3,12,10
+s173,378,173,378c0.7,0,35.3,-71,104,-213c68.7,-142,137.5,-285,206.5,-429
+c69,-144,104.5,-217.7,106.5,-221
+l0 -0
+c5.3,-9.3,12,-14,20,-14
+H400000v40H845.2724
+s-225.272,467,-225.272,467s-235,486,-235,486c-2.7,4.7,-9,7,-19,7
+c-6,0,-10,-1,-12,-3s-194,-422,-194,-422s-65,47,-65,47z
+M834 80h400000v40h-400000z"/></svg></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.155em;"><span></span></span></span></span></span></span></span></span> 的微观实现。而 short gamma 用止损单则恰恰相反，他追的是动量方向，被 bounce 反咬。这解释了为什么 Taleb 个人偏好 long gamma：既出于对凸性的方向偏好，也因为执行机制本身在 long gamma 一侧能提取 edge。</p>
+<p>涉及障碍期权时，一个 short 敲出或 long 敲入的娴熟做市商，能操纵市场以改善自己的成交，这又回到第五节的主题，闭合了&quot;流动性洞 → 障碍触发 → 对冲执行&quot;这条贯穿全章的线。</p>
+<hr>
+<h2 id="十三-本章综述-理论与实务的对照">十三、本章综述：理论与实务的对照</h2>
+<p>第四章把流动性从&quot;风险经理脑后的隐形风险&quot;提到了能撼动 BSM 基石的高度。它的两条暗线，一条是流动性洞如何由价格不敏感的强制订单（止损、障碍、复制程序、结算套利）内生制造，另一条是交易成本如何把单一波动率撑成依赖头寸的波动率带。下表把 Taleb 的实务命题和对应的理论命题对齐。</p>
+<table>
+<thead>
+<tr>
+<th>Taleb 的实务命题</th>
+<th>对应的理论命题</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>滑点随规模、波动率、时区缝隙恶化</td>
+<td>市场冲击的凸成本 <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.1901em;vertical-align:-0.345em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.8451em;"><span style="top:-2.655em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">2</span></span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.394em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">1</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.345em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span><span class="mord mathnormal">λ</span><span class="mord"><span class="mord mathnormal">Q</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span></span></span></span>；BSM 零冲击假设破口</td>
+</tr>
+<tr>
+<td>流动性洞：低价引来加速供给</td>
+<td>价格反馈从负反号为正，稳定不动点变不稳定</td>
+</tr>
+<tr>
+<td>0.2% 成交量能撼动万亿市场</td>
+<td>反馈反号区撬动均衡与总量无关，只与触发订单密度有关</td>
+</tr>
+<tr>
+<td>VaR 漏掉止损边界的清算成本</td>
+<td>分位点平价假设忽略内生冲击，尾部 <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6944em;"></span><span class="mord mathnormal">λ</span></span></span></span> 与被迫清算正相关</td>
+</tr>
+<tr>
+<td>止损是客户免费送的触发期权</td>
+<td>one-touch 期权；价格不敏感强制单 → front-running</td>
+</tr>
+<tr>
+<td>障碍期权不可撤销，最危险</td>
+<td>触发对冲使过程非 Markov，复制根基被侵蚀</td>
+</tr>
+<tr>
+<td>障碍/止损让下一步依赖上一步</td>
+<td><span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathbb">E</span><span class="mopen">[</span><span class="mord mathnormal">d</span><span class="mord mathnormal" style="margin-right:0.0576em;">S</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">∣</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord"><span class="mord mathcal" style="margin-right:0.0993em;">F</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.2806em;"><span style="top:-2.55em;margin-left:-0.0993em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">t</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mclose">]</span></span></span></span> 依赖路径，局部正自相关（动量）</td>
+</tr>
+<tr>
+<td>单向流动性陷阱、有偏资产 put 短缺</td>
+<td>流动性方向性；optionality 在建仓方而非平仓方</td>
+</tr>
+<tr>
+<td>市场&quot;有记忆&quot;却无人免疫</td>
+<td>局部非鞅可预测性被流动性成本锁住</td>
+</tr>
+<tr>
+<td>熔断有效</td>
+<td>外生冷却窗打断正反馈，强制回到负反馈稳定域</td>
+</tr>
+<tr>
+<td>反向滑点：大单可盈利、小单不盈利</td>
+<td>滑点符号取决于与净订单流同向/逆向；建仓有 optionality</td>
+</tr>
+<tr>
+<td>三重巫时专家操纵</td>
+<td>结算价兼作清算与套利基准的机制漏洞</td>
+</tr>
+<tr>
+<td>投资组合保险加剧崩盘</td>
+<td>动态复制 long put = short gamma 顺势卖出，正反馈机器</td>
+</tr>
+<tr>
+<td>真实期权 ≠ 动态复制</td>
+<td>Grossman：有反馈/流动性约束时合成与真实不等价</td>
+</tr>
+<tr>
+<td>Leland 盈亏平衡波动率</td>
+<td><span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.5806em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0359em;">σ</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3283em;"><span style="top:-2.55em;margin-left:-0.0359em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">A</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1.04em;vertical-align:-0.155em;"></span><span class="mord mathnormal" style="margin-right:0.0359em;">σ</span><span class="mord sqrt"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.885em;"><span class="svg-align" style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="mord" style="padding-left:0.833em;"><span class="mord">1</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord mathnormal">A</span></span></span><span style="top:-2.845em;"><span class="pstrut" style="height:3em;"></span><span class="hide-tail" style="min-width:0.853em;height:1.08em;"><svg xmlns="http://www.w3.org/2000/svg" width="400em" height="1.08em" viewBox="0 0 400000 1080" preserveAspectRatio="xMinYMin slice"><path d="M95,702
+c-2.7,0,-7.17,-2.7,-13.5,-8c-5.8,-5.3,-9.5,-10,-9.5,-14
+c0,-2,0.3,-3.3,1,-4c1.3,-2.7,23.83,-20.7,67.5,-54
+c44.2,-33.3,65.8,-50.3,66.5,-51c1.3,-1.3,3,-2,5,-2c4.7,0,8.7,3.3,12,10
+s173,378,173,378c0.7,0,35.3,-71,104,-213c68.7,-142,137.5,-285,206.5,-429
+c69,-144,104.5,-217.7,106.5,-221
+l0 -0
+c5.3,-9.3,12,-14,20,-14
+H400000v40H845.2724
+s-225.272,467,-225.272,467s-235,486,-235,486c-2.7,4.7,-9,7,-19,7
+c-6,0,-10,-1,-12,-3s-194,-422,-194,-422s-65,47,-65,47z
+M834 80h400000v40h-400000z"/></svg></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.155em;"><span></span></span></span></span></span></span></span></span>，<span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal">A</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">∝</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1.1822em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.0315em;">k</span><span class="mord">/</span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.0359em;">σ</span><span class="mord sqrt"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.9322em;"><span class="svg-align" style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="mord" style="padding-left:0.833em;"><span class="mord mathnormal" style="margin-right:0.0379em;">δ</span><span class="mord mathnormal">t</span></span></span><span style="top:-2.8922em;"><span class="pstrut" style="height:3em;"></span><span class="hide-tail" style="min-width:0.853em;height:1.08em;"><svg xmlns="http://www.w3.org/2000/svg" width="400em" height="1.08em" viewBox="0 0 400000 1080" preserveAspectRatio="xMinYMin slice"><path d="M95,702
+c-2.7,0,-7.17,-2.7,-13.5,-8c-5.8,-5.3,-9.5,-10,-9.5,-14
+c0,-2,0.3,-3.3,1,-4c1.3,-2.7,23.83,-20.7,67.5,-54
+c44.2,-33.3,65.8,-50.3,66.5,-51c1.3,-1.3,3,-2,5,-2c4.7,0,8.7,3.3,12,10
+s173,378,173,378c0.7,0,35.3,-71,104,-213c68.7,-142,137.5,-285,206.5,-429
+c69,-144,104.5,-217.7,106.5,-221
+l0 -0
+c5.3,-9.3,12,-14,20,-14
+H400000v40H845.2724
+s-225.272,467,-225.272,467s-235,486,-235,486c-2.7,4.7,-9,7,-19,7
+c-6,0,-10,-1,-12,-3s-194,-422,-194,-422s-65,47,-65,47z
+M834 80h400000v40h-400000z"/></svg></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.1078em;"><span></span></span></span></span></span><span class="mclose">)</span></span></span></span></td>
+</tr>
+<tr>
+<td>盈亏平衡波动率随头寸方向偏移</td>
+<td>Whalley-Wilmott <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.24em;vertical-align:-0.305em;"></span><span class="mord mathnormal" style="margin-right:0.0359em;">σ</span><span class="mord sqrt"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.935em;"><span class="svg-align" style="top:-3.2em;"><span class="pstrut" style="height:3.2em;"></span><span class="mord" style="padding-left:1em;"><span class="mord">1</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord mathnormal">A</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord text"><span class="mord">sign</span></span><span class="mopen">(</span><span class="mord">Γ</span><span class="mclose">)</span></span></span><span style="top:-2.895em;"><span class="pstrut" style="height:3.2em;"></span><span class="hide-tail" style="min-width:1.02em;height:1.28em;"><svg xmlns="http://www.w3.org/2000/svg" width="400em" height="1.28em" viewBox="0 0 400000 1296" preserveAspectRatio="xMinYMin slice"><path d="M263,681c0.7,0,18,39.7,52,119
+c34,79.3,68.167,158.7,102.5,238c34.3,79.3,51.8,119.3,52.5,120
+c340,-704.7,510.7,-1060.3,512,-1067
+l0 -0
+c4.7,-7.3,11,-11,19,-11
+H40000v40H1012.3
+s-271.3,567,-271.3,567c-38.7,80.7,-84,175,-136,283c-52,108,-89.167,185.3,-111.5,232
+c-22.3,46.7,-33.8,70.3,-34.5,71c-4.7,4.7,-12.3,7,-23,7s-12,-1,-12,-1
+s-109,-253,-109,-253c-72.7,-168,-109.3,-252,-110,-252c-10.7,8,-22,16.7,-34,26
+c-22,17.3,-33.3,26,-34,26s-26,-26,-26,-26s76,-59,76,-59s76,-60,76,-60z
+M1001 80h400000v40h-400000z"/></svg></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.305em;"><span></span></span></span></span></span></span></span></span>，波动率 bid-ask 带</td>
+</tr>
+<tr>
+<td>long gamma 用限价单、short gamma 用止损单</td>
+<td>gamma 符号定再平衡方向；long gamma 借负自相关赚 edge</td>
+</tr>
+<tr>
+<td>净 gamma 远小于毛 gamma</td>
+<td>组合内对冲的规模经济，希腊字母整体流动</td>
+</tr>
+</tbody>
+</table>
+<h3 id="核心观点">核心观点</h3>
+<p>第一，<strong>流动性是交易的第一性问题，不是风险清单上的一项</strong>。滑点是它的实务度量，且对规模呈凸性，这从根本上限制了可管理资本的规模，也限制了 BSM &quot;可按中价无限调仓&quot; 假设的适用域。</p>
+<p>第二，<strong>流动性洞是反馈符号的局部反转</strong>。价格不敏感的强制订单（止损、障碍、复制程序、结算套利）把常规的负反馈推成正反馈，让稳定均衡变成不稳定均衡，于是极小的订单能撬动极大的市场。</p>
+<p>第三，<strong>障碍期权和止损是焊死在价格点上的流动性洞</strong>，它们不可撤销、可被提前观察，诱使持有信息者去操纵触发点。这破坏了布朗运动的 Markov 性，是&quot;学障碍期权前先读本章&quot;的真正理由。</p>
+<p>第四，<strong>市场有记忆，但记忆带来的可预测性被流动性成本锁住</strong>。局部动量真实存在（新高新低的跳空、障碍邻域的加速），却只有时空占优者能提取，普通人既无法套利、也无法免疫。</p>
+<p>第五，<strong>交易成本把单一波动率撑成依赖头寸的波动率带</strong>。Leland 把再平衡成本折成波动率加点 <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal">A</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">∝</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1.1822em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.0315em;">k</span><span class="mord">/</span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.0359em;">σ</span><span class="mord sqrt"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.9322em;"><span class="svg-align" style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="mord" style="padding-left:0.833em;"><span class="mord mathnormal" style="margin-right:0.0379em;">δ</span><span class="mord mathnormal">t</span></span></span><span style="top:-2.8922em;"><span class="pstrut" style="height:3em;"></span><span class="hide-tail" style="min-width:0.853em;height:1.08em;"><svg xmlns="http://www.w3.org/2000/svg" width="400em" height="1.08em" viewBox="0 0 400000 1080" preserveAspectRatio="xMinYMin slice"><path d="M95,702
+c-2.7,0,-7.17,-2.7,-13.5,-8c-5.8,-5.3,-9.5,-10,-9.5,-14
+c0,-2,0.3,-3.3,1,-4c1.3,-2.7,23.83,-20.7,67.5,-54
+c44.2,-33.3,65.8,-50.3,66.5,-51c1.3,-1.3,3,-2,5,-2c4.7,0,8.7,3.3,12,10
+s173,378,173,378c0.7,0,35.3,-71,104,-213c68.7,-142,137.5,-285,206.5,-429
+c69,-144,104.5,-217.7,106.5,-221
+l0 -0
+c5.3,-9.3,12,-14,20,-14
+H400000v40H845.2724
+s-225.272,467,-225.272,467s-235,486,-235,486c-2.7,4.7,-9,7,-19,7
+c-6,0,-10,-1,-12,-3s-194,-422,-194,-422s-65,47,-65,47z
+M834 80h400000v40h-400000z"/></svg></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.1078em;"><span></span></span></span></span></span><span class="mclose">)</span></span></span></span>，Whalley-Wilmott 让它随 gamma 符号取正负。卖方用上沿、买方用下沿，这就是隐含波动率 bid-ask 的微观来源，也是动态对冲&quot;频率 vs 成本&quot;两难的定量表达。</p>
+<p>第六，<strong>gamma 符号决定执行方式</strong>。long gamma 逆势再平衡、是流动性提供者，用限价单甚至能借短期负自相关赚 edge；short gamma 顺势再平衡、是流动性需求者，必须用止损单、被价差和动量两头吃。Taleb 对 long gamma 的偏好既是凸性偏好，也是执行机制上的 edge 偏好。</p>
+<h3 id="面对一个头寸或一笔大单的操作清单">面对一个头寸或一笔大单的操作清单</h3>
+<p>读完本章，遇到流动性相关的决策，可依次自问：</p>
+<ol>
+<li>我要执行的规模会产生多大滑点？冲击成本随规模二次增长，这个规模还划算吗？</li>
+<li>市场里有没有价格不敏感的强制订单（止损、障碍、复制程序）？它们会把反馈推成正号吗？我在洞的哪一侧？</li>
+<li>我的对冲流是顺势还是逆势？我是流动性的提供者还是需求者？</li>
+<li>我的 gamma 是正是负？据此该用限价单还是止损单？再平衡频率和交易成本如何权衡（<span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal">A</span></span></span></span> 有多大）？</li>
+<li>我的 VaR / 风险模型有没有把止损边界的清算成本算进去？尾部场景里流动性会蒸发吗？</li>
+<li>这是真实期权还是动态复制？复制需求本身会不会不稳定化市场、并被 front-run？</li>
+<li>我建仓时藏在订单流里很容易，但出场时规模暴露、对手会 fade，退出路径想清楚了吗？</li>
+</ol>
+<h3 id="一句话收束">一句话收束</h3>
+<p>本章最该记住的一句：<strong>模型假设你能按中价、连续、无限量地调仓，而真实市场是一个大影院配一扇小门；流动性洞由价格不敏感的强制订单内生制造，它破坏布朗运动的无记忆性，也把单一波动率撑成依赖你 gamma 符号的买卖价差。</strong></p>
+
+<nav class="pager-row"><a class="pager prev" href="chapter-03-market-making-and-market-using.html"><span class="pager-dir">← 上一篇</span><span class="pager-name">做市与用市</span></a><a class="pager next" href="chapter-05-arbitrage-and-the-arbitrageurs.html"><span class="pager-dir">下一篇 →</span><span class="pager-name">套利与套利者</span></a></nav>
+</article>
+<nav class="toc" aria-label="本章目录"><div class="toc-title">本章目录</div><ul><li class="toc-l2"><a href="#导读-本章要解决的问题">导读：本章要解决的问题</a></li>
+<li class="toc-l2"><a href="#一-流动性与滑点-liquidity-and-slippage">一、流动性与滑点（Liquidity and Slippage）</a></li>
+<li class="toc-l3"><a href="#理论映射-滑点是凸的执行成本-是-bsm-无限可分-零冲击-假设的破口">理论映射：滑点是凸的执行成本，是 BSM &quot;无限可分、零冲击&quot; 假设的破口</a></li>
+<li class="toc-l2"><a href="#二-流动性洞-liquidity-holes">二、流动性洞（Liquidity Holes）</a></li>
+<li class="toc-l3"><a href="#理论映射-流动性洞是负反馈反转为正反馈-均衡从稳定变不稳定">理论映射：流动性洞是负反馈反转为正反馈，均衡从稳定变不稳定</a></li>
+<li class="toc-l2"><a href="#三-流动性与风险管理-liquidity-and-risk-management">三、流动性与风险管理（Liquidity and Risk Management）</a></li>
+<li class="toc-l3"><a href="#理论映射-var-假设位置可在分位点平价了结-忽略了清算的内生冲击">理论映射：VaR 假设位置可在分位点平价了结，忽略了清算的内生冲击</a></li>
+<li class="toc-l2"><a href="#四-止损单与不流动性的路径-stop-orders-and-the-path-of-illiquidity">四、止损单与不流动性的路径（Stop Orders and the Path of Illiquidity）</a></li>
+<li class="toc-l3"><a href="#理论映射-止损-客户免费送出的触发期权-触发者在做单向-front-running">理论映射：止损 = 客户免费送出的触发期权，触发者在做单向 front-running</a></li>
+<li class="toc-l2"><a href="#五-障碍期权与流动性真空-barrier-options-and-the-liquidity-vacuum">五、障碍期权与流动性真空（Barrier Options and the Liquidity Vacuum）</a></li>
+<li class="toc-l3"><a href="#理论映射-触发对冲让过程非-markov-无套利复制的根基被侵蚀">理论映射：触发对冲让过程非 Markov，无套利复制的根基被侵蚀</a></li>
+<li class="toc-l2"><a href="#六-单向流动性陷阱-one-way-liquidity-traps">六、单向流动性陷阱（One-Way Liquidity Traps）</a></li>
+<li class="toc-l2"><a href="#七-洞-black-scholes-与记忆之弊-holes-black-scholes-and-the-ills-of-memory">七、洞、Black-Scholes 与记忆之弊（Holes, Black-Scholes, and the Ills of Memory）</a></li>
+<li class="toc-l3"><a href="#理论映射-有记忆-非鞅可预测性-但被流动性成本锁住">理论映射：有记忆 ⇒ 非鞅可预测性，但被流动性成本锁住</a></li>
+<li class="toc-l2"><a href="#八-限制与市场失灵-limits-and-market-failures">八、限制与市场失灵（Limits and Market Failures）</a></li>
+<li class="toc-l2"><a href="#九-反向滑点-reverse-slippage">九、反向滑点（Reverse Slippage）</a></li>
+<li class="toc-l3"><a href="#理论映射-滑点的符号取决于你和订单流的同向还是逆向">理论映射：滑点的符号取决于你和订单流的同向还是逆向</a></li>
+<li class="toc-l2"><a href="#十-流动性与三重巫时-liquidity-and-triple-witching-hour">十、流动性与三重巫时（Liquidity and Triple Witching Hour）</a></li>
+<li class="toc-l2"><a href="#十一-投资组合保险-portfolio-insurance">十一、投资组合保险（Portfolio Insurance）</a></li>
+<li class="toc-l3"><a href="#理论映射-动态复制-short-gamma-且复制需求本身是不稳定化的反馈">理论映射：动态复制 = short gamma，且复制需求本身是不稳定化的反馈</a></li>
+<li class="toc-l2"><a href="#十二-流动性与期权定价-liquidity-and-option-pricing">十二、流动性与期权定价（Liquidity and Option Pricing）</a></li>
+<li class="toc-l3"><a href="#理论映射-交易成本把单一波动率变成依赖头寸的-bid-ask-波动率带">理论映射：交易成本把单一波动率变成依赖头寸的 bid-ask 波动率带</a></li>
+<li class="toc-l3"><a href="#期权交易员的规模经济与不对称">期权交易员的规模经济与不对称</a></li>
+<li class="toc-l3"><a href="#交易员铁律-long-gamma-用限价单-short-gamma-用止损单">交易员铁律：long gamma 用限价单，short gamma 用止损单</a></li>
+<li class="toc-l3"><a href="#理论映射-负自相关让-long-gamma-的对冲变成赚-edge-与隐含价差">理论映射：负自相关让 long gamma 的对冲变成赚 edge，与隐含价差</a></li>
+<li class="toc-l2"><a href="#十三-本章综述-理论与实务的对照">十三、本章综述：理论与实务的对照</a></li>
+<li class="toc-l3"><a href="#核心观点">核心观点</a></li>
+<li class="toc-l3"><a href="#面对一个头寸或一笔大单的操作清单">面对一个头寸或一笔大单的操作清单</a></li>
+<li class="toc-l3"><a href="#一句话收束">一句话收束</a></li></ul></nav>
+</main>
+<script src="assets/app.js"></script>
+</body>
+</html>

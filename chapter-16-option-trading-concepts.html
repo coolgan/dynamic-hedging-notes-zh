@@ -1,0 +1,832 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>第16章：期权交易概念（Option Trading Concepts） · Dynamic Hedging 精读笔记</title>
+<link rel="stylesheet" href="assets/katex.min.css">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<button id="menuToggle" class="menu-toggle" aria-label="目录">☰</button>
+<aside class="sidebar" id="sidebar">
+<a class="brand" href="index.html"><span class="brand-title">Dynamic Hedging 精读笔记</span><span class="brand-sub">Nassim Taleb · 动态对冲 · 中文精读笔记</span></a><div class="nav-search"><input type="search" id="navSearch" placeholder="筛选章节…" autocomplete="off"></div><div class="nav-section"><h3 class="nav-section-title">正文章节</h3><ul><li><a href="chapter-01-introduction-to-the-instruments.html"><span class="nav-tag">第一章</span><span class="nav-name">金融工具导论</span></a></li>
+<li><a href="chapter-02-the-generalized-option.html"><span class="nav-tag">第二章</span><span class="nav-name">广义期权</span></a></li>
+<li><a href="chapter-03-market-making-and-market-using.html"><span class="nav-tag">第三章</span><span class="nav-name">做市与用市</span></a></li>
+<li><a href="chapter-04-liquidity-and-liquidity-holes.html"><span class="nav-tag">第四章</span><span class="nav-name">流动性与流动性洞</span></a></li>
+<li><a href="chapter-05-arbitrage-and-the-arbitrageurs.html"><span class="nav-tag">第五章</span><span class="nav-name">套利与套利者</span></a></li>
+<li><a href="chapter-06-volatility-and-correlation.html"><span class="nav-tag">第六章</span><span class="nav-name">波动率与相关性</span></a></li>
+<li><a href="chapter-07-adapting-black-scholes-merton-the-delta.html"><span class="nav-tag">第七章</span><span class="nav-name">改造 Black-Scholes-Merton —— Delta</span></a></li>
+<li><a href="chapter-08-gamma-and-shadow-gamma.html"><span class="nav-tag">第八章</span><span class="nav-name">Gamma 与 Shadow Gamma</span></a></li>
+<li><a href="chapter-09-vega-and-the-volatility-surface.html"><span class="nav-tag">第九章</span><span class="nav-name">Vega 与波动率曲面</span></a></li>
+<li><a href="chapter-10-theta-and-minor-greeks.html"><span class="nav-tag">第十章</span><span class="nav-name">Theta 与次要希腊字母</span></a></li>
+<li><a href="chapter-11-the-greeks-and-their-behavior.html"><span class="nav-tag">第十一章</span><span class="nav-name">希腊字母的动态行为</span></a></li>
+<li><a href="chapter-12-fungibility-convergence-and-stacking.html"><span class="nav-tag">第12章</span><span class="nav-name">可替代性、收敛与堆叠</span></a></li>
+<li><a href="chapter-13-some-wrinkles-of-option-markets.html"><span class="nav-tag">第13章</span><span class="nav-name">期权市场的一些褶皱</span></a></li>
+<li><a href="chapter-14-bucketing-and-topography.html"><span class="nav-tag">第14章</span><span class="nav-name">分桶与地形图</span></a></li>
+<li><a href="chapter-15-beware-the-distribution.html"><span class="nav-tag">第15章</span><span class="nav-name">当心分布</span></a></li>
+<li class="active"><a href="chapter-16-option-trading-concepts.html"><span class="nav-tag">第16章</span><span class="nav-name">期权交易概念</span></a></li>
+<li><a href="chapter-17-binary-options-european-style.html"><span class="nav-tag">第17章</span><span class="nav-name">欧式二元期权</span></a></li>
+<li><a href="chapter-18-binary-options-american-style.html"><span class="nav-tag">第18章</span><span class="nav-name">美式二元期权</span></a></li>
+<li><a href="chapter-19-barrier-options-i.html"><span class="nav-tag">第19章</span><span class="nav-name">障碍期权</span></a></li>
+<li><a href="chapter-20-barrier-options-ii.html"><span class="nav-tag">第20章</span><span class="nav-name">障碍期权</span></a></li>
+<li><a href="chapter-21-compound-choosers-and-higher-order-options.html"><span class="nav-tag">第21章</span><span class="nav-name">复合期权、选择者期权与高阶期权</span></a></li>
+<li><a href="chapter-22-multiasset-options.html"><span class="nav-tag">第22章</span><span class="nav-name">多资产期权</span></a></li>
+<li><a href="chapter-23-minor-exotics-lookback-and-asian-options.html"><span class="nav-tag">第23章</span><span class="nav-name">次要奇异期权——回望与亚式期权</span></a></li></ul></div><div class="nav-section"><h3 class="nav-section-title">附录模块</h3><ul><li><a href="module-a-brownian-motion-on-a-spreadsheet.html"><span class="nav-tag">模块 A</span><span class="nav-name">电子表格上的布朗运动教程</span></a></li>
+<li><a href="module-b-risk-neutrality-explained.html"><span class="nav-tag">模块 B</span><span class="nav-name">风险中性解释</span></a></li>
+<li><a href="module-c-numeraire-relativity-and-the-two-country-paradox.html"><span class="nav-tag">模块 C</span><span class="nav-name">计价单位相对性与两国悖论</span></a></li>
+<li><a href="module-d-correlation-triangles.html"><span class="nav-tag">模块 D</span><span class="nav-name">相关性三角，一个图形化案例</span></a></li>
+<li><a href="module-e-the-value-at-risk.html"><span class="nav-tag">模块 E</span><span class="nav-name">风险价值</span></a></li>
+<li><a href="module-f-probabilistic-rankings-in-arbitrage.html"><span class="nav-tag">模块 F</span><span class="nav-name">套利中的概率排序</span></a></li>
+<li><a href="module-g-option-pricing.html"><span class="nav-tag">模块 G</span><span class="nav-name">期权定价</span></a></li></ul></div>
+</aside>
+<div class="overlay" id="overlay"></div>
+<main class="content">
+<article class="note">
+<h1 id="第16章-期权交易概念-option-trading-concepts">第16章：期权交易概念（Option Trading Concepts）</h1>
+<blockquote>
+<p>Hiring a trader is like selling volatility. If he does very well or very poorly, you are out of a job. —— An old option proverb</p>
+</blockquote>
+<h2 id="导读-本章要解决的问题">导读：本章要解决的问题</h2>
+<p>这一章是全书前半部分的术语收口。Taleb 把书中各处用到的交易概念集中定义一遍：复制（replication）、动态对冲（dynamic hedging）、中性价差（neutral spreading）、波动率交易里 vega 与 gamma 的区分、软硬 delta、各阶波动率押注，最后用两个案例研究把&quot;动态对冲让一切变得路径依赖&quot;这条贯穿主线钉死。开篇那句谚语本身就是态度：雇一个交易员像卖波动率，他做得太好或太差你都要丢工作，所以这一章的落点在于怎么把风险拆清楚、对冲干净、活下去，而非追求暴富。</p>
+<p>把全章压缩成几条主线：</p>
+<ol>
+<li><strong>复制是一个谱</strong>，从静态复制（找一个不需要持续再平衡的组合去匹配头寸）到动态对冲（守住最小希腊字母敞口、持续再平衡）。中间还有 Derman 的二叉树回滚法和 Taleb 自己的递归复制法。要警惕用&quot;久期恒定&quot;的工具去静态复制&quot;有停时&quot;的工具。</li>
+<li><strong>动态对冲让每一个期权都变成路径依赖</strong>。这是本章最重要的一句断言，两个案例研究就是为了证明它。</li>
+<li><strong>中性价差是做市的核心技术</strong>：用期权对冲期权，捕捉中心极限定理（降方差、抬漂移）、隔绝定价公式的瑕疵、兑现理论 edge。</li>
+<li><strong>&quot;做多/做空波动率&quot;在风险管理上没有意义</strong>，必须把 gamma（带区间）和 vega 分开说。一阶波动率交易 vega 与 gamma 同侧、二阶波动率交易 gamma 会翻号、加权 vega 会反转。</li>
+<li><strong>路径依赖是动态对冲者的命门</strong>。同样的起点、终点、波动率，重排收益序列就能让动态对冲的盈亏天差地别；一个价外 call 的买方甚至可能亏得比权利金还多。</li>
+</ol>
+<p>笔记沿原文 复制/动态对冲/中性价差 → VEGA VERSUS GAMMA → SOFT VS HARD DELTAS → VOLATILITY BETTING → 两个案例研究的顺序展开，在每处把交易员的操作接回它的数学结构：自融资复制接鞅表示、动态对冲盈亏接 gamma-theta 关系、价差隔绝公式接 put-call parity、软 delta 接期权 delta 的渐近消失、路径依赖接离散对冲盈亏的实现方差。</p>
+<hr>
+<h2 id="一-复制-从静态到动态的一个谱">一、复制：从静态到动态的一个谱</h2>
+<p>正式地说，期权复制（option replication）指用其他工具自融资地（self-financing）复制某个期权工具支付的方法（图 16.1）。但实践中，复制是一个更宽的概念，覆盖一切通过期权完成的操作。</p>
+<p><img src="images/78a27bea8c4562c256ea6c51ce0ba174720160afd060f3cd26ed5b1b52aeddb9.jpg" alt="图 16.1 期权复制"></p>
+<p>静态复制（static replication）是一种风险管理策略，它为一个期权头寸找到一个不需要持续再平衡的匹配。静态复制有两个目的：降低这笔交易的盈亏方差、把交易成本压到最小。</p>
+<p>最简单的静态复制就是 put-call-asset 套利：把一个 call 合成成一个 put，反之亦然。这正是第 15 章 4.1 节那条 <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.7667em;vertical-align:-0.0833em;"></span><span class="mord mathnormal" style="margin-right:0.0715em;">C</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.1389em;">P</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1.0913em;vertical-align:-0.25em;"></span><span class="mord"><span class="mord mathnormal">e</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8413em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">−</span><span class="mord mathnormal mtight" style="margin-right:0.0278em;">r</span><span class="mord mathnormal mtight" style="margin-right:0.1389em;">T</span></span></span></span></span></span></span></span></span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.1389em;">F</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.0715em;">K</span><span class="mclose">)</span></span></span></span> 的应用，剥掉确定性的远期内在价值后，call 和 put 的时间价值部分可以互相合成。</p>
+<p>Taleb 在这里插了一条警告，它后面在二元和障碍期权的讨论里会反复出现：</p>
+<div class="callout callout-warning"><div class="callout-title"><span class="callout-icon">⚠</span><span class="callout-title-text">不要用恒定久期的工具去静态复制有停时的工具</span></div><div class="callout-body"><p>读者应当警惕，用具有恒定久期的工具去静态复制那些带停时（stopping time，即久期不稳定）的工具。</p>
+</div></div>
+<p>这条警告的理论根是停时。一个香草欧式期权的到期是确定的 <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.1389em;">T</span></span></span></span>；一个障碍或美式期权的有效终止时刻是一个随机停时 <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal" style="margin-right:0.1132em;">τ</span></span></span></span>（首次触障或最优行权时点）。用一组到期固定的香草去匹配一个 <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal" style="margin-right:0.1132em;">τ</span></span></span></span> 随市场漂移的工具，匹配只在当下成立，市场一动 <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal" style="margin-right:0.1132em;">τ</span></span></span></span> 的分布就变，复制立刻失配。第 15 章讲分桶时&quot;敞口在桶间游移&quot;是同一回事的另一面。</p>
+<p>还要区分分解（decomposition）与复制（replication）。很多交易需要操作者把它分解开来，作为一种价值发现方法和对冲方向的指引。比如分解能揭示偏度风险（skew risks）。但多数情况下，由分解得到的复制在实操上行不通。这个区分很实用：分解是为了&quot;看懂&quot;一笔交易由哪些风险构成，复制是为了&quot;对冲掉&quot;它，前者总能做，后者常常做不到。</p>
+<h3 id="1-1-derman-的二叉树回滚法">1.1 Derman 的二叉树回滚法</h3>
+<p>通过在二叉树上回滚风险来做静态复制（Derman's method），做法是：取证券的最终支付，围绕它构造一棵二叉树，试图在树的几乎每个节点上复制这个支付。这种方法对对冲某些障碍期权的风险有用。Taleb 说他会展示一个改造版本，在那里匹配的不只是支付，连希腊字母也一起匹配。</p>
+<h3 id="1-2-递归复制法-在每个状态上匹配希腊字母">1.2 递归复制法：在每个状态上匹配希腊字母</h3>
+<p>作者本人用得相当成功的递归期权复制法（recursive option replication），做法是为这个结构取一系列状态，找到能最小化对这些状态敞口的交易（图 16.2）。一个状态（state）定义为未来某个可能的资产价格。</p>
+<p><img src="images/740e0270459e1abb07da0403f63c4271469e2c12f417ecaf8326a3ebcb4896d9.jpg" alt="图 16.2 递归期权复制"></p>
+<p>要在每个状态上匹配的希腊字母清单如下：</p>
+<ul>
+<li>Delta</li>
+<li>修正 Gamma（Modified Gamma）</li>
+<li>修正 Vega（Modified Vega）</li>
+<li>Theta</li>
+<li>修正 Rho（Rho1、Rho2）</li>
+<li>Bleed</li>
+<li>相关性 delta（如果有）</li>
+</ul>
+<p>最好的静态对冲，是在所有节点的每个状态上都匹配住这些希腊字母的那个。它的缺陷是，操作者常常要花掉这笔交易收入的一大部分去支付买卖价差来匹配希腊字母，因为这可能需要在常常缺乏流动性的市场里做一大堆组合交易。答案往往就是动态对冲。</p>
+<p>把递归复制接回理论，它是用离散的状态网格去逼近鞅表示定理（martingale representation theorem）所保证的复制组合。理论上任何（可积的）支付都能被标的的自融资组合复制，但那个组合的权重是连续变化的；递归法把&quot;连续&quot;离散成有限个状态，在每个状态上匹配到二阶、三阶敏感度，本质是在做一个有限维的对冲投影。它做得越细、匹配的希腊字母越多，离散误差越小，但要付的买卖价差也越多。这个权衡直接把话题引向动态对冲。</p>
+<hr>
+<h2 id="二-动态对冲-守住最小敞口-持续再平衡">二、动态对冲：守住最小敞口、持续再平衡</h2>
+<p>动态对冲（dynamic hedging）意味着守住一个最小的希腊字母敞口、持续再平衡，以达到某种中性。它与静态对冲相对：静态对冲把交易看成一个带某种到期结局的组合，动态对冲则不去寻找完全中和整棵树的交易。这就是它和图 16.2 那种递归复制的区别，动态对冲者不追求把树清零。</p>
+<p>动态对冲牵涉 book 里所有的希腊字母。它从 delta 的再平衡开始（随市场移动、或随 delta 因时间 bleed 而变化）；随着 gamma 变化，它通过期权来调整 gamma、以及随之而来的时间衰减；随着市场移动，Rho1 和 Rho2 也要调整，等等。</p>
+<p>Taleb 在这里下了本章的核心断言：</p>
+<div class="callout callout-important"><div class="callout-title"><span class="callout-icon">★</span><span class="callout-title-text">动态对冲让每一个期权都变成路径依赖</span></div><div class="callout-body"><p>关于动态对冲有一点值得一提：它让每一个期权都变成路径依赖（path dependent）。</p>
+</div></div>
+<p>这句话是全章两个案例研究的论题。把它接回理论：一个欧式期权的终端支付 <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mop">max</span><span class="mopen">(</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0576em;">S</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3283em;"><span style="top:-2.55em;margin-left:-0.0576em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.1389em;">T</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.0715em;">K</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord">0</span><span class="mclose">)</span></span></span></span> 只依赖 <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0576em;">S</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3283em;"><span style="top:-2.55em;margin-left:-0.0576em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.1389em;">T</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>，理论上路径无关。但动态对冲者的盈亏对应的是另一个量，即&quot;期权 + 沿途每天再平衡的 delta 对冲&quot;的合计。离散对冲下，这个合计是</p>
+<p><span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord text"><span class="mord">P/L</span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">≈</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1.2em;vertical-align:-0.35em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.8451em;"><span style="top:-2.655em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">2</span></span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.394em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">1</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.345em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mop"><span class="mop op-symbol small-op" style="position:relative;top:0em;">∑</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.162em;"><span style="top:-2.4003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">i</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2997em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mord">Γ</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0576em;">S</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-2.4413em;margin-left:-0.0576em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2587em;"><span></span></span></span></span></span></span><span class="mord"><span class="delimsizing size1">[</span></span><span class="mopen">(</span><span class="mord">Δ</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0576em;">S</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:-0.0576em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mord">/</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0576em;">S</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:-0.0576em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mclose"><span class="mclose">)</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1.2em;vertical-align:-0.35em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0359em;">σ</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span><span class="mord">Δ</span><span class="mord mathnormal">t</span><span class="mord"><span class="delimsizing size1">]</span></span></span></span></span></p>
+<p>每一天的盈亏是&quot;当天实际平方收益减去隐含方差&quot;乘以当天的 dollar gamma。gamma 随 <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.0576em;">S</span></span></span></span> 和时间变化，所以&quot;大 move 落在 gamma 大的时候还是 gamma 小的时候&quot;会显著改变求和结果。终端 <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0576em;">S</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3283em;"><span style="top:-2.55em;margin-left:-0.0576em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.1389em;">T</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span> 相同、但路径不同，这个和就不同。于是连续时间里路径无关的欧式期权，在离散动态对冲下变成了路径依赖的盈亏。案例研究会把这个公式的后果用数字砸出来。</p>
+<hr>
+<h2 id="三-中性价差-用期权对冲期权">三、中性价差：用期权对冲期权</h2>
+<p>中性价差（neutral spreading）是一种期权交易技术，买入一定数量的期权、卖出另一批，全部行权价和到期都不同。它是动态对冲的一种形式，允许保留一些希腊字母风险，前提是这风险得到了恰当的补偿。</p>
+<p>在场内交易的行话里，spreader 是那个把&quot;红票&quot;和&quot;蓝票&quot;配起来的人（早年交易所里红票是卖单、蓝票是买单）。中性价差有不同的程度，但一般认为：只要某人买一个期权、卖另一个期权，且它们的行权价和到期足够接近，捕捉&quot;价值&quot;的能力就会大大增强。第 15 章对有偏资产的研究说明，在偏度使&quot;下行&quot;行权价与&quot;上行&quot;行权价显著不同的市场里，spreader 还需要一些额外约束。</p>
+<p>Taleb 给了一段行业史佐证：最成功的期权交易公司多半由 spreader 创立，迄今最成功的瑞士银行公司（Swiss Bank Corporation，通过它与 O'Connor and Company 的联合，后者原是芝加哥期权交易所一家成功的做市商）至今要求它的交易员有场内经验，以磨练价差技巧。价差的精微之处通常只能靠经验获得，工具之间如何&quot;联姻&quot;理论上能确定，但和多数游戏一样，只有充分实践才能让人学会把一个期权和另一个配起来。经典价差技术可以轻易延伸到奇异期权领域，许多规则是通用的，只是行权价与到期之间的&quot;距离&quot;变得更难评估。</p>
+<h3 id="3-1-价差的三个优势">3.1 价差的三个优势</h3>
+<p>Taleb 把价差作为做市技术的价值拆成三条，每条都有清晰的理论身份。</p>
+<p><strong>第一，捕捉中心极限（Capturing of Central Limit）。</strong> 做市商能降低方差（读作&quot;运气&quot;）、最大化漂移（读作&quot;技能&quot;），这个概念在第 3 章讲过。它的数学身份是大数定律与中心极限定理：单笔交易的盈亏方差大、信噪比低；把大量近似独立的小价差累加起来，方差按 <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">1/</span><span class="mord mathnormal">n</span></span></span></span> 衰减、而每笔的正期望（来自做市价差或理论 edge）线性累加，于是技能（漂移）相对运气（方差）越来越显著。这就是做市商靠&quot;多做&quot;而非&quot;做大&quot;取胜的统计基础。</p>
+<p><strong>第二，隔绝定价公式的风险（Insulation from the Risks of the Formula）。</strong> 用期权对冲期权，是规避 Black-Scholes-Merton（或其他公式）瑕疵的一个可靠办法。Taleb 的论证很干净：市场在 100，平值 100 的 put 和 call 隐含波动率都是 15.7%。无论公式和分布有什么效应，put-call parity 套利会强制同行权价同到期的 put 和 call 有相同的时间价值（因而相同的波动率）。</p>
+<p>假设 104 call 的市场波动率是 16.2，104.5 call 的市场波动率是 15.5。卖 104 call、买 104.5 call，同时调整数量以满足低剩余 gamma 和 delta 中性，看起来是个好主意。如果有人发现（许多人确实发现了）BSM 低估了价外期权，对这笔交易没有实质影响，因为两个期权都受同样影响；反过来，如果发现 BSM 高估了上行（在有偏资产里确实如此），同样如此。两个行权价足够接近，价差对公式免疫。</p>
+<p>这条的理论身份是：价差让定价误差以差分形式出现。如果定价偏差是 moneyness 的光滑函数 <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal">ϵ</span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.0715em;">K</span><span class="mclose">)</span></span></span></span>，那么相邻行权价价差承受的是 <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal">ϵ</span><span class="mopen">(</span><span class="mord">104</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal">ϵ</span><span class="mopen">(</span><span class="mord">104.5</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">≈</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1.0019em;vertical-align:-0.25em;"></span><span class="mord"><span class="mord mathnormal">ϵ</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.7519em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">′</span></span></span></span></span></span></span></span></span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.0715em;">K</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">⋅</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord">Δ</span><span class="mord mathnormal" style="margin-right:0.0715em;">K</span></span></span></span>，是误差的一阶差分而非误差本身。只要 <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord">Δ</span><span class="mord mathnormal" style="margin-right:0.0715em;">K</span></span></span></span> 小，系统性的公式偏差被大幅抵消，留下的是局部相对错价，而那正是 spreader 想捕捉的东西。</p>
+<p><strong>第三，兑现理论 edge（Realization of Theoretical Edge）。</strong> 用期权对冲期权，是对付那些困扰交易员的二阶、三阶导数的安全办法。Taleb 把中性分成三个层级：</p>
+<ul>
+<li>第一层：delta 中性（含 Rho1、Rho2）。</li>
+<li>第二层：gamma 中性。</li>
+<li>第三层：vega 中性。</li>
+</ul>
+<p>理论 edge（theoretical edge）是一个工具的交易价格与某个界定的公允价值之间的差。价差有时能锁定这种 edge，原因有两个。其一，隔绝于广泛的参数集（Insulation from the Broad Set of Parameters），CBOE 场内有个做市商把自己的存活归功于他只交易 call。其二，它是一个有效的做市装置（An Effectual Market-Making Device），期权个体通常缺乏流动性，而整体市场流动性很好，这也是活跃做市商能拿到便宜融资的原因。交易员越活跃，只要他持续在理论价值&quot;之上&quot;或&quot;之下&quot;成交，最终就越赚钱。有些做市商公司给交易员强加成交量要求逼他们活跃，在严苛的 gamma 和 theta 约束下逼他们活跃交易，以确保交易员满足某些预算要求。</p>
+<hr>
+<h2 id="四-波动率交易入门-vega-与-gamma-之别">四、波动率交易入门：vega 与 gamma 之别</h2>
+<div class="callout callout-warning"><div class="callout-title"><span class="callout-icon">⚠</span><span class="callout-title-text">风险管理规则：单说&quot;多/空波动率&quot;没有意义</span></div><div class="callout-body"><p>&quot;做多&quot;或&quot;做空&quot;波动率不携带真正的风险管理含义。必须把 gamma（带一个区间）和 vega 分别限定清楚。</p>
+</div></div>
+<p>&quot;做多和做空波动率&quot;这个说法不能被动态对冲者使用。1980 年代早期，交易员很难向睡眼惺忪的老板解释 gamma 和 vega 的区别。对单个期权来说，头寸是直截了当的，因为它对两者要么同时多、要么同时空。</p>
+<p>Taleb 讲了一个段子来点破混淆。某人 X 曾（短暂地）为一个老板工作，这老板把自己的期权交易&quot;专长&quot;归功于他曾经（意外地）在一个期权头寸上极其赚钱。X 当时做空日历价差（short calendars），被问是做多还是做空波动率。X 是做空波动率的，但他想要市场移动。老板眼里立刻浮现困惑。X 很难解释他是做多 gamma、做空 vega，在试图给老板讲期权定价理论讲到喘不过气之后，他下决心再也不为一个不会听的人工作。</p>
+<p>这个段子的理论内核是：gamma 和 vega 度量的是两种不同的波动率敞口。gamma 是对<strong>已实现波动率</strong>（realized volatility，市场真的动了多少）的敞口，它从动态对冲的 <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.0641em;vertical-align:-0.25em;"></span><span class="mord">Γ</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0576em;">S</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span><span class="mopen">[(</span><span class="mord">Δ</span><span class="mord mathnormal" style="margin-right:0.0576em;">S</span><span class="mord">/</span><span class="mord mathnormal" style="margin-right:0.0576em;">S</span><span class="mclose"><span class="mclose">)</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1.0641em;vertical-align:-0.25em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0359em;">σ</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span><span class="mord">Δ</span><span class="mord mathnormal">t</span><span class="mclose">]</span></span></span></span> 项里赚钱；vega 是对<strong>隐含波动率</strong>（implied volatility，市场给期权定价用的 <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal" style="margin-right:0.0359em;">σ</span></span></span></span>）的敞口。做空日历价差的人，卖近月、买远月，近月 gamma 大，所以净头寸做多 gamma（想要市场动起来兑现近月的高 gamma），同时因为远月 vega 大、近月 vega 小，净头寸做空 vega（怕隐含波动率上升抬高远月）。&quot;想要市场动、又怕隐含波动率涨&quot;这两件事在单一的&quot;多/空波动率&quot;语言里无法表达，必须拆成 gamma 和 vega。</p>
+<h3 id="4-1-option-wizard-期权策略的基本形态">4.1 Option Wizard：期权策略的基本形态</h3>
+<p>Taleb 给了一张按&quot;产品复杂度 × 交易复杂度&quot;分类的策略清单，它本身就是后续章节的目录。</p>
+<p>简单交易 + 简单产品：跨式（straddle）、宽跨式（strangle）、蝶式（butterfly）、波动率押注。</p>
+<p>复杂交易 + 简单产品：做多尖峰态（leptokurtosis，四阶矩押注）、玩波动率期限结构、日历/对角价差、做多 vega 凸性、做多 Eurodollar 的&quot;阻尼&quot;效应、分布套利（偏度交易）。</p>
+<p>简单交易 + 复杂产品：用障碍期权玩方差比（variance ratio）、bet 与反射障碍。</p>
+<p>复杂交易 + 复杂产品：通过或然权利金期权（contingent premium options）做分布套利、用障碍玩二阶收敛（套利曲线斜率）、用 reverse knock-out 凸性对冲 ramp 期权、用 bet 与复合期权的组合套利分布的高阶矩。</p>
+<p>这张表的组织逻辑值得记住：交易复杂度（单边多空 vs 多空混合）和产品复杂度（香草 vs 奇异）是两个独立维度。它和第 15 章高阶矩的讨论接得上，三阶矩押注、四阶矩押注都被安排进了&quot;复杂交易&quot;那两栏。</p>
+<h3 id="4-2-gamma-要带区间-日历价差的翻号-gamma">4.2 gamma 要带区间：日历价差的翻号 gamma</h3>
+<p>在一个两期权 book 里，用如下结构（表 16.1）：期权 A 是短期平值期权，期权 B 是中期平值期权。</p>
+<div class="callout callout-warning"><div class="callout-title"><span class="callout-icon">⚠</span><span class="callout-title-text">风险管理规则：多/空 gamma 必须带区间限定</span></div><div class="callout-body"><p>做多或做空 gamma 必须用一个区间来限定（如第 8 章所示）。交易员需要说清他是持续做多 gamma、做多 up-gamma、做多 down-gamma，还是 gamma 在某处翻号。</p>
+</div></div>
+<p>日历价差（calendar spread）的 gamma 会在远离平值处反转。原因是，日历的卖方只能指望从日历上赚一笔有限的钱（一般就是平值日历的那点权利金贷方）。一个想押注两翼的操作者有几个选择：要么用价外期权对冲平值期权，要么更简单地玩日历。通过给时间价差施加一个比例（ratio），操作者可以让 gamma 在平值附近保持中性到轻微做空，但在两翼迅速变得非常正。</p>
+<p>这把&quot;gamma 是一条沿标的的曲线、而非一个标量&quot;讲清了。日历价差近月 A 的 gamma 集中在平值附近的窄区、远月 B 的 gamma 摊在更宽的区间。卖近月买远月时，平值附近被近月的高 gamma 主导（净空 gamma），两翼则被远月的 gamma 主导（净多 gamma），于是 gamma 沿标的翻号。这正是第 8 章 shadow gamma 强调的&quot;gamma 随标的位置变化&quot;的一个具体形态，也解释了为什么 Taleb 坚持 gamma 必须带区间说。</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Long Vega</th>
+<th>Short Vega</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Long Gamma</td>
+<td>Long A, Long B</td>
+<td>Long A, Short B</td>
+</tr>
+<tr>
+<td>Short Gamma</td>
+<td>Short A, Long B</td>
+<td>Short A, Short B</td>
+</tr>
+</tbody>
+</table>
+<p>（表 16.1 波动率规则。本框架不用权重；期权 B 比期权 A 到期更长。四个象限对应 gamma×vega 的四种组合，对角线上的 Long A/Short B 与 Short A/Long B 就是日历价差的两个方向。）</p>
+<hr>
+<h2 id="五-软-delta-与硬-delta">五、软 delta 与硬 delta</h2>
+<p>软 delta 执行（soft delta execution）是通过一个期权完成的 delta 对冲，因而它会渐近地（随资产价格）消失。硬 delta（hard delta）在标的移动到极限时不会消失。</p>
+<p>软 delta 一般用来覆盖二级 delta（即市场移动产生的 delta），这种 delta 用硬 delta 去对冲会在极端处加大风险。</p>
+<p>把定义接到理论：硬 delta 是现货或期货头寸，它的 delta 恒为 <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.7278em;vertical-align:-0.0833em;"></span><span class="mord">±</span><span class="mord">1</span></span></span></span>、与 <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.0576em;">S</span></span></span></span> 无关，所以无论市场走多远它都不消失。软 delta 是一个期权头寸，它的 delta 是 <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.109em;">N</span><span class="mopen">(</span><span class="mord"><span class="mord mathnormal">d</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">1</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mclose">)</span></span></span></span> 这类随 <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.0576em;">S</span></span></span></span> 渐近到 0 或 1 的函数，且它自带 gamma。用软 delta 对冲，等于在调整 delta 的同时修改了头寸的 gamma 形态；用硬 delta 对冲只动 delta、不动 gamma。当你的负 gamma 已经在两翼很危险时，这个区别是生死攸关的。</p>
+<h3 id="5-1-算例-用软-delta-稳住翻号-gamma-的头寸">5.1 算例：用软 delta 稳住翻号 gamma 的头寸</h3>
+<p>交易员账上有这样一个头寸：做多平值期权、做空更大数量的价外 call。</p>
+<table>
+<thead>
+<tr>
+<th>Asset</th>
+<th style="text-align:right">100</th>
+<th style="text-align:right">102</th>
+<th style="text-align:right">104</th>
+<th style="text-align:right">106</th>
+<th style="text-align:right">108</th>
+<th style="text-align:right">110</th>
+<th style="text-align:right">112</th>
+<th style="text-align:right">114</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Delta</td>
+<td style="text-align:right">0</td>
+<td style="text-align:right">10</td>
+<td style="text-align:right">15</td>
+<td style="text-align:right">17</td>
+<td style="text-align:right">15</td>
+<td style="text-align:right">12</td>
+<td style="text-align:right">-10</td>
+<td style="text-align:right">-50</td>
+</tr>
+<tr>
+<td>Gamma</td>
+<td style="text-align:right">Long</td>
+<td style="text-align:right">Long</td>
+<td style="text-align:right">Long</td>
+<td style="text-align:right">Square</td>
+<td style="text-align:right">Short</td>
+<td style="text-align:right">Short</td>
+<td style="text-align:right">Very Short</td>
+<td style="text-align:right">Very Short</td>
+</tr>
+</tbody>
+</table>
+<p>在 106，交易员有一些来自多头 delta 的利润。如果卖硬 delta，他的负 gamma 在尾部会变得更糟：</p>
+<table>
+<thead>
+<tr>
+<th>Asset</th>
+<th style="text-align:right">100</th>
+<th style="text-align:right">102</th>
+<th style="text-align:right">104</th>
+<th style="text-align:right">106</th>
+<th style="text-align:right">108</th>
+<th style="text-align:right">110</th>
+<th style="text-align:right">112</th>
+<th style="text-align:right">114</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Delta</td>
+<td style="text-align:right">-17</td>
+<td style="text-align:right">-7</td>
+<td style="text-align:right">-2</td>
+<td style="text-align:right">0</td>
+<td style="text-align:right">-2</td>
+<td style="text-align:right">-5</td>
+<td style="text-align:right">-27</td>
+<td style="text-align:right">-67</td>
+</tr>
+</tbody>
+</table>
+<p>注意这一行：在 106 卖掉 17 个硬 delta 把当前 delta 归零，但代价是把整条 delta 曲线向下平移，于是 100（-17）和 114（-67）两端的 delta 都更负了，头寸在尾部更危险。这正是&quot;硬 delta 不消失&quot;的恶果，它在极端处依然满负荷做空。</p>
+<p>如果改为通过期权卖 delta，比如买一个 put 或一个 put 价差，则可以达到：</p>
+<table>
+<thead>
+<tr>
+<th>Asset</th>
+<th style="text-align:right">100</th>
+<th style="text-align:right">102</th>
+<th style="text-align:right">104</th>
+<th style="text-align:right">106</th>
+<th style="text-align:right">108</th>
+<th style="text-align:right">110</th>
+<th style="text-align:right">112</th>
+<th style="text-align:right">114</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Delta</td>
+<td style="text-align:right">-2</td>
+<td style="text-align:right">-1</td>
+<td style="text-align:right">-8</td>
+<td style="text-align:right">0</td>
+<td style="text-align:right">2</td>
+<td style="text-align:right">0</td>
+<td style="text-align:right">-10</td>
+<td style="text-align:right">-50</td>
+</tr>
+</tbody>
+</table>
+<p>对比这一行和上一行：106 处同样把 delta 调到 0，但两端温和得多（100 处从 -17 变 -2，114 处从 -67 变 -50），因为 put 的 delta 在市场远离时自己消失了。软 delta 只在需要的中段起作用、在极端处退场，所以没有恶化尾部。</p>
+<p>有时卖 delta 的最好办法是移动行权价（即把 gamma 的中心挪到接近做空区）。最初，多头 gamma 的团块聚在 100 附近、空头 gamma 聚在 112 附近。这轮上涨应该给交易员机会把中心从 100 挪到 106，从而稳住头寸。这种情形下最好的对冲是软 delta（买 106 区的期权）加上卖 100 区的期权。如果上涨继续，下一步是重复这个操作，把多头挪进 112 区。</p>
+<div class="callout callout-important"><div class="callout-title"><span class="callout-icon">★</span><span class="callout-title-text">再平衡前必做的测试：gamma 会不会翻号</span></div><div class="callout-body"><p>在再平衡期权头寸时，交易员需要做这个测试：gamma 会翻向另一边吗？如果多头 gamma 翻成负 gamma，卖&quot;硬&quot;delta（现货或期货）会非常危险，因为盈亏会在矩阵的尾部变得更糟。</p>
+</div></div>
+<p>这条建议是 5.1 节算例的规则化总结。它的理论含义是：硬 delta 对冲假设头寸的 gamma 在对冲后保持稳定，但当 gamma 沿标的翻号时，这个假设破裂，平移整条 delta 曲线会在 gamma 为负的区域放大损失。软 delta 因为自带 gamma 且渐近消失，能在调 delta 的同时修补 gamma 形态，这是负 gamma 头寸在趋势市里自保的关键手法。</p>
+<hr>
+<h2 id="六-波动率押注-一阶-二阶与高阶矩">六、波动率押注：一阶、二阶与高阶矩</h2>
+<p>这一节的交易可以涉及不止一个期权，所考虑的全部是香草期权。</p>
+<h3 id="6-1-一阶波动率交易">6.1 一阶波动率交易</h3>
+<p>用香草期权的一阶波动率交易（first-order volatility trade）满足下面的条件：</p>
+<ul>
+<li>它单调地做多或做空波动率，尽管 gamma 不必恒定。</li>
+<li>它的 vega 和 gamma 在市场的同一侧。</li>
+<li>它意图保持 delta 中性。</li>
+</ul>
+<p>这些特征适用于简单期权交易：做多跨式、做多宽跨式等等。任何&quot;所有期权同为多头或同为空头&quot;的交易形式都满足这些规则（表 16.1）。一阶波动率交易的优势是易于处理、盈亏容易预测（图 16.3），它们是复杂度较小的头寸。</p>
+<p><img src="images/6dd777c609f0b86baf24aa95c53d98978327f23a3440cc6a06a853ffd0ea056c.jpg" alt="图 16.3 一阶波动率交易"></p>
+<p>&quot;vega 与 gamma 同侧&quot;是一阶交易的定义性特征，也是它易于预测的根源。所有期权同向（全多或全空）时，已实现波动率敞口（gamma）和隐含波动率敞口（vega）方向一致，盈亏对&quot;波动率&quot;这一个因子单调，不会出现自相矛盾的对冲需求。对应表 16.1，一阶交易就是左上角（Long A, Long B）和右下角（Short A, Short B）那两格。</p>
+<h3 id="6-2-二阶波动率交易">6.2 二阶波动率交易</h3>
+<p>二阶波动率交易（second-order volatility trade）是一个包含不同行权价或不同到期的多头和空头期权、但限定在一个产品之内的交易。它的特征是：</p>
+<ul>
+<li>gamma 在图上总会从正翻到负。</li>
+<li>它的原始 vega（raw vega）可以在某处变号（这不是必要条件）。</li>
+<li>它的加权 vega（weighted vega）总会在图上某处反转。</li>
+<li>由于复杂，二维图形表示往往变得无关紧要、揭示力很弱。</li>
+</ul>
+<p>一个一比一的 call 价差，比如等量买 102 call、卖 106 call，当市场在 100 时表现得像单个 call。但如果市场涨到 104，它就会有&quot;零 gamma、正 down-gamma、负 up-gamma&quot;的特征，这正是一个 risk reversal 的特征。一个比例价差（ratio spread），操作者买 102 call、卖两倍的 106 call，则呈现相反的特征。</p>
+<p>二阶交易的&quot;gamma 必然翻号、加权 vega 必然反转&quot;把它和一阶清晰区分开。多空混合的期权组合，敞口随标的位置和时间在多空波动率之间切换，所以单一的&quot;多/空波动率&quot;标签彻底失效，二维快照也难以表达（呼应第 14 章地形图对路径依赖工具的局限）。表 16.1 的另外两格（Long A/Short B、Short A/Long B，即日历价差）就是二阶交易的代表。</p>
+<h3 id="6-3-高阶矩押注">6.3 高阶矩押注</h3>
+<p>三阶矩押注（third moment bet）是一种分布套利，押注某个市场的波动率与资产价格之间的相关性。四阶矩押注（fourth moment bet）是做多或做空波动率的波动，可以用价外期权或用日历来实现。</p>
+<p>这两句把第 15 章的统计语言接到了交易上。三阶矩押注就是押偏度，即押&quot;价-波相关&quot;（第 15 章 3.1 节那条偏度=移动与其波动的相关）；四阶矩押注就是押 vvol，即押峰度（第 15 章 2.1 节）。Taleb 给的两个实现工具各有道理：价外期权直接吃 volga（对 vvol 凸），日历价差则通过近远月波动率的相对变化吃 vvol。</p>
+<p>举例：一个比例&quot;反向价差&quot;（ratio backspread / reverse spread）是大量买入价外期权、卖出较小数量平值期权的方法，但要确保交易满足&quot;贷方规则&quot;（credit rule，即交易初始产生正现金流）。当用价内期权时，贷方规则更难解释，那时应当用 put-call parity 规则扣掉每个期权内在部分的现值，把它们等同于价外期权。</p>
+<p><img src="images/9835758a8c7439a4fb1d9f570400ea5ec3fa5ab2cc24fa1c2dd9cd83865a966a.jpg" alt="图 16.4 交易两翼，第一种方法"></p>
+<p>图 16.4 的交易通过买入价外 put 和价外 call、卖出较小数量同到期的平值跨式完成。</p>
+<p><img src="images/5e2c3c97fc30e2af46ab1988c74797cf38874db625e9509b39cd34c576468328.jpg" alt="图 16.5 交易两翼，第二种方法"></p>
+<p>图 16.5 展示第二种方法，买入某个数量的 60 天期权、卖出 80% 数量的 20 天期权。两种交易都显示头寸从肥尾和高峰中获益，但它们有不同的 vega 敏感度，且修正 vega 接近平。</p>
+<p>&quot;贷方规则&quot;值得记一笔：它要求押注肥尾的结构在建仓时净收钱。这等于要求你做多的凸性（价外期权、肥尾敞口）是被对手&quot;倒贴&quot;给你的，这样即便市场什么都不发生，时间衰减也大致被卖出的平值期权权利金覆盖。它把第 15 章&quot;彩票效应长期利好买方&quot;那条观察操作化了：以贷方建仓的肥尾多头，是在被付钱持有凸性。</p>
+<hr>
+<h2 id="七-案例研究一-一个常规期权的路径依赖">七、案例研究一：一个常规期权的路径依赖</h2>
+<p>下面的案例说明期权复制能在多大程度上路径依赖。</p>
+<p>这个案例用一串收益（包括起始价、终止价及其波动率）。有了这些数字，就能在保持起始价、终止价、波动率不变的前提下，重排出大量不同的序列。Taleb 给了构造价格路径的算法：取一串百分比收益，比如 1%、5%、-1%、-5%，证券从 100 起，下一价是 <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">100</span><span class="mopen">(</span><span class="mord">1</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">.01</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">101</span></span></span></span>，再下一价 <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.7278em;vertical-align:-0.0833em;"></span><span class="mord">101</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord">1</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">.05</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">106.05</span></span></span></span>，再 <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.7278em;vertical-align:-0.0833em;"></span><span class="mord">106.05</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord">1</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">.01</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">104.99</span></span></span></span>，再 <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.7278em;vertical-align:-0.0833em;"></span><span class="mord">104.99</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord">1</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">.05</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">99.74</span></span></span></span>（终值）。价格序列是 100, 101, 106.05, 104.99, 99.74。把收益重排成 5%、-5%、-1%、1%，价格序列就变成 100, 105, 99.75, 98.75, 99.74，一条很不同的路径。</p>
+<p>在例子里，目标是复制 252 个交易日：取一个 15.6% 波动率的任意分布（每个工作日平均移动 1%），重排成 106 条不同路径。所有价格都从 100 起、在 98.6 结束。</p>
+<p><img src="images/bb6deb922a76ceecbb6111ea62ba80782f5270edad5e60e827087b3b757b1161.jpg" alt="图 16.6 同样波动率、同样最终收益的八条路径"></p>
+<p>图 16.6 显示八条样本路径，说明可能产生的路径差异：一条路径的最高点是 127，另一条只有 105。又一次反直觉的是，两者有相同的均值和相同的波动率。事实上，有些重排结果的年内区间是 10%，另一些是 60%。图里为清晰起见只画了分析中用到的八条。</p>
+<p>交易员买 1000 万一年期、行权价 100 的欧式 call，每日再平衡 delta。欧式期权号称路径无关，因此对它们只有最终结果重要。表 16.2 显示一个策略的盈亏：在恰好 15.6% 买波动率、无交易成本、每日收盘对冲。</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:right">P/L</th>
+<th style="text-align:right">Freq</th>
+<th style="text-align:right">P/L</th>
+<th style="text-align:right">Freq</th>
+<th style="text-align:right">P/L</th>
+<th style="text-align:right">Freq</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right">-72000</td>
+<td style="text-align:right">1</td>
+<td style="text-align:right">-20000</td>
+<td style="text-align:right">1</td>
+<td style="text-align:right">32000</td>
+<td style="text-align:right">6</td>
+</tr>
+<tr>
+<td style="text-align:right">-64000</td>
+<td style="text-align:right">1</td>
+<td style="text-align:right">-16000</td>
+<td style="text-align:right">12</td>
+<td style="text-align:right">36000</td>
+<td style="text-align:right">4</td>
+</tr>
+<tr>
+<td style="text-align:right">-44000</td>
+<td style="text-align:right">1</td>
+<td style="text-align:right">-12000</td>
+<td style="text-align:right">13</td>
+<td style="text-align:right">40000</td>
+<td style="text-align:right">4</td>
+</tr>
+<tr>
+<td style="text-align:right">-36000</td>
+<td style="text-align:right">1</td>
+<td style="text-align:right">-8000</td>
+<td style="text-align:right">4</td>
+<td style="text-align:right">44000</td>
+<td style="text-align:right">4</td>
+</tr>
+<tr>
+<td style="text-align:right">-32000</td>
+<td style="text-align:right">1</td>
+<td style="text-align:right">-4000</td>
+<td style="text-align:right">2</td>
+<td style="text-align:right">48000</td>
+<td style="text-align:right">3</td>
+</tr>
+<tr>
+<td style="text-align:right">-28000</td>
+<td style="text-align:right">2</td>
+<td style="text-align:right">0</td>
+<td style="text-align:right">6</td>
+<td style="text-align:right">52000</td>
+<td style="text-align:right">1</td>
+</tr>
+<tr>
+<td style="text-align:right">-24000</td>
+<td style="text-align:right">1</td>
+<td style="text-align:right">4000</td>
+<td style="text-align:right">5</td>
+<td style="text-align:right">56000</td>
+<td style="text-align:right">1</td>
+</tr>
+<tr>
+<td style="text-align:right"></td>
+<td style="text-align:right"></td>
+<td style="text-align:right">8000</td>
+<td style="text-align:right">7</td>
+<td style="text-align:right">68000</td>
+<td style="text-align:right">2</td>
+</tr>
+<tr>
+<td style="text-align:right"></td>
+<td style="text-align:right"></td>
+<td style="text-align:right">12000</td>
+<td style="text-align:right">2</td>
+<td style="text-align:right">72000+</td>
+<td style="text-align:right">1</td>
+</tr>
+<tr>
+<td style="text-align:right"></td>
+<td style="text-align:right"></td>
+<td style="text-align:right">16000</td>
+<td style="text-align:right">6</td>
+<td style="text-align:right"></td>
+<td style="text-align:right"></td>
+</tr>
+<tr>
+<td style="text-align:right"></td>
+<td style="text-align:right"></td>
+<td style="text-align:right">20000</td>
+<td style="text-align:right">5</td>
+<td style="text-align:right"></td>
+<td style="text-align:right"></td>
+</tr>
+<tr>
+<td style="text-align:right"></td>
+<td style="text-align:right"></td>
+<td style="text-align:right">24000</td>
+<td style="text-align:right">7</td>
+<td style="text-align:right"></td>
+<td style="text-align:right"></td>
+</tr>
+<tr>
+<td style="text-align:right"></td>
+<td style="text-align:right"></td>
+<td style="text-align:right">28000</td>
+<td style="text-align:right">2</td>
+<td style="text-align:right"></td>
+<td style="text-align:right"></td>
+</tr>
+</tbody>
+</table>
+<p>（表 16.2 动态对冲的结果，共 106 条路径。摘取自原表，盈亏从 -72000 到 72000+ 散布。）</p>
+<p>这个结果的要害在于：106 条路径有完全相同的起点、终点、波动率，因此完全相同的欧式期权终端支付，但动态对冲的盈亏却从亏 7.2 万散布到赚 7 万以上。理论上欧式期权路径无关，可一旦每日离散对冲，盈亏就由 <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.1901em;vertical-align:-0.345em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.8451em;"><span style="top:-2.655em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">2</span></span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.394em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">1</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.345em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mop"><span class="mop op-symbol small-op" style="position:relative;top:0em;">∑</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.162em;"><span style="top:-2.4003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2997em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mord">Γ</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0576em;">S</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-2.4413em;margin-left:-0.0576em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2587em;"><span></span></span></span></span></span></span><span class="mopen">[(</span><span class="mord">Δ</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0576em;">S</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:-0.0576em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mord">/</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0576em;">S</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:-0.0576em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mclose"><span class="mclose">)</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1.0641em;vertical-align:-0.25em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0359em;">σ</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span><span class="mord">Δ</span><span class="mord mathnormal">t</span><span class="mclose">]</span></span></span></span> 决定，大 move 落在 gamma 高的时段（接近行权价）还是 gamma 低的时段（远离行权价），结果天差地别。这就是&quot;动态对冲让欧式期权变路径依赖&quot;的数值证据。</p>
+<p>Taleb 讲了一个测验：他把这个问题抛给三类人，初级交易员、有经验的交易员、交易主管。多数初级交易员和交易主管复述培训材料里的话，说波动率就是波动率、事件次序无关紧要；有经验的交易员则解释我们面对的是离散而非连续时间世界，会有一个随交易频率变化的方差。有趣的结果是：所有有经验的交易员答对了，所有交易主管答错了。金融界至今大体没意识到动态对冲对风险的糟糕跟踪。多数有经验的交易员解释，当做多 gamma 时，最好让大 move 发生在 gamma 最大的时候、小 move 发生在市场离行权价最远的时候。</p>
+<hr>
+<h2 id="八-案例研究二-极端路径依赖与-最坏情形">八、案例研究二：极端路径依赖与&quot;最坏情形&quot;</h2>
+<h3 id="8-1-一个-risk-reversal-的惊人盈亏散布">8.1 一个 risk reversal 的惊人盈亏散布</h3>
+<p>前一个例子是单调做多 gamma 的简单头寸。下一个头寸初始接近 gamma 平、却呈现混合特征。表 16.3 表示这样一个 risk reversal：做多 1 亿的 90 call、做空 1 亿的 110 call、delta 中性，delta 同样每日再平衡。结果相当令人不安。</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:right">P/L</th>
+<th style="text-align:right">Freq</th>
+<th style="text-align:right">P/L</th>
+<th style="text-align:right">Freq</th>
+<th style="text-align:right">P/L</th>
+<th style="text-align:right">Freq</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right">-600,000</td>
+<td style="text-align:right">2</td>
+<td style="text-align:right">-150,000</td>
+<td style="text-align:right">8</td>
+<td style="text-align:right">300,000</td>
+<td style="text-align:right">7</td>
+</tr>
+<tr>
+<td style="text-align:right">-450,000</td>
+<td style="text-align:right">1</td>
+<td style="text-align:right">-100,000</td>
+<td style="text-align:right">5</td>
+<td style="text-align:right">350,000</td>
+<td style="text-align:right">7</td>
+</tr>
+<tr>
+<td style="text-align:right">-400,000</td>
+<td style="text-align:right">2</td>
+<td style="text-align:right">-50,000</td>
+<td style="text-align:right">11</td>
+<td style="text-align:right">500,000</td>
+<td style="text-align:right">1</td>
+</tr>
+<tr>
+<td style="text-align:right">-300,000</td>
+<td style="text-align:right">4</td>
+<td style="text-align:right">0</td>
+<td style="text-align:right">8</td>
+<td style="text-align:right">550,000</td>
+<td style="text-align:right">1</td>
+</tr>
+<tr>
+<td style="text-align:right">-250,000</td>
+<td style="text-align:right">4</td>
+<td style="text-align:right">50,000</td>
+<td style="text-align:right">9</td>
+<td style="text-align:right">650,000</td>
+<td style="text-align:right">2</td>
+</tr>
+<tr>
+<td style="text-align:right">-200,000</td>
+<td style="text-align:right">3</td>
+<td style="text-align:right">100,000</td>
+<td style="text-align:right">6</td>
+<td style="text-align:right"></td>
+<td style="text-align:right"></td>
+</tr>
+<tr>
+<td style="text-align:right"></td>
+<td style="text-align:right"></td>
+<td style="text-align:right">150,000</td>
+<td style="text-align:right">9</td>
+<td style="text-align:right"></td>
+<td style="text-align:right"></td>
+</tr>
+<tr>
+<td style="text-align:right"></td>
+<td style="text-align:right"></td>
+<td style="text-align:right">200,000</td>
+<td style="text-align:right">7</td>
+<td style="text-align:right"></td>
+<td style="text-align:right"></td>
+</tr>
+<tr>
+<td style="text-align:right"></td>
+<td style="text-align:right"></td>
+<td style="text-align:right">250,000</td>
+<td style="text-align:right">9</td>
+<td style="text-align:right"></td>
+<td style="text-align:right"></td>
+</tr>
+</tbody>
+</table>
+<p>（表 16.3 极端路径依赖：一个 risk reversal。盈亏从亏 60 万散布到赚 65 万。）</p>
+<p>造成这种盈亏的分布没有偏度：一般而言下行波动率和上行波动率没有区别，也没有市场波动率与标的水平之间的相关。简言之，一个干净的、极其理论化的分布。即便如此，盈亏散布从亏 60 万到赚 65 万，比表 16.2 那个单调做多 gamma 的例子宽了一个数量级。原因是 risk reversal 的 gamma 沿标的翻号（90 一侧多 gamma、110 一侧空 gamma），路径走哪一侧、在哪一侧停留多久，决定了你主要在赚 gamma 还是亏 gamma。这就是 6.2 节&quot;二阶交易 gamma 必然翻号&quot;在盈亏上的代价。</p>
+<p>由此引出一个权衡：减少路径依赖的唯一办法是提高交易频率，而提高交易频率会抬高交易成本。这个影响还会被复合，因为负 gamma 交易员承受的此类成本比正 gamma 交易员更高（负 gamma 者越动越亏 gamma-theta，越要追着市场砍单）。</p>
+<p>许多交易室主管低估路径的影响，会发表诸如&quot;总的来说，长期我终会捕获市场里的 edge&quot;这类评论。他们多数不知道下面这条规则：</p>
+<div class="callout callout-important"><div class="callout-title"><span class="callout-icon">★</span><span class="callout-title-text">期权的盈亏方差通常被低估</span></div><div class="callout-body"><p>在期权里，盈亏方差通常被低估，需要更多的分散化。而分散化的一条规则，即跨时间分散，由于杠杆、以及交易员被一个非统计学的人持续盯着这一事实，并不能正常奏效。况且，一个交易员的职业生涯太短，不足以做充分的时间分散。</p>
+</div></div>
+<p>这条规则的理论身份是：动态对冲盈亏的实现方差远大于&quot;长期均值收敛&quot;的直觉。每条路径的盈亏是 dollar gamma 加权的方差误差之和，方差很大；靠&quot;长期&quot;把它平掉需要大量独立样本，而单个交易员一生经历的独立周期太少，且杠杆和止损制度会在样本积累够之前就把他淘汰。这是对&quot;长期总会赚回来&quot;这种朴素大数定律信仰的直接反驳。</p>
+<p>Taleb 补充，真实市场里结果肯定更糟，原因有四：其一，空 gamma 时交易员通常用止损对冲，增加成本、提高被反复打脸（whipsaw）的概率；其二，多数市场都有某种偏度；其三，交易员的盈亏有某种吸收障碍（absorbing barrier），106 条路径里很多在中途的亏损就超过了最终最坏的 60 万，若在亏 30 万就叫停交易员，负结果的路径会多得多；其四，可能让上述价差最宽的因素是隐含波动率，这里假设交易只用资产调整、不用期权调整，若看每条路径的盈亏、分析盈亏波动率，有些路径相当吓人。</p>
+<p>第三条&quot;吸收障碍&quot;尤其重要：它把统计上的&quot;最终盈亏分布&quot;和现实里的&quot;中途会不会被止损/被开除&quot;分开了。表 16.3 的终端最坏是亏 60 万，但路径中途的浮亏峰值更深，一个有止损线的交易员根本活不到看见终值。这呼应第 14 章障碍支付地形图的母题，真正的风险是路径中途的极值，而非终点。</p>
+<h3 id="8-2-表-16-4-讨厌的路径-趋势如何吃掉动态对冲者">8.2 表 16.4 &quot;讨厌的路径&quot;：趋势如何吃掉动态对冲者</h3>
+<table>
+<thead>
+<tr>
+<th style="text-align:right">Days</th>
+<th style="text-align:right">Asset</th>
+<th style="text-align:right">Opt Price</th>
+<th style="text-align:right">Opt Delta</th>
+<th style="text-align:right">P/L Opt</th>
+<th style="text-align:right">P/L Fut</th>
+<th style="text-align:right">Cum P/L(千)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right">30</td>
+<td style="text-align:right">100.00</td>
+<td style="text-align:right">0.02</td>
+<td style="text-align:right">26</td>
+<td style="text-align:right"></td>
+<td style="text-align:right"></td>
+<td style="text-align:right"></td>
+</tr>
+<tr>
+<td style="text-align:right">25</td>
+<td style="text-align:right">100.65</td>
+<td style="text-align:right">0.03</td>
+<td style="text-align:right">38</td>
+<td style="text-align:right">2.5</td>
+<td style="text-align:right">-5</td>
+<td style="text-align:right">-11.6</td>
+</tr>
+<tr>
+<td style="text-align:right">20</td>
+<td style="text-align:right">101.30</td>
+<td style="text-align:right">0.04</td>
+<td style="text-align:right">55</td>
+<td style="text-align:right">2.5</td>
+<td style="text-align:right">-7</td>
+<td style="text-align:right">-29.3</td>
+</tr>
+<tr>
+<td style="text-align:right">15</td>
+<td style="text-align:right">101.95</td>
+<td style="text-align:right">0.05</td>
+<td style="text-align:right">81</td>
+<td style="text-align:right">3.2</td>
+<td style="text-align:right">-10</td>
+<td style="text-align:right">-56.7</td>
+</tr>
+<tr>
+<td style="text-align:right">10</td>
+<td style="text-align:right">102.60</td>
+<td style="text-align:right">0.07</td>
+<td style="text-align:right">122</td>
+<td style="text-align:right">3.8</td>
+<td style="text-align:right">-15</td>
+<td style="text-align:right">-101.1</td>
+</tr>
+<tr>
+<td style="text-align:right">5</td>
+<td style="text-align:right">103.25</td>
+<td style="text-align:right">0.09</td>
+<td style="text-align:right">190</td>
+<td style="text-align:right">2.3</td>
+<td style="text-align:right">-22</td>
+<td style="text-align:right">-179.7</td>
+</tr>
+<tr>
+<td style="text-align:right">4</td>
+<td style="text-align:right">103.38</td>
+<td style="text-align:right">0.09</td>
+<td style="text-align:right">208</td>
+<td style="text-align:right">0.9</td>
+<td style="text-align:right">-25</td>
+<td style="text-align:right">-203.5</td>
+</tr>
+<tr>
+<td style="text-align:right">3</td>
+<td style="text-align:right">103.51</td>
+<td style="text-align:right">0.09</td>
+<td style="text-align:right">229</td>
+<td style="text-align:right">-1.6</td>
+<td style="text-align:right">-27</td>
+<td style="text-align:right">-232.1</td>
+</tr>
+<tr>
+<td style="text-align:right">2</td>
+<td style="text-align:right">103.64</td>
+<td style="text-align:right">0.08</td>
+<td style="text-align:right">253</td>
+<td style="text-align:right">-6.3</td>
+<td style="text-align:right">-30</td>
+<td style="text-align:right">-268.2</td>
+</tr>
+<tr>
+<td style="text-align:right">1</td>
+<td style="text-align:right">103.77</td>
+<td style="text-align:right">0.06</td>
+<td style="text-align:right">273</td>
+<td style="text-align:right">-17.2</td>
+<td style="text-align:right">-33</td>
+<td style="text-align:right">-318.2</td>
+</tr>
+<tr>
+<td style="text-align:right">0</td>
+<td style="text-align:right">103.98</td>
+<td style="text-align:right">0.00</td>
+<td style="text-align:right">0</td>
+<td style="text-align:right">-63.8</td>
+<td style="text-align:right">-57</td>
+<td style="text-align:right">-439.4</td>
+</tr>
+</tbody>
+</table>
+<p>（表 16.4 讨厌的路径。摘取自原表 30 天逐日记录，完整表逐日列出。）</p>
+<p>这张表是下一节&quot;最坏情形&quot;的引擎，先放在这里看它的形状：资产从 100 一路缓涨到 103.98，始终没摸到 104 行权价。期权价格先随 delta 上升小幅获利（P/L Option 列前期为正），但 delta 对冲的期货头寸持续做空、持续逆势浮亏（P/L Future 列全负且越来越负）。临近到期，期权价格因 theta 加速归零（最后几行 P/L Option 转为大负），而此前累积的期货空头亏损已无法挽回，累计盈亏滑到 -439.4 千。这个头寸在某个水平上会变成做多或做空 vega，调整只会让最终价差更糟。</p>
+<h3 id="8-3-简单案例研究-最坏情形">8.3 简单案例研究：&quot;最坏情形&quot;</h3>
+<p>经验不足的风险经理通常把期权风险描述为：做多时风险是权利金，做空时反之。这对动态对冲者不成立。这个案例用一个简单例子说明，权利金卖方能赚得比初始收取的权利金更多，权利金买方能亏得比支出更多。</p>
+<p>一个价外 call，delta 20%：</p>
+<ul>
+<li>资产价格：100.5</li>
+<li>行权价：104</li>
+<li>到期天数：30</li>
+<li>价格：0.19</li>
+<li>数量：1000 万</li>
+<li>初始权利金：19 万美元</li>
+</ul>
+<p>看上去 call 的买方最多只会亏掉权利金 19 万，不会更多，是一笔很安全的交易。但看 delta 对冲者的最坏情形：初始 delta 28 万，对冲者卖出全部这个数量。</p>
+<p>看接下来 30 天的盈亏表（即表 16.4）：标的走的路径特别歹毒，它每天上涨。结果一目了然，动态对冲让我们这位仁兄陷入麻烦，造成 44 万的损失，而本该被限制在 19 万。这类事件相当常见（尽管很少这么极端），发生在趋势行情里：趋势那一侧的价外期权无情地衰减，delta 对冲者最终在期权和 delta 对冲两头都亏。</p>
+<p>这个案例是全章的高潮，也是对&quot;经验不足的风险经理&quot;那套静态直觉最干净的反驳。买方付了 19 万买 call，朴素地以为最大损失就是 19 万。但他每日 delta 对冲：标的缓涨，他被迫追高补回做空的 delta（delta 从 26 涨到 273，一路追涨杀低买高），每天的期货对冲都浮亏；最后标的停在 103.98、没到 104，call 到期归零，期权本身亏掉全部 19 万权利金，而沿途 delta 对冲又额外亏掉约 25 万，合计 44 万。</p>
+<p>把它接回理论：动态对冲者的盈亏是 <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.1202em;vertical-align:-0.3061em;"></span><span class="mop op-symbol small-op" style="margin-right:0.1945em;position:relative;top:-0.0006em;">∫</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord">Γ</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0576em;">S</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span><span class="mopen">[(</span><span class="mord">Δ</span><span class="mord mathnormal" style="margin-right:0.0576em;">S</span><span class="mord">/</span><span class="mord mathnormal" style="margin-right:0.0576em;">S</span><span class="mclose"><span class="mclose">)</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1.0641em;vertical-align:-0.25em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0359em;">σ</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span><span class="mord mathnormal">d</span><span class="mord mathnormal">t</span><span class="mclose">]</span><span class="mord">/2</span></span></span></span> 沿路径累积。一个稳定缓涨、低实现波动率的趋势，让每天的 <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.0641em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord">Δ</span><span class="mord mathnormal" style="margin-right:0.0576em;">S</span><span class="mord">/</span><span class="mord mathnormal" style="margin-right:0.0576em;">S</span><span class="mclose"><span class="mclose">)</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span></span></span></span> 都小于隐含的 <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8141em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0359em;">σ</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span><span class="mord">Δ</span><span class="mord mathnormal">t</span></span></span></span>，做多 gamma 的对冲者每天都在&quot;付 theta、收不回 gamma&quot;，日复一日失血。&quot;最大损失等于权利金&quot;只对一个买了就不动、持有到期的人成立；对一个动态对冲者，损失没有上界，因为对冲本身在亏钱。这把本章开篇&quot;动态对冲让每个期权变路径依赖&quot;彻底闭环。</p>
+<hr>
+<h2 id="九-本章综述-理论与实务的对照">九、本章综述：理论与实务的对照</h2>
+<table>
+<thead>
+<tr>
+<th>Taleb 的实务命题</th>
+<th>对应的理论命题</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>静态复制 = 找不需再平衡的匹配组合</td>
+<td>自融资复制组合，目标降盈亏方差 + 省成本</td>
+</tr>
+<tr>
+<td>put-call-asset 套利是最简单的静态复制</td>
+<td><span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.7667em;vertical-align:-0.0833em;"></span><span class="mord mathnormal" style="margin-right:0.0715em;">C</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.1389em;">P</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1.0913em;vertical-align:-0.25em;"></span><span class="mord"><span class="mord mathnormal">e</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8413em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">−</span><span class="mord mathnormal mtight" style="margin-right:0.0278em;">r</span><span class="mord mathnormal mtight" style="margin-right:0.1389em;">T</span></span></span></span></span></span></span></span></span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.1389em;">F</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.0715em;">K</span><span class="mclose">)</span></span></span></span>，剥内在价值后时间价值互换</td>
+</tr>
+<tr>
+<td>别用恒定久期工具静态复制有停时的工具</td>
+<td>香草到期 <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.1389em;">T</span></span></span></span> 确定 vs 障碍/美式停时 <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal" style="margin-right:0.1132em;">τ</span></span></span></span> 随市场漂移</td>
+</tr>
+<tr>
+<td>分解 ≠ 复制</td>
+<td>分解总能做（看懂风险），复制常不可行</td>
+</tr>
+<tr>
+<td>递归法在每个状态匹配希腊字母</td>
+<td>鞅表示的有限维离散投影，匹配越细误差越小成本越高</td>
+</tr>
+<tr>
+<td>动态对冲 = 守最小敞口 + 持续再平衡</td>
+<td>不求清零整棵树，沿路径调 delta/gamma/rho</td>
+</tr>
+<tr>
+<td>动态对冲让每个期权变路径依赖</td>
+<td>离散盈亏 <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.1901em;vertical-align:-0.345em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.8451em;"><span style="top:-2.655em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">2</span></span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.394em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">1</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.345em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mop op-symbol small-op" style="position:relative;top:0em;">∑</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mord">Γ</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0576em;">S</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-2.4413em;margin-left:-0.0576em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2587em;"><span></span></span></span></span></span></span><span class="mopen">[(</span><span class="mord">Δ</span><span class="mord mathnormal" style="margin-right:0.0576em;">S</span><span class="mord">/</span><span class="mord mathnormal" style="margin-right:0.0576em;">S</span><span class="mclose"><span class="mclose">)</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1.0641em;vertical-align:-0.25em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0359em;">σ</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span><span class="mord">Δ</span><span class="mord mathnormal">t</span><span class="mclose">]</span></span></span></span></td>
+</tr>
+<tr>
+<td>价差捕捉中心极限</td>
+<td>大数定律：方差 <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.3669em;"></span><span class="mrel">∼</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">1/</span><span class="mord mathnormal">n</span></span></span></span> 衰减、漂移线性累加</td>
+</tr>
+<tr>
+<td>相邻行权价价差对公式免疫</td>
+<td>定价误差以一阶差分 <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.0019em;vertical-align:-0.25em;"></span><span class="mord"><span class="mord mathnormal">ϵ</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.7519em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">′</span></span></span></span></span></span></span></span></span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.0715em;">K</span><span class="mclose">)</span><span class="mord">Δ</span><span class="mord mathnormal" style="margin-right:0.0715em;">K</span></span></span></span> 出现</td>
+</tr>
+<tr>
+<td>理论 edge = 交易价 − 公允价值</td>
+<td>三层中性：delta → gamma → vega</td>
+</tr>
+<tr>
+<td>&quot;多/空波动率&quot;无风险管理含义</td>
+<td>gamma = 已实现波动率敞口；vega = 隐含波动率敞口</td>
+</tr>
+<tr>
+<td>空日历 = 多 gamma 空 vega</td>
+<td>近月 gamma 大、远月 vega 大，方向相反</td>
+</tr>
+<tr>
+<td>gamma 必须带区间</td>
+<td>gamma 是沿标的的曲线，日历价差处翻号</td>
+</tr>
+<tr>
+<td>软 delta 随市场移动渐近消失</td>
+<td>期权 delta = <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.109em;">N</span><span class="mopen">(</span><span class="mord"><span class="mord mathnormal">d</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">1</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mclose">)</span></span></span></span> 渐近 0/1，自带 gamma</td>
+</tr>
+<tr>
+<td>硬 delta 不消失、恶化尾部</td>
+<td>现货/期货 delta 恒 <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.7278em;vertical-align:-0.0833em;"></span><span class="mord">±</span><span class="mord">1</span></span></span></span>，平移整条 delta 曲线</td>
+</tr>
+<tr>
+<td>再平衡前测 gamma 是否翻号</td>
+<td>gamma 翻负区卖硬 delta 放大尾部损失</td>
+</tr>
+<tr>
+<td>一阶交易 vega 与 gamma 同侧</td>
+<td>全多/全空，盈亏对波动率单调</td>
+</tr>
+<tr>
+<td>二阶交易 gamma 必翻号、加权 vega 必反转</td>
+<td>多空混合，敞口随位置切换，二维快照失效</td>
+</tr>
+<tr>
+<td>三阶矩押注 = 押偏度</td>
+<td>押价-波相关（第15章偏度定义）</td>
+</tr>
+<tr>
+<td>四阶矩押注 = 押 vvol</td>
+<td>押峰度，用价外期权（volga）或日历</td>
+</tr>
+<tr>
+<td>贷方规则：肥尾多头建仓净收钱</td>
+<td>被付钱持有凸性，theta 被卖方权利金覆盖</td>
+</tr>
+<tr>
+<td>同起点终点波动率、盈亏散布巨大</td>
+<td>大 move 落在 gamma 高/低时段决定盈亏</td>
+</tr>
+<tr>
+<td>risk reversal 盈亏散布宽一个量级</td>
+<td>gamma 沿标的翻号，路径走哪侧决定赚亏 gamma</td>
+</tr>
+<tr>
+<td>减少路径依赖只能提高交易频率</td>
+<td>频率↑降实现方差，但成本↑，负 gamma 者更贵</td>
+</tr>
+<tr>
+<td>期权盈亏方差被低估、时间分散失效</td>
+<td>实现方差大，独立样本不足，止损/杠杆提前淘汰</td>
+</tr>
+<tr>
+<td>交易员盈亏有吸收障碍</td>
+<td>中途浮亏极值 &gt; 终端最坏，止损线先触发</td>
+</tr>
+<tr>
+<td>价外 call 买方可亏得比权利金多</td>
+<td>缓涨趋势下 delta 对冲每日失血，损失无上界</td>
+</tr>
+</tbody>
+</table>
+<h3 id="核心观点">核心观点</h3>
+<p>第一，<strong>复制是一个谱，不是一个开关</strong>。从 put-call-asset 套利这种干净的静态复制，到 Derman 二叉树回滚、到递归匹配希腊字母、再到动态对冲，越往后越要持续干预、越受流动性和成本掣肘。要警惕用恒定久期工具去静态复制带停时的工具，那是第 13 至 20 章反复出现的陷阱。</p>
+<p>第二，<strong>gamma 和 vega 是两种波动率，混为一谈会犯错</strong>。gamma 吃已实现波动率，vega 吃隐含波动率。&quot;多/空波动率&quot;这种说法对动态对冲者没有意义，必须把 gamma 带区间说清、把 vega 单独说清。日历价差正是 gamma 与 vega 反向的典型。</p>
+<p>第三，<strong>软硬 delta 的区别在尾部生死攸关</strong>。硬 delta 不消失，会把整条 delta 曲线平移、在 gamma 翻负的尾部放大损失；软 delta 自带 gamma 且渐近消失，能边调 delta 边修 gamma 形态。再平衡前先测 gamma 会不会翻号，是负 gamma 头寸在趋势市自保的关键。</p>
+<p>第四，<strong>波动率交易按矩的阶数组织</strong>。一阶（跨式、宽跨式）vega 与 gamma 同侧、易预测；二阶（价差、日历）gamma 翻号、加权 vega 反转；三阶押偏度、四阶押 vvol，把第 15 章的统计语言落到了具体结构上。贷方规则保证肥尾多头是被付钱持有凸性。</p>
+<p>第五，<strong>动态对冲让一切变路径依赖，这是本章的命门</strong>。相同的起点、终点、波动率，重排序列就能让盈亏散布巨大；risk reversal 因 gamma 翻号散布更宽；一个价外 call 的买方在缓涨趋势里能亏得比权利金还多。&quot;最大损失等于权利金&quot;只对持有到期的人成立，对动态对冲者损失没有上界。期权的盈亏方差被系统性低估，靠&quot;长期&quot;摊平它的信念会被职业寿命和止损制度击碎。</p>
+<h3 id="面对一个期权头寸的操作清单">面对一个期权头寸的操作清单</h3>
+<ol>
+<li>我是要静态复制还是动态对冲这个头寸？它带停时吗（障碍/美式）？带停时就别指望恒定久期工具静态匹配。</li>
+<li>我能把它分解成已知风险（看懂偏度敞口）吗？分解和复制是两件事，别指望分解出的腿都能成交。</li>
+<li>我说&quot;多/空波动率&quot;时，到底指 gamma 还是 vega？gamma 在哪个区间、会不会翻号？</li>
+<li>这个价差的两腿行权价/到期够近吗？够近才对定价公式免疫，才能锁住理论 edge。</li>
+<li>我要调 delta 时，该用软 delta 还是硬 delta？我的 gamma 会不会在调整后翻负、恶化尾部？</li>
+<li>这是一阶还是二阶波动率交易？二阶的话，二维盈亏图已经不可靠，gamma 会在哪翻号？</li>
+<li>我押的是几阶矩？偏度（三阶）还是 vvol（四阶）？建仓是贷方还是借方？</li>
+<li>这个头寸的盈亏对路径有多敏感？同样的终值，最坏路径和最好路径差多少？我的交易频率够压住这个散布吗？</li>
+<li>我的浮亏中途会不会触发止损/风控线？终端最坏不等于我能活着看到的最坏。</li>
+</ol>
+<h3 id="一句话收束">一句话收束</h3>
+<p>本章最该记住的一句：<strong>动态对冲让每一个期权都变成路径依赖，所以期权的真实风险不在它的终端支付里，而在你为对冲它而走过的那条路上。</strong> 把&quot;多/空波动率&quot;拆成 gamma 和 vega、把硬 delta 换成软 delta、用价差隔绝公式、按矩的阶数组织押注，这些技术服务于同一个目的，在一个离散、有成本、有止损线、职业寿命有限的真实世界里，管住那个被静态直觉严重低估的盈亏方差。</p>
+
+<nav class="pager-row"><a class="pager prev" href="chapter-15-beware-the-distribution.html"><span class="pager-dir">← 上一篇</span><span class="pager-name">当心分布</span></a><a class="pager next" href="chapter-17-binary-options-european-style.html"><span class="pager-dir">下一篇 →</span><span class="pager-name">欧式二元期权</span></a></nav>
+</article>
+<nav class="toc" aria-label="本章目录"><div class="toc-title">本章目录</div><ul><li class="toc-l2"><a href="#导读-本章要解决的问题">导读：本章要解决的问题</a></li>
+<li class="toc-l2"><a href="#一-复制-从静态到动态的一个谱">一、复制：从静态到动态的一个谱</a></li>
+<li class="toc-l3"><a href="#1-1-derman-的二叉树回滚法">1.1 Derman 的二叉树回滚法</a></li>
+<li class="toc-l3"><a href="#1-2-递归复制法-在每个状态上匹配希腊字母">1.2 递归复制法：在每个状态上匹配希腊字母</a></li>
+<li class="toc-l2"><a href="#二-动态对冲-守住最小敞口-持续再平衡">二、动态对冲：守住最小敞口、持续再平衡</a></li>
+<li class="toc-l2"><a href="#三-中性价差-用期权对冲期权">三、中性价差：用期权对冲期权</a></li>
+<li class="toc-l3"><a href="#3-1-价差的三个优势">3.1 价差的三个优势</a></li>
+<li class="toc-l2"><a href="#四-波动率交易入门-vega-与-gamma-之别">四、波动率交易入门：vega 与 gamma 之别</a></li>
+<li class="toc-l3"><a href="#4-1-option-wizard-期权策略的基本形态">4.1 Option Wizard：期权策略的基本形态</a></li>
+<li class="toc-l3"><a href="#4-2-gamma-要带区间-日历价差的翻号-gamma">4.2 gamma 要带区间：日历价差的翻号 gamma</a></li>
+<li class="toc-l2"><a href="#五-软-delta-与硬-delta">五、软 delta 与硬 delta</a></li>
+<li class="toc-l3"><a href="#5-1-算例-用软-delta-稳住翻号-gamma-的头寸">5.1 算例：用软 delta 稳住翻号 gamma 的头寸</a></li>
+<li class="toc-l2"><a href="#六-波动率押注-一阶-二阶与高阶矩">六、波动率押注：一阶、二阶与高阶矩</a></li>
+<li class="toc-l3"><a href="#6-1-一阶波动率交易">6.1 一阶波动率交易</a></li>
+<li class="toc-l3"><a href="#6-2-二阶波动率交易">6.2 二阶波动率交易</a></li>
+<li class="toc-l3"><a href="#6-3-高阶矩押注">6.3 高阶矩押注</a></li>
+<li class="toc-l2"><a href="#七-案例研究一-一个常规期权的路径依赖">七、案例研究一：一个常规期权的路径依赖</a></li>
+<li class="toc-l2"><a href="#八-案例研究二-极端路径依赖与-最坏情形">八、案例研究二：极端路径依赖与&quot;最坏情形&quot;</a></li>
+<li class="toc-l3"><a href="#8-1-一个-risk-reversal-的惊人盈亏散布">8.1 一个 risk reversal 的惊人盈亏散布</a></li>
+<li class="toc-l3"><a href="#8-2-表-16-4-讨厌的路径-趋势如何吃掉动态对冲者">8.2 表 16.4 &quot;讨厌的路径&quot;：趋势如何吃掉动态对冲者</a></li>
+<li class="toc-l3"><a href="#8-3-简单案例研究-最坏情形">8.3 简单案例研究：&quot;最坏情形&quot;</a></li>
+<li class="toc-l2"><a href="#九-本章综述-理论与实务的对照">九、本章综述：理论与实务的对照</a></li>
+<li class="toc-l3"><a href="#核心观点">核心观点</a></li>
+<li class="toc-l3"><a href="#面对一个期权头寸的操作清单">面对一个期权头寸的操作清单</a></li>
+<li class="toc-l3"><a href="#一句话收束">一句话收束</a></li></ul></nav>
+</main>
+<script src="assets/app.js"></script>
+</body>
+</html>
