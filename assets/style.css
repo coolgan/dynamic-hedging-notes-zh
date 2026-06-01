@@ -136,6 +136,7 @@ a:hover { text-decoration: underline; }
   gap: 40px;
   justify-content: center;
   align-items: flex-start;
+  min-width: 0;
 }
 .note {
   background: var(--surface);
@@ -144,6 +145,7 @@ a:hover { text-decoration: underline; }
   padding: 48px 56px 40px;
   max-width: var(--max-read);
   width: 100%;
+  min-width: 0;
   box-shadow: 0 1px 2px rgba(0,0,0,.04);
 }
 
@@ -176,6 +178,15 @@ a:hover { text-decoration: underline; }
 .note ul, .note ol { padding-left: 26px; margin: 14px 0; }
 .note li { margin: 6px 0; }
 .note li > ul, .note li > ol { margin: 6px 0; }
+.note h1,
+.note h2,
+.note h3,
+.note h4,
+.note p,
+.note li,
+.note blockquote {
+  overflow-wrap: anywhere;
+}
 
 .note strong { font-weight: 700; color: #1b1f24; }
 .note hr { border: none; border-top: 1px solid var(--border); margin: 36px 0; }
@@ -384,7 +395,7 @@ a:hover { text-decoration: underline; }
   body.nav-open .overlay { display: block; }
   .content { margin-left: 0; padding: 64px 16px 80px; }
   .note { padding: 28px 20px 28px; border-radius: 10px; }
-  .note h1 { font-size: 24px; }
+  .note h1 { font-size: 24px; overflow-wrap: anywhere; }
   .note h2 { font-size: 20px; }
   .pager-row { flex-direction: column; }
 }
@@ -437,4 +448,15 @@ body.home { background: var(--bg); }
   color: var(--text-soft);
   font-size: 13px;
   padding: 30px 24px 60px;
+}
+
+@media (max-width: 520px) {
+  .hero { padding: 56px 24px 34px; }
+  .hero h1 {
+    font-size: 34px;
+    line-height: 1.28;
+    overflow-wrap: anywhere;
+  }
+  .hero-desc { font-size: 15px; }
+  .card-grid { grid-template-columns: 1fr; }
 }
