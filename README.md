@@ -1,8 +1,21 @@
 # Dynamic Hedging 中文学习笔记
 
-本仓库用于托管 Nassim Nicholas Taleb《Dynamic Hedging: Managing Vanilla and Exotic Options》的非官方中文学习笔记静态网页。
+本仓库托管 Nassim Nicholas Taleb《Dynamic Hedging: Managing Vanilla and Exotic Options》的非官方中文学习笔记静态网页。项目面向希望系统理解期权交易实务、波动率风险管理与动态对冲框架的读者，对原书 23 章正文与 7 个附录模块进行了中文化梳理。
 
-在线阅读地址：
+## 项目简介
+
+《Dynamic Hedging》不是一本只讲期权定价公式的教材，而是一部从交易台视角讨论风险暴露、头寸管理、流动性、波动率曲面和奇异期权结构的实务著作。本项目试图将书中的核心概念转化为更便于中文读者检索、复习和推演的学习笔记，重点关注：
+
+- 期权做市与用市中的交易逻辑；
+- Delta、Gamma、Vega、Theta 等希腊字母的动态行为；
+- 波动率、相关性、流动性与路径依赖风险；
+- 障碍期权、二元期权、多资产期权等结构化产品的风险直觉；
+- 从理论公式到交易账簿风险管理之间的连接。
+
+## 在线阅读
 
 https://dynamichedging.pages.dev/
 
+## 说明
+
+本项目为个人学习整理，不是原书的官方译本，也不构成投资建议或交易建议。笔记更适合作为期权交易、金融工程、波动率建模和衍生品风险管理学习过程中的辅助材料。
